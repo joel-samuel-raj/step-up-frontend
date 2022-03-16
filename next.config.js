@@ -10,7 +10,7 @@ module.exports = {
     return [
       {
         source: '/:prefix*/server/:path*',
-        destination: 'http://localhost:3000/:path*' // Proxy to Backend
+        destination: process.env.BACKEND_URL + '/:path*' // Proxy to Backend
       }
     ]
   }
