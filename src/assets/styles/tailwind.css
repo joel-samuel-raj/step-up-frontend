@@ -1,0 +1,79 @@
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Playfair+Display+SC&family=Poppins&family=Titillium+Web:wght@200&family=Ubuntu:wght@300&display=swap');
+/* @import 'aos/dist/aos.css'; */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.page-enter-active,
+.page-leave-active,
+.layout-enter-active, 
+.layout-leave-active {
+  transition: opacity 0.25s !important;
+  transform : scale(1) !important;
+  transition : all 0.25s ease-in-out !important;
+}
+.page-enter,
+.page-leave-active,
+.layout-enter, 
+.layout-leave-active {
+  opacity: 0 !important;
+  transform : scale(0.5) !important;
+  transition : all 0.25s ease-in-out !important
+}
+.page-leave-to, .layout-leave-active {
+    transform : scale(1.25) !important;
+}
+
+
+section {
+    min-height: 100vh;
+    width: 100%;
+    @apply my-40
+}
+
+.anton {
+    font-family: 'Anton', sans-serif;
+}
+
+.playfair {
+    font-family: 'Playfair Display SC', serif;
+}
+
+.poppins {
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    font-family: 'ubuntu', sans-serif;
+}
+
+/*👉h1, h2, h3, h4, h5, h6 {
+    font-family: 'Titillium Web', sans-serif;
+}👈*/
+
+h6 {
+    @apply text-base;
+    @apply md:text-lg
+}
+h5 {
+    @apply text-lg;
+    @apply md:text-xl
+}
+h4 {
+    @apply text-xl;
+    @apply md:text-2xl
+}
+h3 {
+    @apply text-2xl;
+    @apply md:text-3xl
+}
+h2 {
+    @apply text-3xl;
+    @apply md:text-4xl
+}
+h1 {
+    @apply text-4xl;
+    @apply md:text-5xl
+}
+
