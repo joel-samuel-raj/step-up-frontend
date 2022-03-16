@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'
 import { useState } from 'react'
 import axios from 'axios'
 import React from 'react'
+import { IconProp } from '@fortawesome/fontawesome-svg-core'
 
 export default function Password () {
     const router = useRouter()
@@ -26,14 +27,14 @@ export default function Password () {
             <TextField color="primary" name="password" className="w-full" InputProps={ {
                 startAdornment: (
                     <InputAdornment position="start">
-                        <FontAwesomeIcon icon={ faLock }></FontAwesomeIcon>
+                        <FontAwesomeIcon icon={ faLock as IconProp }></FontAwesomeIcon>
                     </InputAdornment>
                 ),
             } } label="Password" required type="password" variant="outlined" />
             <TextField color="primary" name="password" className="w-full my-4" InputProps={ {
                 startAdornment: (
                     <InputAdornment position="start">
-                        <FontAwesomeIcon icon={ faLock }></FontAwesomeIcon>
+                        <FontAwesomeIcon icon={ faLock as IconProp }></FontAwesomeIcon>
                     </InputAdornment>
                 ),
             } } label="Confirm Password" onChange={ ( e ) => setNewPassword( e.target.value ) } required type="password" variant="outlined" />

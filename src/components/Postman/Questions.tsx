@@ -6,10 +6,10 @@ import router from 'next/router'
 import React, { useContext, useEffect, useState } from 'react'
 import RichMarkdownEditor from 'rich-markdown-editor'
 import Create from './Create'
-import Update from './Update'
 import Editor from "rich-markdown-editor"
 import { UserContext } from '../../context/UserContext'
 import { User } from '../../utils/types/user'
+import { IconProp } from '@fortawesome/fontawesome-svg-core'
 
 type answer = {
   _id: string,
@@ -82,12 +82,12 @@ export default function Questions () {
                 setConfirmModal( true )
                 setId( ( arr ) => [ ...arr, dat._id ] )
               } }>
-                <FontAwesomeIcon className="text-white text-lg" icon={ faClose }></FontAwesomeIcon>
+                <FontAwesomeIcon className="text-white text-lg" icon={ faClose as IconProp }></FontAwesomeIcon>
               </IconButton>
               <IconButton className="p-2 w-6 h-6 cursor-pointer bg-green-500 hover:bg-green-600 rounded absolute top-2 right-10" onClick={ () => {
                 setEditModal( true ); setUpdate( dat._id as string )
               } }>
-                <FontAwesomeIcon className="text-white text-lg" icon={ faPencil }></FontAwesomeIcon>
+                <FontAwesomeIcon className="text-white text-lg" icon={ faPencil as IconProp }></FontAwesomeIcon>
               </IconButton>
             </Box>
           ) ) }
@@ -97,7 +97,7 @@ export default function Questions () {
       <Container className="mt-4">
         { currentAnswers.length > 0 && <Box>
           { currentAnswers.map( ( ans, j ) => ( <div key={ j } className="py-4"> <Accordion className="bg-purple_heart-50">
-            <AccordionSummary className="bg-purple_heart-300 rounded text-purple-900" expandIcon={ <FontAwesomeIcon icon={ faChevronDown }></FontAwesomeIcon> }> { ans.userName } </AccordionSummary>
+            <AccordionSummary className="bg-purple_heart-300 rounded text-purple-900" expandIcon={ <FontAwesomeIcon icon={ faChevronDown as IconProp }></FontAwesomeIcon> }> { ans.userName } </AccordionSummary>
             <AccordionDetails> <Box>
               { handleQuestion( ans.questionId ).questions.map( ( quest: any, k: number ) => ( <div key={ k }>
                 <p className="font-bold mt-8"> { quest } </p>
@@ -132,11 +132,11 @@ export default function Questions () {
         onClose={ () => { setModel( false ) } }>
         <Box className="bg-white px-16 py-8 rounded relative w-11/12">
           <IconButton className="p-2 w-6 h-6 cursor-pointer bg-red-500 hover:bg-red-600 rounded absolute top-2 right-2" onClick={ () => setModel( false ) }>
-            <FontAwesomeIcon className="text-white text-lg" icon={ faClose }></FontAwesomeIcon>
+            <FontAwesomeIcon className="text-white text-lg" icon={ faClose as IconProp }></FontAwesomeIcon>
           </IconButton>
           <h3 className="m-4 mt-0"> Create new Quiz </h3>
           <TextField fullWidth value={ name } onChange={ ( e ) => { setName( e.target.value ) } } label="Name of the new Quiz" placeholder="Type..." />
-          <Button onClick={ () => { setModel( false ); setQuestionsModal( true ) } } className="float-right mt-4"> next <FontAwesomeIcon className="ml-2" icon={ faArrowRight }></FontAwesomeIcon>  </Button>
+          <Button onClick={ () => { setModel( false ); setQuestionsModal( true ) } } className="float-right mt-4"> next <FontAwesomeIcon className="ml-2" icon={ faArrowRight as IconProp }></FontAwesomeIcon>  </Button>
         </Box>
       </Modal>
 
@@ -146,7 +146,7 @@ export default function Questions () {
         onClose={ () => { setQuestionsModal( false ) } }>
         <Box className="bg-white sm:px-4 md:px-16 py-8 rounded relative w-11/12">
           <IconButton className="p-2 w-6 h-6 cursor-pointer bg-red-500 hover:bg-red-600 rounded absolute top-2 right-2" onClick={ () => setQuestionsModal( false ) }>
-            <FontAwesomeIcon className="text-white text-lg" icon={ faClose }></FontAwesomeIcon>
+            <FontAwesomeIcon className="text-white text-lg" icon={ faClose as IconProp }></FontAwesomeIcon>
           </IconButton>
           <Create name={ name } />
         </Box>
@@ -166,7 +166,7 @@ export default function Questions () {
         onClose={ () => { setConfirmModal( false ) } }>
         <Box className="bg-white px-16 py-8 rounded relative flex justify-center items-center flex-col">
           <IconButton className="p-2 w-6 h-6 cursor-pointer bg-red-500 hover:bg-red-600 rounded absolute top-2 right-2" onClick={ () => setConfirmModal( false ) }>
-            <FontAwesomeIcon className="text-white text-lg" icon={ faClose }></FontAwesomeIcon>
+            <FontAwesomeIcon className="text-white text-lg" icon={ faClose as IconProp }></FontAwesomeIcon>
           </IconButton>
           <h4> Are you sure to delele the post ? </h4>
           <div>

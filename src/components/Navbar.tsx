@@ -9,6 +9,7 @@ import axios from 'axios'
 import { UserContext } from '../context/UserContext'
 import { User } from "../utils/types/user"
 import router from 'next/router'
+import { IconProp } from '@fortawesome/fontawesome-svg-core'
 
 export default function Navbar ({loginModel,setloginmodel}: {loginModel?: boolean, setloginmodel?: Function}) {
 
@@ -86,19 +87,19 @@ export default function Navbar ({loginModel,setloginmodel}: {loginModel?: boolea
                 <Modal className="flex justify-center items-center p-4" open={ modal } onClose={ () => setModal( false ) }>
                     <Box className="relative bg-white py-12 px-16 rounded">
                         <IconButton className="p-2 w-6 h-6 cursor-pointer bg-red-500 hover:bg-red-600 rounded absolute top-2 right-2" onClick={ () => setModal( false ) }>
-                            <FontAwesomeIcon className="text-white text-lg" icon={ faClose }></FontAwesomeIcon>
+                            <FontAwesomeIcon className="text-white text-lg" icon={ faClose as IconProp }></FontAwesomeIcon>
                         </IconButton>
                         <TextField color="primary" name="email" onBlur={ onClickHandler2 } className="w-full my-4" InputProps={ {
                             startAdornment: (
                                 <InputAdornment position="start">
-                                    <FontAwesomeIcon icon={ faEnvelope }></FontAwesomeIcon>
+                                    <FontAwesomeIcon icon={ faEnvelope as IconProp }></FontAwesomeIcon>
                                 </InputAdornment>
                             ),
                         } } label="Email" required type="email" variant="outlined" />
                         <TextField color="primary" name="password" onBlur={ onClickHandler2 } className="w-full" InputProps={ {
                             startAdornment: (
                                 <InputAdornment position="start">
-                                    <FontAwesomeIcon icon={ faLock }></FontAwesomeIcon>
+                                    <FontAwesomeIcon icon={ faLock as IconProp }></FontAwesomeIcon>
                                 </InputAdornment>
                             ),
                         } } label="Password" required type="password" variant="outlined" />
@@ -116,13 +117,13 @@ export default function Navbar ({loginModel,setloginmodel}: {loginModel?: boolea
                 <Modal className="flex justify-center items-center p-4" open={ forgotPassword } onClose={ () => setForgotPassword( false ) }>
                     <Box className="relative bg-white py-12 px-16 rounded">
                         <IconButton className="p-2 w-6 h-6 cursor-pointer bg-red-500 hover:bg-red-600 rounded absolute top-2 right-2" onClick={ () => setForgotPassword( false ) }>
-                            <FontAwesomeIcon className="text-white text-lg" icon={ faClose }></FontAwesomeIcon>
+                            <FontAwesomeIcon className="text-white text-lg" icon={ faClose as IconProp }></FontAwesomeIcon>
                         </IconButton>
                         <p className="text-gray-500"> Enter the email registered with this account to get the password reset link</p>
                         <TextField color="primary" onBlur={ ( e ) => onClickHandlerPassword( e.target.value ) } name="name" className="w-full my-4" InputProps={ {
                             startAdornment: (
                                 <InputAdornment position="start">
-                                    <FontAwesomeIcon icon={ faEnvelope }></FontAwesomeIcon>
+                                    <FontAwesomeIcon icon={ faEnvelope as IconProp }></FontAwesomeIcon>
                                 </InputAdornment>
                             ),
                         } } label="email" required type="email" variant="outlined" />
@@ -133,7 +134,7 @@ export default function Navbar ({loginModel,setloginmodel}: {loginModel?: boolea
                 <Modal className="flex justify-center items-center p-4" open={ createModal } onClose={ () => setModal( false ) }>
                     <Box className="relative bg-white py-12 px-16 rounded">
                         <IconButton className="p-2 w-6 h-6 cursor-pointer bg-red-500 hover:bg-red-600 rounded absolute top-2 right-2" onClick={ () => setCreateModal( false ) }>
-                            <FontAwesomeIcon className="text-white text-lg" icon={ faClose }></FontAwesomeIcon>
+                            <FontAwesomeIcon className="text-white text-lg" icon={ faClose as IconProp }></FontAwesomeIcon>
                         </IconButton>
                         <div className="my-4 flex">
                             <img src={ newUser.profilePicture } className="w-16 h-16 rounded-full" alt="" />
@@ -144,42 +145,42 @@ export default function Navbar ({loginModel,setloginmodel}: {loginModel?: boolea
                         <TextField color="primary" onBlur={ onClickHandler } name="name" className="w-full my-4" InputProps={ {
                             startAdornment: (
                                 <InputAdornment position="start">
-                                    <FontAwesomeIcon icon={ faUser }></FontAwesomeIcon>
+                                    <FontAwesomeIcon icon={ faUser as IconProp }></FontAwesomeIcon>
                                 </InputAdornment>
                             ),
                         } } label="Name" required type="text" variant="outlined" />
                         <TextField color="primary" onBlur={ onClickHandler } name="rollNumber" className="w-full my-4" InputProps={ {
                             startAdornment: (
                                 <InputAdornment position="start">
-                                    <FontAwesomeIcon icon={ faAddressBook }></FontAwesomeIcon>
+                                    <FontAwesomeIcon icon={ faAddressBook as IconProp }></FontAwesomeIcon>
                                 </InputAdornment>
                             ),
                         } } label="Roll Number" required type="text" variant="outlined" />
                         <TextField color="primary" onBlur={ onClickHandler } name="phoneNumber" className="w-full my-4" InputProps={ {
                             startAdornment: (
                                 <InputAdornment position="start">
-                                    <FontAwesomeIcon icon={ faPhone }></FontAwesomeIcon>
+                                    <FontAwesomeIcon icon={ faPhone as IconProp }></FontAwesomeIcon>
                                 </InputAdornment>
                             ),
                         } } label="Phone Number" required type="text" variant="outlined" />
                         <TextField color="primary" onBlur={ onClickHandler } name="email" className="w-full" InputProps={ {
                             startAdornment: (
                                 <InputAdornment position="start">
-                                    <FontAwesomeIcon icon={ faEnvelope }></FontAwesomeIcon>
+                                    <FontAwesomeIcon icon={ faEnvelope as IconProp }></FontAwesomeIcon>
                                 </InputAdornment>
                             ),
                         } } label="Email" required type="email" variant="outlined" />
                         <TextField color="primary" className="w-full mt-4" InputProps={ {
                             startAdornment: (
                                 <InputAdornment position="start">
-                                    <FontAwesomeIcon icon={ faLock }></FontAwesomeIcon>
+                                    <FontAwesomeIcon icon={ faLock as IconProp }></FontAwesomeIcon>
                                 </InputAdornment>
                             ),
                         } } label="Password" required type="password" variant="outlined" />
                         <TextField color="primary" onBlur={ onClickHandler } name="password" className="w-full mt-4" InputProps={ {
                             startAdornment: (
                                 <InputAdornment position="start">
-                                    <FontAwesomeIcon icon={ faLock }></FontAwesomeIcon>
+                                    <FontAwesomeIcon icon={ faLock as IconProp }></FontAwesomeIcon>
                                 </InputAdornment>
                             ),
                         } } label="Confirm Password" required type="password" variant="outlined" />

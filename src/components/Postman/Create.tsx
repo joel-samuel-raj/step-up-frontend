@@ -1,3 +1,4 @@
+import { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { faAdd, faClose } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Alert, Button, Container, InputAdornment, Snackbar, TextField } from '@mui/material'
@@ -88,11 +89,11 @@ export default function Create ({name, id}: {name?: string, id?: string}) {
                         endAdornment: (
                             <>
                                 <InputAdornment position="end">
-                                    { i === fate().length - 1 && <FontAwesomeIcon onClick={ () => { addQuesion( i ) } } className="text-blue-600 cursor-pointer" icon={ faAdd } /> }
+                                    { i === fate().length - 1 && <FontAwesomeIcon onClick={ () => { addQuesion( i ) } } className="text-blue-600 cursor-pointer" icon={ faAdd as IconProp } /> }
                                 </InputAdornment>
                                 <InputAdornment position="end">
                                     { i === fate().length - 1 &&
-                                        <FontAwesomeIcon className="text-red-600 cursor-pointer" icon={ faClose } onClick={ () => { removeQuestion( i ) } } /> }
+                                        <FontAwesomeIcon className="text-red-600 cursor-pointer" icon={ faClose as IconProp } onClick={ () => { removeQuestion( i ) } } /> }
                                 </InputAdornment>
                             </>
                         ),
