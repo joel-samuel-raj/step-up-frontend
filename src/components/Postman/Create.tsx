@@ -4,25 +4,23 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Alert, Button, Container, IconButton, InputAdornment, Snackbar, TextField } from '@mui/material'
 import axios from 'axios'
 import router, { Router } from 'next/router'
-import React, { useState, useReducer, useEffect } from 'react'
+import React, { useState, useReducer, useEffect, useContext } from 'react'
 import { ulid } from 'ulid'
 import { postsImage } from '../../assets/images/posts'
-
-type question = {
-    name?: string
-    description?: string
-    image?: string | ArrayBuffer | null
-    questions?: string[]
-}
+import { PostsContext } from '../../context/PostsContext'
+import { questionType } from '../../utils/types/question'
 
 export default function Create ( { name, id }: { name?: string, id?: string } ) {
+
+    const allPosts = useContext( PostsContext )
+
     const [ , forceUpdate ] = useReducer( x => x + 1, 0 )
     const [ questions, setQuestions ] = useState( [ "question #1" ] )
     const [ editQuestions, setEditQuestions ] = useState( [ "question #1" ] )
     const [ createModel, setCreateModel ] = useState( false )
     const [ next, setNext ] = useState( false )
-    const [ posts, setPosts ] = useState<question>( { image: postsImage, questions: questions } )
-    const [ editPosts, setEditPosts ] = useState<question>( { image: postsImage } )
+    const [ posts, setPosts ] = useState<questionType>( { image: postsImage, questions: questions } )
+    const [ editPosts, setEditPosts ] = useState<questionType>( { image: postsImage } )
 
     const addQuesion = ( i: number ) => {
         if ( id ) {
@@ -33,33 +31,35 @@ export default function Create ( { name, id }: { name?: string, id?: string } ) 
 
     const handleTyping = ( e: any ) => {
         let { name, value } = e.target
-        let obj = { ...posts, [ name ]: value }
-        setPosts( obj )
-        console.log( posts )
+        if ( id ) {
+            let obj = { ...editPosts, [ name ]: value }
+            setEditPosts( obj )
+        }
+        if ( !id ) {
+            let obj = { ...posts, [ name ]: value }
+            setPosts( obj )
+        }
     }
 
     const handleImage = ( e: any ) => {
         let file = e.target.files[ 0 ]
         const reader = new FileReader()
         reader.onload = ( e ) => {
-            setEditPosts((prev) => ({...prev, image: e.target!.result}))
-            forceUpdate()
+            setEditPosts( ( prev ) => ( { ...prev, image: e.target!.result } ) )
+            setPosts( ( prev ) => ( { ...prev, image: e.target!.result } ) )
+            // forceUpdate()
         }
         reader.readAsDataURL( file )
     }
 
     useEffect( () => {
         if ( !id ) return
-        axios.get( `/server/posts/${ id }` ).then( ( response ) => {
-            let arr = response.data[ 0 ]
-            setEditQuestions( arr.questions )
-            console.log( editQuestions )
-            console.log( arr )
-            setEditPosts( arr )
-            console.log( editPosts )
-        } )
+        let arr = allPosts.find( ar => ar._id === id )
+        setEditQuestions( arr!.questions as string[]) 
+        setEditPosts( arr as questionType )
+        console.log(posts)
     }, [] )
-
+ 
     const removeQuestion = ( i: number ) => {
         if ( id ) {
             if ( editQuestions.length === 1 ) return
@@ -82,22 +82,24 @@ export default function Create ( { name, id }: { name?: string, id?: string } ) 
             let array = editQuestions
             array[ i ] = value
             setEditQuestions( array )
+            setEditPosts((prev) => ({...prev, questions: editQuestions}))
         }
         else {
             let value = e.target.value
             let array = questions
             array[ i ] = value
             setQuestions( array )
-            posts.questions![ i ] = e.target.value
+            setPosts((prev) => ({...prev, questions: questions}))
         }
-        forceUpdate()
+        // forceUpdate()
         console.log( posts )
     }
 
     const submit = () => {
         if ( id ) {
+            console.log( editPosts )
             console.log( editQuestions )
-            axios.post( "server/posts/update", editPosts ).then( ( res ) => {
+            axios.post( `server/posts/update/${id}`, editPosts ).then( ( res ) => {
                 console.log( res )
             } )
             return
@@ -113,11 +115,11 @@ export default function Create ( { name, id }: { name?: string, id?: string } ) 
         return id ? editQuestions : questions
     }
 
-    return (
+    return ( 
         <>
-            { ( ( id && editPosts.name ) || ( !id ) ) && ( <>
+            { ( ( id && ( typeof editPosts.name === 'string' ) ) || ( !id ) ) && ( <>
                 <Container className="my-4">
-                    { <h3> { id ? "Create New Quiz" : `Edit quiz` } </h3> }
+                    { <h3> { id ? `Edit ${editPosts.name}` : `Create ${posts.name}` } </h3> }
                     { next ? ( <>
                         { ( id ? editQuestions : questions ).map( ( question: any, i: number ) => (
                             <TextField autoFocus={ true } key={ i } onChange={ ( e ) => { handleChange( e, i ) } } className="my-2" value={ question } label={ `Question #${ i + 1 }` } multiline fullWidth InputProps={ {
@@ -142,7 +144,7 @@ export default function Create ( { name, id }: { name?: string, id?: string } ) 
                     </> ) : ( <div>
                         <TextField value={ editPosts.name } onChange={ handleTyping } name="name" className="my-4" fullWidth label="name" />
                         <TextField value={ editPosts.description } onChange={ handleTyping } name="description" className="my-4" multiline fullWidth label="description" />
-                        <img className="w-full object-contain" src={ posts.image as string } alt="" />
+                        <img className="w-full object-contain" src={ id ? editPosts.image as string : posts.image as string } alt="" />
                         <Button className="block relative"> <input type="file" className="absolute w-full h-full opacity-0" onChange={ handleImage } /> Update Photo </Button>
                     </div> ) }
                     <div className="flex justify-end w-full items-center">

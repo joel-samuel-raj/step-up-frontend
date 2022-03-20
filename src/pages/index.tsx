@@ -1,4 +1,4 @@
-import { Button, Container } from "@mui/material"
+import { Button, Container, Box, Divider } from "@mui/material"
 import type { NextPage } from "next"
 import Navbar from "../components/Navbar"
 import { useEffect, useContext, useState } from "react"
@@ -6,63 +6,66 @@ import axios from 'axios'
 import { UserContext } from "../context/UserContext"
 import { User } from "../utils/types/user"
 import Editor from "rich-markdown-editor"
-
-type questionType = {
-  _id?: String,
-  name?: String,
-  questions?: [{
-    _id: String,
-    question: String[]
-  }]
-}
+import { PostsContext } from "../context/PostsContext"
+import { answerType } from "../utils/types/answer"
+import { questionType } from "../utils/types/question"
 
 const Home: NextPage = () => {
+
+  const allPosts = useContext( PostsContext )
   const user: User = useContext( UserContext )
-  const [ data, setData ] = useState( [] )
+
+  const [ data, setData ] = useState<[ questionType ]>( [ {} ] )
   const [ loginModel, setLoginModel ] = useState( false )
-  const [answer, setAnswer] = useState<string[]>([])
-  const [currentQuestion, setCurrentQuestion] = useState(0)
+  const [ answer, setAnswer ] = useState<string[]>( [] )
+  const [ currentQuestion, setCurrentQuestion ] = useState( 0 )
   const [ question, setQuestion ] = useState<questionType>( {} )
+
   useEffect( () => {
-    axios.get( "/server/posts/getPosts" ).then( res => { console.log( res.data ); setData( res.data ) } )
-    // axios.get("/server/posts/answers/get").then(res => console.log(res))
-  }, [] )
+    if ( allPosts.length > 0 ) {
+      let arr: questionType[] = allPosts.filter( post => post.open === true )
+      setData( arr as [ questionType ] )
+    }
+  }, [ allPosts ] )
 
   const handleChange = ( e: string, j: number ) => {
     let array = answer
-    array[j] = e
+    array[ j ] = e
     setAnswer( array )
-    console.log(answer)
+    console.log( answer )
   }
 
   const handleSubmit = ( j: any ) => {
     if ( !user ) {
-      setLoginModel(true)
+      setLoginModel( true )
       return
     }
     if ( user ) {
       let obj = {
-        userName : user.name,
-        userId : user._id,
+        userName: user.name,
+        userId: user._id,
         questionId: j,
         answers: answer,
-        userEmail: user.email, 
+        userEmail: user.email,
         userPhone: user.phoneNumber
       }
-      axios.post( "/server/posts/answers/post", obj).then( res => console.log(res))
+      axios.post( "/server/posts/answers/post", obj ).then( res => console.log( res ) )
     }
   }
 
-  return ( 
+  return (
     <>
-      <Navbar loginModel={loginModel} setloginmodel = {setLoginModel}/>
+      <Navbar loginModel={ loginModel } setloginmodel={ setLoginModel } />
       <Container className="my-4 mt-20">
         <h3 className="m-4"> Available Quiz 👇🏼 </h3>
         <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           { data.map( ( dat: any, i: number ) => (
-            <Button key={ i } onClick={ () => { setQuestion( data[ i ] ) } } className="bg-gradient-to-tr cursor-pointer text-white from-purple-400 to-purple-500 rounded relative">
-              { dat.name }
-            </Button>
+            <Box key={ i } onClick={ () => { setQuestion( data[ i ] ) } } className="bg-gradient-to-tr cursor-pointer text-white from-purple-400 to-purple-600 rounded relative">
+              <h3 className="m-4"> { dat.name } </h3>
+              <img className="w-full object-contain rounded" src={ dat.image as string } alt="" />
+              <Divider className="m-4 bg-purple-900"></Divider>
+              <p className="m-4"> { dat.description } </p>
+            </Box>
           ) ) }
         </div>
       </Container>
@@ -73,12 +76,12 @@ const Home: NextPage = () => {
           { question.questions!.map( ( quest, j: number ) => ( <div key={ j } className="p-4">
             <p className="text-lg"> { quest } </p>
             <div className="my-4">
-              <Editor defaultValue="" onChange={ ( value ) => { handleChange( value(), j) } } placeholder="Start Writing Here..."
+              <Editor defaultValue="" onChange={ ( value ) => { handleChange( value(), j ) } } placeholder="Start Writing Here..."
               />
             </div>
-          </div> 
+          </div>
           ) ) }
-          <Button onClick={() => {handleSubmit(question._id)}}> Submit </Button>
+          <Button onClick={ () => { handleSubmit( question._id ) } }> Submit </Button>
         </div>
       </Container> }
     </>

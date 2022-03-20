@@ -2,6 +2,8 @@ import { createTheme, ThemeProvider } from "@mui/material"
 import type { AppProps } from "next/app"
 import { UserProvider } from "../context/UserContext"
 import "../assets/styles/tailwind.css"
+import { PostsProvider } from "../context/PostsContext"
+import { AnswersProvider } from "../context/AnswersContext"
 const theme = createTheme( {
   palette: {
     primary: {
@@ -16,9 +18,13 @@ const theme = createTheme( {
 function MyApp ( { Component, pageProps }: AppProps ) {
   return (
     <UserProvider>
-      <ThemeProvider theme={ theme }>
-        <Component { ...pageProps } />
-      </ThemeProvider>
+      <PostsProvider>
+        <AnswersProvider>
+          <ThemeProvider theme={ theme }>
+            <Component { ...pageProps } />
+          </ThemeProvider>
+        </AnswersProvider>
+      </PostsProvider>
     </UserProvider>
   )
 }

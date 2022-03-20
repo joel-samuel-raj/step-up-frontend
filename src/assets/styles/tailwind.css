@@ -48,32 +48,26 @@ body {
     font-family: 'ubuntu', sans-serif;
 }
 
-/*👉h1, h2, h3, h4, h5, h6 {
-    font-family: 'Titillium Web', sans-serif;
-}👈*/
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Poppins', sans-serif;
+}
 
 h6 {
     @apply text-base;
-    @apply md:text-lg
 }
 h5 {
     @apply text-lg;
-    @apply md:text-xl
 }
 h4 {
     @apply text-xl;
-    @apply md:text-2xl
 }
 h3 {
     @apply text-2xl;
-    @apply md:text-3xl
 }
 h2 {
     @apply text-3xl;
-    @apply md:text-4xl
 }
 h1 {
     @apply text-4xl;
-    @apply md:text-5xl
 }
 

@@ -239,9 +239,9 @@ export default function Navbar ({loginModel,setloginmodel}: {loginModel?: boolea
                                 <ListItemText> My Profile </ListItemText>
                             </ListItem>
                         </Link>
-                        <Link href="/Answers">
+                        <Link href="/My-Responses">
                             <ListItem className="flex items-center justify-center" button>
-                                <ListItemText> Answers </ListItemText>
+                                <ListItemText> My Response </ListItemText>
                             </ListItem>
                         </Link>
                     </List>

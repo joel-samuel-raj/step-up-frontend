@@ -1,30 +1,20 @@
-import { faArrowLeft, faArrowRight, faChevronDown, faClose, faPencil } from '@fortawesome/free-solid-svg-icons'
+import { faChevronDown, faClose, faPencil } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Accordion, AccordionSummary, Box, Button, Container, IconButton, Modal, TextField, Typography, AccordionDetails, Divider } from '@mui/material'
+import { Accordion, AccordionSummary, Box, Button, Container, IconButton, Modal, AccordionDetails, Divider } from '@mui/material'
 import axios from 'axios'
 import router from 'next/router'
-import React, { useContext, useEffect, useState } from 'react'
-import RichMarkdownEditor from 'rich-markdown-editor'
+import React, { useContext, useEffect, useReducer, useState } from 'react'
 import Create from './Create'
 import Editor from "rich-markdown-editor"
-import { UserContext } from '../../context/UserContext'
-import { User } from '../../utils/types/user'
 import { IconProp } from '@fortawesome/fontawesome-svg-core'
+import { PostsContext } from '../../context/PostsContext'
+import { AnswersContext } from '../../context/AnswersContext'
+import { answerType } from '../../utils/types/answer'
 
-type answer = {
-  _id: string,
-  userName?: "",
-  userId?: "",
-  questionId?: "",
-  answers?: string[],
-  validate: boolean,
-  userEmail: answer,
-  userPhone: number
-}
 
 export default function Questions () {
 
-  const user: User = useContext( UserContext )
+  const [ , forceUpdate ] = useReducer( x => x + 1, 0 )
 
   const [ model, setModel ] = useState( false )
   const [ name, setName ] = useState( "" )
@@ -32,24 +22,28 @@ export default function Questions () {
   const [ confirmModal, setConfirmModal ] = useState( false )
   const [ editModal, setEditModal ] = useState( false )
   const [ id, setId ] = useState<string[]>( [] )
-  const [ data, setData ] = useState<any>( [ { name: "" } ] )
+  const [ data, setData ] = useState<any>( [] )
   const [ update, setUpdate ] = useState( "" )
-  const [ answers, setAnswers ] = useState<answer[]>( [] )
-  const [ currentAnswers, setCurrentAnswers ] = useState<answer[]>( [] )
-  const [ next, setNext ] = useState( false )
+  const [ answers, setAnswers ] = useState<answerType[]>( [] )
+  const [ currentAnswers, setCurrentAnswers ] = useState<answerType[]>( [] )
+
+  const allPosts = useContext( PostsContext )
+  const allAnswers = useContext( AnswersContext )
 
   useEffect( () => {
-    axios.get( "/server/posts/getPosts" ).then( ( response ) => {
-      setData( response.data )
-      // console.log( data )
-    } )
-    axios.get( "/server/posts/answers/get" ).then( res => setAnswers( res.data ) )
-  }, [] )
+    setAnswers( allAnswers as answerType[] )
+  }, [ allAnswers ] )
+
+  useEffect( () => {
+    setData( allPosts )
+    console.log( data )
+  }, [ allPosts ] )
 
   const handleClick = ( id: string ) => {
-    let data: answer[] = answers.filter( answer => answer.questionId! === id )
-    setCurrentAnswers( data )
-    // console.log( currentAnswers )
+    console.log( id )
+    let dat = answers.filter( answer => answer.questionId! === id )
+    setCurrentAnswers( dat )
+    console.log( dat )
   }
 
   const handleDelete = () => {
@@ -64,9 +58,14 @@ export default function Questions () {
     return arr
   }
 
-  const handleValidate = ( j: number ) => {
+  const handleValidate = ( j: number, key: string ) => {
     let array = currentAnswers
-    array[ j ].validate = true
+    if ( key === "star" ) {
+      array[j].star = true
+    }
+    if ( key === "validate" ) {
+      array[j].validate = true
+    }
     setCurrentAnswers( array )
     console.log( currentAnswers )
     axios.post( `/server/posts/answers/validate/${ currentAnswers[ j ]._id }`, currentAnswers[ j ] )
@@ -107,15 +106,35 @@ export default function Questions () {
                 </div>
                 <Divider></Divider>
               </div> ) ) }
-            </Box> <Button className="mt-4" onClick={ () => { handleValidate( j ) } }> Validate </Button>  </AccordionDetails>
+            </Box>
+              <div className="flex items-center justify-around">
+                <Button className="mt-4 text-blue-500" onClick={ () => { handleValidate( j , "validate" )} }> Validate </Button>
+                <Button className="mt-4 text-yellow-500" onClick={ () => { handleValidate( j , "star") } }> Star </Button>
+              </div>
+            </AccordionDetails>
           </Accordion> </div> ) ) }
         </Box> }
       </Container>
 
-      <Container>
+      <Container className="my-4">
         { currentAnswers.length > 0 && <Box>
           <Divider className="bg-purple_heart-500 rounded-full my-4"></Divider>
           <h3 className="my-4"> Potential Winners ⚡ </h3>
+          { currentAnswers.map( ( ans, j ) => ( <div key={ j }>{
+            ans.star && <Box className="bg-purple_heart-100 rounded p-2">
+              <h4 className=""> { ans.userName } </h4>
+              <p onClick={ () => window.location.href = `mailto:${ ans.userEmail }?body=You have potential to win !` } className="text-blue-500 cursor-pointer hover:underline"> { ans.userEmail } </p>
+              <p onClick={ () => window.location.href = `tel:${ ans.userPhone }` } className="text-blue-500 cursor-pointer hover:underline"> { ans.userPhone } </p>
+            </Box>
+          }
+          </div> ) )
+          } </Box> }
+      </Container>
+
+      <Container className="my-4">
+        { currentAnswers.length > 0 && <Box>
+          <Divider className="bg-purple_heart-500 rounded-full my-4"></Divider>
+          <h3 className="my-4">  Winners 🔥 </h3>
           { currentAnswers.map( ( ans, j ) => ( <div key={ j }>{
             ans.validate && <Box className="bg-purple_heart-100 rounded p-2">
               <h4 className=""> { ans.userName } </h4>
@@ -127,25 +146,11 @@ export default function Questions () {
           } </Box> }
       </Container>
 
-      {/* <Modal
-        className="flex justify-center items-center"
-        open={ model }
-        onClose={ () => { setModel( false ) } }>
-        <Box className="bg-white px-16 py-8 rounded relative w-11/12">
-          <IconButton className="p-2 w-6 h-6 cursor-pointer bg-red-500 hover:bg-red-600 rounded absolute top-2 right-2" onClick={ () => setModel( false ) }>
-            <FontAwesomeIcon className="text-white text-lg" icon={ faClose as IconProp }></FontAwesomeIcon>
-          </IconButton>
-          <h3 className="m-4 mt-0"> Create new Quiz </h3>
-          <TextField fullWidth value={ name } onChange={ ( e ) => { setName( e.target.value ) } } label="Name of the new Quiz" placeholder="Type..." />
-          <Button onClick={ () => { setModel( false ); setQuestionsModal( true ) } } className="float-right mt-4"> next <FontAwesomeIcon className="ml-2" icon={ faArrowRight as IconProp }></FontAwesomeIcon>  </Button>
-        </Box>
-      </Modal> */}
-
       <Modal
         className="flex justify-center items-center"
         open={ questionsModal }
         onClose={ () => { setQuestionsModal( false ) } }
-        style={{ overflow: 'scroll' }}>
+        style={ { overflow: 'scroll' } }>
         <Box className="bg-white sm:px-4 md:px-16 py-8 rounded relative w-11/12">
           <IconButton className="p-2 w-6 h-6 cursor-pointer bg-red-500 hover:bg-red-600 rounded absolute top-2 right-2" onClick={ () => setQuestionsModal( false ) }>
             <FontAwesomeIcon className="text-white text-lg" icon={ faClose as IconProp }></FontAwesomeIcon>
@@ -161,7 +166,7 @@ export default function Questions () {
           <IconButton className="p-2 w-6 h-6 cursor-pointer bg-red-500 hover:bg-red-600 rounded absolute top-2 right-2" onClick={ () => setEditModal( false ) }>
             <FontAwesomeIcon className="text-white text-lg" icon={ faClose as IconProp }></FontAwesomeIcon>
           </IconButton>
-          <Create id={update} />
+          <Create id={ update } />
         </Box>
       </Modal>
       <Modal
