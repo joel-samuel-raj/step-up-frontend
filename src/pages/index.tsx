@@ -25,7 +25,7 @@ const Home: NextPage = () => {
   const [ question, setQuestion ] = useState<questionType>( {} )
   useEffect( () => {
     axios.get( "/server/posts/getPosts" ).then( res => { console.log( res.data ); setData( res.data ) } )
-    axios.get("/server/posts/answers/get").then(res => console.log(res))
+    // axios.get("/server/posts/answers/get").then(res => console.log(res))
   }, [] )
 
   const handleChange = ( e: string, j: number ) => {

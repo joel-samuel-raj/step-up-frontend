@@ -1,4 +1,4 @@
-import { faArrowRight, faChevronDown, faClose, faPencil } from '@fortawesome/free-solid-svg-icons'
+import { faArrowLeft, faArrowRight, faChevronDown, faClose, faPencil } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Accordion, AccordionSummary, Box, Button, Container, IconButton, Modal, TextField, Typography, AccordionDetails, Divider } from '@mui/material'
 import axios from 'axios'
@@ -36,6 +36,7 @@ export default function Questions () {
   const [ update, setUpdate ] = useState( "" )
   const [ answers, setAnswers ] = useState<answer[]>( [] )
   const [ currentAnswers, setCurrentAnswers ] = useState<answer[]>( [] )
+  const [ next, setNext ] = useState( false )
 
   useEffect( () => {
     axios.get( "/server/posts/getPosts" ).then( ( response ) => {
@@ -92,7 +93,7 @@ export default function Questions () {
             </Box>
           ) ) }
         </div>
-        <Button className="mt-4" onClick={ () => { setModel( true ) } } variant="contained"> Create New Quiz </Button>
+        <Button className="mt-4" onClick={ () => { setQuestionsModal( true ) } } variant="contained"> Create New Quiz </Button>
       </Container>
       <Container className="mt-4">
         { currentAnswers.length > 0 && <Box>
@@ -118,15 +119,15 @@ export default function Questions () {
           { currentAnswers.map( ( ans, j ) => ( <div key={ j }>{
             ans.validate && <Box className="bg-purple_heart-100 rounded p-2">
               <h4 className=""> { ans.userName } </h4>
-              <p onClick={() => window.location.href=`mailto:${ans.userEmail}?body=You have potential to win !`} className="text-blue-500 cursor-pointer hover:underline"> { ans.userEmail } </p>
-              <p onClick={() => window.location.href=`tel:${ans.userPhone}`} className="text-blue-500 cursor-pointer hover:underline"> { ans.userPhone } </p>
+              <p onClick={ () => window.location.href = `mailto:${ ans.userEmail }?body=You have potential to win !` } className="text-blue-500 cursor-pointer hover:underline"> { ans.userEmail } </p>
+              <p onClick={ () => window.location.href = `tel:${ ans.userPhone }` } className="text-blue-500 cursor-pointer hover:underline"> { ans.userPhone } </p>
             </Box>
           }
           </div> ) )
           } </Box> }
       </Container>
 
-      <Modal
+      {/* <Modal
         className="flex justify-center items-center"
         open={ model }
         onClose={ () => { setModel( false ) } }>
@@ -138,28 +139,31 @@ export default function Questions () {
           <TextField fullWidth value={ name } onChange={ ( e ) => { setName( e.target.value ) } } label="Name of the new Quiz" placeholder="Type..." />
           <Button onClick={ () => { setModel( false ); setQuestionsModal( true ) } } className="float-right mt-4"> next <FontAwesomeIcon className="ml-2" icon={ faArrowRight as IconProp }></FontAwesomeIcon>  </Button>
         </Box>
-      </Modal>
+      </Modal> */}
 
       <Modal
         className="flex justify-center items-center"
         open={ questionsModal }
-        onClose={ () => { setQuestionsModal( false ) } }>
+        onClose={ () => { setQuestionsModal( false ) } }
+        style={{ overflow: 'scroll' }}>
         <Box className="bg-white sm:px-4 md:px-16 py-8 rounded relative w-11/12">
           <IconButton className="p-2 w-6 h-6 cursor-pointer bg-red-500 hover:bg-red-600 rounded absolute top-2 right-2" onClick={ () => setQuestionsModal( false ) }>
             <FontAwesomeIcon className="text-white text-lg" icon={ faClose as IconProp }></FontAwesomeIcon>
           </IconButton>
-          <Create name={ name } />
+          <Create />
         </Box>
       </Modal>
 
       <Modal className="flex justify-center items-center"
         open={ editModal }
         onClose={ () => { setEditModal( false ) } }>
-        <Box className="bg-white px-16 py-8 rounded relative flex justify-center items-center flex-col">
-          <Create id={ update } />
+        <Box className="bg-white px-4 md:px-16 m-4 md:m-auto py-8 rounded relative flex justify-center items-center flex-col">
+          <IconButton className="p-2 w-6 h-6 cursor-pointer bg-red-500 hover:bg-red-600 rounded absolute top-2 right-2" onClick={ () => setEditModal( false ) }>
+            <FontAwesomeIcon className="text-white text-lg" icon={ faClose as IconProp }></FontAwesomeIcon>
+          </IconButton>
+          <Create id={update} />
         </Box>
       </Modal>
-
       <Modal
         className="flex justify-center items-center"
         open={ confirmModal }
