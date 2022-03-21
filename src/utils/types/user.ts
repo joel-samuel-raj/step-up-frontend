@@ -8,5 +8,6 @@ export class User {
     phoneNumber?: ""
     stratergy? : ""
     password?: ""
-    isAdmin? : false
+    isAdmin?: false
+    data?: ''
 }  

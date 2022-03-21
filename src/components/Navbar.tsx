@@ -73,11 +73,16 @@ export default function Navbar ({loginModel,setloginmodel}: {loginModel?: boolea
     }
 
     const loginUser = async () => {
-        await axios.post( `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/local/login`, user ).then( () => router.reload() )
+        // await axios.post( `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/local/token-login`, user ).then( () => router.reload() )
+        await axios.post( `${ process.env.NEXT_PUBLIC_BACKEND_URL }/auth/local/token-login`, user ).then( ( res ) => {
+            console.log( res.data )
+            localStorage.setItem( 'local_user', JSON.stringify( res.data ) )
+            router.reload()
+        } )
     }
 
     const resetPassword = async () => {
-        await axios.post( `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/local/reset`, email ).then( res => console.log( res ) )
+        await axios.post( `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/local/reset`, email ).then( res => alert("Success ! Please check Your Mail !") )
     }
 
     const login = () => {
@@ -194,10 +199,16 @@ export default function Navbar ({loginModel,setloginmodel}: {loginModel?: boolea
     const logout = () => { 
         const logoutUser = async () => {
             console.log( currentUser )
-            await axios.get( `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/${ stratergy }/logout` ).then( ( res ) => {
+            if ( currentUser.stratergy as string === 'google' ) {
+                await axios.get( `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/${ stratergy }/logout` ).then( ( res ) => {
+                    router.reload()
+                    // console.log(res.data)
+                } )
+            }
+            if ( currentUser.stratergy as string === 'local' ) {
+                localStorage.removeItem( 'local_user' )
                 router.reload()
-                // console.log(res.data)
-            } )
+            }
         }
         return (
             <>
@@ -224,7 +235,7 @@ export default function Navbar ({loginModel,setloginmodel}: {loginModel?: boolea
                         <Typography onClick={() => {router.push("/")}} variant="h6" component="div" sx={ { flexGrow: 1 } }>
                             StepUp Quiz
                         </Typography>
-                        { currentUser.name as string === "" ? login() : logout() }
+                        { (currentUser.name as string === "" || currentUser.data as string === "wrong password") ? login() : logout() }
                     </Toolbar>
                 </AppBar>
             </Box>
