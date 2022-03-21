@@ -15,14 +15,14 @@ export const UserProvider = ( props: any ) => {
     } )
     useEffect( () => {
         const getuser = async () => {
-            await axios.get( "server/auth/local/users", {
+            await axios.get( `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/local/users`, {
                 withCredentials: true
             } ).then( ( res ) => {
                 if ( Object.keys( res.data ).length > 0 ) {
                     setuser( res.data )
                 }
             } )
-            await axios.get( "server/auth/google/users", {
+            await axios.get( `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/google/users`, {
                 withCredentials: true
             } ).then( ( res ) => {
                 if ( Object.keys( res.data ).length > 0 ) {

@@ -10,7 +10,7 @@ import { postsImage } from '../../assets/images/posts'
 import { PostsContext } from '../../context/PostsContext'
 import { questionType } from '../../utils/types/question'
 
-export default function Create ( { name, id }: { name?: string, id?: string } ) {
+export default function Create ( { bool, id }: { bool?: boolean, id?: string } ) {
 
     const allPosts = useContext( PostsContext )
 
@@ -99,12 +99,13 @@ export default function Create ( { name, id }: { name?: string, id?: string } ) 
         if ( id ) {
             console.log( editPosts )
             console.log( editQuestions )
-            axios.post( `server/posts/update/${id}`, editPosts ).then( ( res ) => {
+            axios.post( `${process.env.NEXT_PUBLIC_BACKEND_URL}/posts/update/${id}`, editPosts ).then( ( res ) => {
                 console.log( res )
+                router.reload()
             } )
             return
         }
-        axios.post( "server/posts/create", posts ).then( ( res ) => {
+        axios.post( `${process.env.NEXT_PUBLIC_BACKEND_URL}/posts/create`, posts ).then( ( res ) => {
             console.log( res )
             setCreateModel( true )
             router.reload()
@@ -119,7 +120,7 @@ export default function Create ( { name, id }: { name?: string, id?: string } ) 
         <>
             { ( ( id && ( typeof editPosts.name === 'string' ) ) || ( !id ) ) && ( <>
                 <Container className="my-4">
-                    { <h3> { id ? `Edit ${editPosts.name}` : `Create ${posts.name}` } </h3> }
+                    { <h3 className="my-4"> { id ? `Edit ${editPosts.name}` : `Create ${posts.name}` } </h3> }
                     { next ? ( <>
                         { ( id ? editQuestions : questions ).map( ( question: any, i: number ) => (
                             <TextField autoFocus={ true } key={ i } onChange={ ( e ) => { handleChange( e, i ) } } className="my-2" value={ question } label={ `Question #${ i + 1 }` } multiline fullWidth InputProps={ {
@@ -136,17 +137,17 @@ export default function Create ( { name, id }: { name?: string, id?: string } ) 
                                 ),
                             } } />
                         ) ) }
-                        { id ? ( <Button className="float-right" onClick={ () => { submit() } }>
+                        { id ? ( <Button className="float-left" onClick={ () => { submit() } }>
                             Confirm Changes
-                        </Button> ) : ( <Button className="float-right" onClick={ () => { submit() } }>
+                        </Button> ) : ( <Button className="float-left" onClick={ () => { submit() } }>
                             Post Quiz
                         </Button> ) }
                     </> ) : ( <div>
                         <TextField value={ editPosts.name } onChange={ handleTyping } name="name" className="my-4" fullWidth label="name" />
                         <TextField value={ editPosts.description } onChange={ handleTyping } name="description" className="my-4" multiline fullWidth label="description" />
                         <img className="w-full object-contain" src={ id ? editPosts.image as string : posts.image as string } alt="" />
-                        <Button className="block relative"> <input type="file" className="absolute w-full h-full opacity-0" onChange={ handleImage } /> Update Photo </Button>
-                    </div> ) }
+                        <Button className="block relative my-4"> <input type="file" className="absolute w-full h-full opacity-0 " onChange={ handleImage } /> {id ? "Update Photo" : "Upload Photo"} </Button>
+                    </div> ) } 
                     <div className="flex justify-end w-full items-center">
                         <IconButton className="" onClick={ () => setNext( false ) }>
                             <FontAwesomeIcon className="text-blue-500 text-lg" icon={ faArrowLeft as IconProp }></FontAwesomeIcon>

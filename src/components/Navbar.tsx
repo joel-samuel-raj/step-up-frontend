@@ -69,15 +69,15 @@ export default function Navbar ({loginModel,setloginmodel}: {loginModel?: boolea
     }
 
     const createUser = async () => {
-        await axios.post( "server/auth/local/signin", newUser ).then( () => router.reload() )
+        await axios.post( `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/local/signin`, newUser ).then( () => router.reload() )
     }
 
     const loginUser = async () => {
-        await axios.post( "/server/auth/local/login", user ).then( () => router.reload() )
+        await axios.post( `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/local/login`, user ).then( () => router.reload() )
     }
 
     const resetPassword = async () => {
-        await axios.post( "server/auth/local/reset", email ).then( res => console.log( res ) )
+        await axios.post( `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/local/reset`, email ).then( res => console.log( res ) )
     }
 
     const login = () => {
@@ -108,7 +108,7 @@ export default function Navbar ({loginModel,setloginmodel}: {loginModel?: boolea
                             <p onClick={ () => { setModal( false ); setForgotPassword( true ) } } className="cursor-pointer text-sm text-red-800"> Forgot Password </p>
                             <p onClick={ () => { setModal( false ); setCreateModal( true ) } } className="cursor-pointer text-sm text-blue-800"> Create Account </p>
                         </div>
-                        <Link href="server/auth/google">
+                        <Link href={`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/google` as string}>
                             <Button color="secondary" variant="contained" className="block w-full mx-auto p-1"> <span> Login with Google </span> </Button>
                         </Link>
                     </Box>
@@ -191,10 +191,10 @@ export default function Navbar ({loginModel,setloginmodel}: {loginModel?: boolea
         )
     }
 
-    const logout = () => {
+    const logout = () => { 
         const logoutUser = async () => {
             console.log( currentUser )
-            await axios.get( `server/auth/${ stratergy }/logout` ).then( ( res ) => {
+            await axios.get( `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/${ stratergy }/logout` ).then( ( res ) => {
                 router.reload()
                 // console.log(res.data)
             } )
@@ -239,11 +239,21 @@ export default function Navbar ({loginModel,setloginmodel}: {loginModel?: boolea
                                 <ListItemText> My Profile </ListItemText>
                             </ListItem>
                         </Link>
-                        <Link href="/My-Responses">
+                        <Link href="/">
                             <ListItem className="flex items-center justify-center" button>
-                                <ListItemText> My Response </ListItemText>
+                                <ListItemText> Home </ListItemText>
                             </ListItem>
                         </Link>
+                        <Link href="/Winners">
+                            <ListItem className="flex items-center justify-center" button>
+                                <ListItemText> Winners </ListItemText>
+                            </ListItem>
+                        </Link>
+                        {currentUser.isAdmin && (<Link href="/Admin">
+                            <ListItem className="flex items-center justify-center" button>
+                                <ListItemText> Admin </ListItemText>
+                            </ListItem>
+                        </Link>)}
                     </List>
                 </Drawer>
             </Box>

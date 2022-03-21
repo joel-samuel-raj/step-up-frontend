@@ -1,3 +1,5 @@
+import { questionType } from "./question"
+
 export type answerType = {
     _id?: string,
     userName?: "",
@@ -7,5 +9,6 @@ export type answerType = {
     validate?: boolean,
     star?: boolean,
     userEmail?: string,
-    userPhone?: number
+    userPhone?: number,
+    question?: questionType
 }

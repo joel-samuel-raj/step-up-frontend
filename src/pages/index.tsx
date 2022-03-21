@@ -1,4 +1,4 @@
-import { Button, Container, Box, Divider } from "@mui/material"
+import { Button, Container, Box, Divider, Snackbar, Alert } from "@mui/material"
 import type { NextPage } from "next"
 import Navbar from "../components/Navbar"
 import { useEffect, useContext, useState } from "react"
@@ -22,6 +22,7 @@ const Home: NextPage = () => {
   const [ question, setQuestion ] = useState<questionType>( {} )
 
   useEffect( () => {
+    console.log( process.env.NEXT_PUBLIC_BACKEND_URL )
     if ( allPosts.length > 0 ) {
       let arr: questionType[] = allPosts.filter( post => post.open === true )
       setData( arr as [ questionType ] )
@@ -35,32 +36,34 @@ const Home: NextPage = () => {
     console.log( answer )
   }
 
-  const handleSubmit = ( j: any ) => {
-    if ( !user ) {
+  const handleSubmit = ( j: any, object: questionType ) => {
+    if ( !user.name ) {
       setLoginModel( true )
+      console.log(loginModel)
       return
     }
-    if ( user ) {
+    if ( user.name ) {
       let obj = {
         userName: user.name,
         userId: user._id,
         questionId: j,
         answers: answer,
         userEmail: user.email,
-        userPhone: user.phoneNumber
+        userPhone: user.phoneNumber,
+        question: object
       }
-      axios.post( "/server/posts/answers/post", obj ).then( res => console.log( res ) )
+      axios.post( `${ process.env.NEXT_PUBLIC_BACKEND_URL }/posts/answers/post`, obj ).then( () => setQuestion( {} ) )
     }
   }
 
   return (
     <>
-      <Navbar loginModel={ loginModel } setloginmodel={ setLoginModel } />
+      <Navbar />
       <Container className="my-4 mt-20">
         <h3 className="m-4"> Available Quiz 👇🏼 </h3>
         <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           { data.map( ( dat: any, i: number ) => (
-            <Box key={ i } onClick={ () => { setQuestion( data[ i ] ) } } className="bg-gradient-to-tr cursor-pointer text-white from-purple-400 to-purple-600 rounded relative">
+            <Box key={ i } onClick={ () => { setQuestion( data[ i ] ) } } className="bg-gradient-to-tr cursor-pointer text-white from-purple-400 to-purple-900 rounded relative">
               <h3 className="m-4"> { dat.name } </h3>
               <img className="w-full object-contain rounded" src={ dat.image as string } alt="" />
               <Divider className="m-4 bg-purple-900"></Divider>
@@ -81,9 +84,14 @@ const Home: NextPage = () => {
             </div>
           </div>
           ) ) }
-          <Button onClick={ () => { handleSubmit( question._id ) } }> Submit </Button>
+          <Button onClick={ () => { handleSubmit( question._id, question ) } }> Submit </Button>
         </div>
       </Container> }
+      <Snackbar anchorOrigin={{ vertical : 'top', horizontal: 'right' }} open={ loginModel } autoHideDuration={ 6000 } onClose={ () => setLoginModel( false ) }>
+        <Alert onClose={ () => setLoginModel( false ) } severity="error" sx={ { width: '100%' } }>
+          Please Login To Submit !
+        </Alert>
+      </Snackbar>
     </>
   )
 }

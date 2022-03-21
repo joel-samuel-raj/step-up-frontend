@@ -14,7 +14,7 @@ export default function Password () {
     const [ open, setOpen ] = useState( false )
     const [ error, setError ] = useState( "" )
     const changePassword = () => {
-        axios.post( "server/auth/local/reset/" + query.password, {
+        axios.post( `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/local/reset/` + query.password, {
             password: newPassword
         } ).catch( e => {
             // console.log(JSON.parse(JSON.stringify(e)))

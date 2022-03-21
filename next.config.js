@@ -23,7 +23,7 @@ module.exports = {
     return [
       {
         source: '/:prefix*/server/:path*',
-        destination: process.env.BACKEND_URL + '/:path*' // Proxy to Backend
+        destination: process.env.NEXT_PUBLIC_BACKEND_URL + '/:path*' // Proxy to Backend
       }
     ]
   }

@@ -1,6 +1,6 @@
 import { faChevronDown, faClose, faPencil } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Accordion, AccordionSummary, Box, Button, Container, IconButton, Modal, AccordionDetails, Divider } from '@mui/material'
+import { Accordion, AccordionSummary, Box, Button, Container, IconButton, Modal, AccordionDetails, Divider, Switch } from '@mui/material'
 import axios from 'axios'
 import router from 'next/router'
 import React, { useContext, useEffect, useReducer, useState } from 'react'
@@ -16,6 +16,9 @@ export default function Questions () {
 
   const [ , forceUpdate ] = useReducer( x => x + 1, 0 )
 
+  const allPosts = useContext( PostsContext )
+  const allAnswers = useContext( AnswersContext )
+
   const [ model, setModel ] = useState( false )
   const [ name, setName ] = useState( "" )
   const [ questionsModal, setQuestionsModal ] = useState( false )
@@ -26,9 +29,8 @@ export default function Questions () {
   const [ update, setUpdate ] = useState( "" )
   const [ answers, setAnswers ] = useState<answerType[]>( [] )
   const [ currentAnswers, setCurrentAnswers ] = useState<answerType[]>( [] )
+  const [open, setOpen] = useState<boolean[]>(new Array(allPosts.length).fill(true) as boolean[])
 
-  const allPosts = useContext( PostsContext )
-  const allAnswers = useContext( AnswersContext )
 
   useEffect( () => {
     setAnswers( allAnswers as answerType[] )
@@ -47,7 +49,8 @@ export default function Questions () {
   }
 
   const handleDelete = () => {
-    axios.get( `/server/posts/delete/${ id.pop() }` ).then( () => {
+    axios.get( `/${process.env.NEXT_PUBLIC_BACKEND_URL}
+$/posts/delete/${ id.pop() }` ).then( () => {
       router.reload()
     } )
   }
@@ -61,23 +64,43 @@ export default function Questions () {
   const handleValidate = ( j: number, key: string ) => {
     let array = currentAnswers
     if ( key === "star" ) {
-      array[j].star = true
+      array[ j ].star = true
     }
     if ( key === "validate" ) {
-      array[j].validate = true
+      array[ j ].validate = true
     }
+
     setCurrentAnswers( array )
     console.log( currentAnswers )
-    axios.post( `/server/posts/answers/validate/${ currentAnswers[ j ]._id }`, currentAnswers[ j ] )
+    axios.post( `/${process.env.NEXT_PUBLIC_BACKEND_URL}
+$/posts/answers/validate/${ currentAnswers[ j ]._id }`, currentAnswers[ j ] )
+    forceUpdate()
+  }
+
+  const handleSwitch = (e:any,  i: number ) => {
+    e.stopPropagation()
+    let arr = data
+    arr[ i ].open = e.target.checked
+    setData( arr )
+    console.log( data )
+    axios.post(`/${process.env.NEXT_PUBLIC_BACKEND_URL}
+$/posts/update/${data[i]._id}`, data[i])
   }
 
   return (
     <>
+    <Container>
+      <h3 className="m-4"> Admin Page </h3>
+    </Container>  
       <Container className="py-4 rounded shadow-lg bg-purple_heart-200">
         <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           { data.map( ( dat: any, i: number ) => (
             <Box onClick={ () => { handleClick( dat._id ) } } key={ i } className="bg-gradient-to-tr cursor-pointer text-white from-purple-400 to-purple-500 p-2 rounded relative">
               <h4> { dat.name } </h4>
+              <Switch
+                checked={ dat.open }
+                onChange={ (e) => handleSwitch(e, i) }
+              />
               <IconButton className="p-2 w-6 h-6 cursor-pointer bg-purple-800 hover:bg-red-600 rounded absolute top-2 right-2" onClick={ () => {
                 setConfirmModal( true )
                 setId( ( arr ) => [ ...arr, dat._id ] )
@@ -108,8 +131,8 @@ export default function Questions () {
               </div> ) ) }
             </Box>
               <div className="flex items-center justify-around">
-                <Button className="mt-4 text-blue-500" onClick={ () => { handleValidate( j , "validate" )} }> Validate </Button>
-                <Button className="mt-4 text-yellow-500" onClick={ () => { handleValidate( j , "star") } }> Star </Button>
+                <Button className="mt-4 text-blue-500" onClick={ () => { handleValidate( j, "validate" ) } }> Validate </Button>
+                <Button className="mt-4 text-yellow-500" onClick={ () => { handleValidate( j, "star" ) } }> Star </Button>
               </div>
             </AccordionDetails>
           </Accordion> </div> ) ) }
@@ -147,11 +170,11 @@ export default function Questions () {
       </Container>
 
       <Modal
-        className="flex justify-center items-center"
+        className="flex justify-center items-center p-4"
         open={ questionsModal }
         onClose={ () => { setQuestionsModal( false ) } }
         style={ { overflow: 'scroll' } }>
-        <Box className="bg-white sm:px-4 md:px-16 py-8 rounded relative w-11/12">
+        <Box className="bg-white px-4 md:px-16 m-4 md:m-auto md:w-4/5 lg:w-3/5 py-8 rounded relative flex justify-center items-center flex-col">
           <IconButton className="p-2 w-6 h-6 cursor-pointer bg-red-500 hover:bg-red-600 rounded absolute top-2 right-2" onClick={ () => setQuestionsModal( false ) }>
             <FontAwesomeIcon className="text-white text-lg" icon={ faClose as IconProp }></FontAwesomeIcon>
           </IconButton>
@@ -159,10 +182,10 @@ export default function Questions () {
         </Box>
       </Modal>
 
-      <Modal className="flex justify-center items-center"
+      <Modal style={{ overflow: 'scroll' }} className="p-4 flex justify-center items-center"
         open={ editModal }
         onClose={ () => { setEditModal( false ) } }>
-        <Box className="bg-white px-4 md:px-16 m-4 md:m-auto py-8 rounded relative flex justify-center items-center flex-col">
+        <Box className="bg-white px-4 md:px-16 m-4 md:m-auto md:w-4/5 lg:w-3/5 py-8 rounded relative flex justify-center items-center flex-col">
           <IconButton className="p-2 w-6 h-6 cursor-pointer bg-red-500 hover:bg-red-600 rounded absolute top-2 right-2" onClick={ () => setEditModal( false ) }>
             <FontAwesomeIcon className="text-white text-lg" icon={ faClose as IconProp }></FontAwesomeIcon>
           </IconButton>

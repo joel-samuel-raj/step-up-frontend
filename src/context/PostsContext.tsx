@@ -6,7 +6,7 @@ export const PostsContext = createContext<[questionType]>( [{}] )
 export const PostsProvider = ( props: any ) => {
     const [ posts, setPosts ] = useState<[questionType]>( [{}] )
     useEffect( function () {
-        axios.get( "server/posts/getPosts" ).then( res => setPosts( res.data ) )
+        axios.get( `${process.env.NEXT_PUBLIC_BACKEND_URL}/posts/getPosts` ).then( res => setPosts( res.data ) )
 
     }, [] )
     return (
