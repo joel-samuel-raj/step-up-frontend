@@ -95,6 +95,7 @@ export default function Navbar ({loginModel,setloginmodel}: {loginModel?: boolea
                             <FontAwesomeIcon className="text-white text-lg" icon={ faClose as IconProp }></FontAwesomeIcon>
                         </IconButton>
                         <TextField color="primary" name="email" onBlur={ onClickHandler2 } className="w-full my-4" InputProps={ {
+                            className: "my-4",
                             startAdornment: (
                                 <InputAdornment position="start">
                                     <FontAwesomeIcon icon={ faEnvelope as IconProp }></FontAwesomeIcon>
@@ -126,6 +127,7 @@ export default function Navbar ({loginModel,setloginmodel}: {loginModel?: boolea
                         </IconButton>
                         <p className="text-gray-500"> Enter the email registered with this account to get the password reset link</p>
                         <TextField color="primary" onBlur={ ( e ) => onClickHandlerPassword( e.target.value ) } name="name" className="w-full my-4" InputProps={ {
+                            className: "my-4",
                             startAdornment: (
                                 <InputAdornment position="start">
                                     <FontAwesomeIcon icon={ faEnvelope as IconProp }></FontAwesomeIcon>
@@ -148,6 +150,7 @@ export default function Navbar ({loginModel,setloginmodel}: {loginModel?: boolea
                             </Button>
                         </div>
                         <TextField color="primary" onBlur={ onClickHandler } name="name" className="w-full my-4" InputProps={ {
+                            className: "my-4",
                             startAdornment: (
                                 <InputAdornment position="start">
                                     <FontAwesomeIcon icon={ faUser as IconProp }></FontAwesomeIcon>
@@ -155,6 +158,7 @@ export default function Navbar ({loginModel,setloginmodel}: {loginModel?: boolea
                             ),
                         } } label="Name" required type="text" variant="outlined" />
                         <TextField color="primary" onBlur={ onClickHandler } name="rollNumber" className="w-full my-4" InputProps={ {
+                            className: "my-4",
                             startAdornment: (
                                 <InputAdornment position="start">
                                     <FontAwesomeIcon icon={ faAddressBook as IconProp }></FontAwesomeIcon>
@@ -162,6 +166,7 @@ export default function Navbar ({loginModel,setloginmodel}: {loginModel?: boolea
                             ),
                         } } label="Roll Number" required type="text" variant="outlined" />
                         <TextField color="primary" onBlur={ onClickHandler } name="phoneNumber" className="w-full my-4" InputProps={ {
+                            className: "my-4",
                             startAdornment: (
                                 <InputAdornment position="start">
                                     <FontAwesomeIcon icon={ faPhone as IconProp }></FontAwesomeIcon>
@@ -176,6 +181,7 @@ export default function Navbar ({loginModel,setloginmodel}: {loginModel?: boolea
                             ),
                         } } label="Email" required type="email" variant="outlined" />
                         <TextField color="primary" className="w-full mt-4" InputProps={ {
+                            className: "mt-4",
                             startAdornment: (
                                 <InputAdornment position="start">
                                     <FontAwesomeIcon icon={ faLock as IconProp }></FontAwesomeIcon>
@@ -183,6 +189,7 @@ export default function Navbar ({loginModel,setloginmodel}: {loginModel?: boolea
                             ),
                         } } label="Password" required type="password" variant="outlined" />
                         <TextField color="primary" onBlur={ onClickHandler } name="password" className="w-full mt-4" InputProps={ {
+                            className: "mt-4",
                             startAdornment: (
                                 <InputAdornment position="start">
                                     <FontAwesomeIcon icon={ faLock as IconProp }></FontAwesomeIcon>

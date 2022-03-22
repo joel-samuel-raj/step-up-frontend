@@ -55,11 +55,11 @@ export default function Create ( { bool, id }: { bool?: boolean, id?: string } )
     useEffect( () => {
         if ( !id ) return
         let arr = allPosts.find( ar => ar._id === id )
-        setEditQuestions( arr!.questions as string[]) 
+        setEditQuestions( arr!.questions as string[] )
         setEditPosts( arr as questionType )
-        console.log(posts)
+        console.log( posts )
     }, [] )
- 
+
     const removeQuestion = ( i: number ) => {
         if ( id ) {
             if ( editQuestions.length === 1 ) return
@@ -82,14 +82,14 @@ export default function Create ( { bool, id }: { bool?: boolean, id?: string } )
             let array = editQuestions
             array[ i ] = value
             setEditQuestions( array )
-            setEditPosts((prev) => ({...prev, questions: editQuestions}))
+            setEditPosts( ( prev ) => ( { ...prev, questions: editQuestions } ) )
         }
         else {
             let value = e.target.value
             let array = questions
             array[ i ] = value
             setQuestions( array )
-            setPosts((prev) => ({...prev, questions: questions}))
+            setPosts( ( prev ) => ( { ...prev, questions: questions } ) )
         }
         // forceUpdate()
         console.log( posts )
@@ -99,13 +99,13 @@ export default function Create ( { bool, id }: { bool?: boolean, id?: string } )
         if ( id ) {
             console.log( editPosts )
             console.log( editQuestions )
-            axios.post( `${process.env.NEXT_PUBLIC_BACKEND_URL}/posts/update/${id}`, editPosts ).then( ( res ) => {
+            axios.post( `${ process.env.NEXT_PUBLIC_BACKEND_URL }/posts/update/${ id }`, editPosts ).then( ( res ) => {
                 console.log( res )
                 router.reload()
             } )
             return
         }
-        axios.post( `${process.env.NEXT_PUBLIC_BACKEND_URL}/posts/create`, posts ).then( ( res ) => {
+        axios.post( `${ process.env.NEXT_PUBLIC_BACKEND_URL }/posts/create`, posts ).then( ( res ) => {
             console.log( res )
             setCreateModel( true )
             router.reload()
@@ -116,14 +116,15 @@ export default function Create ( { bool, id }: { bool?: boolean, id?: string } )
         return id ? editQuestions : questions
     }
 
-    return ( 
+    return (
         <>
             { ( ( id && ( typeof editPosts.name === 'string' ) ) || ( !id ) ) && ( <>
                 <Container className="my-4">
-                    { <h3 className="my-4"> { id ? `Edit ${editPosts.name}` : `Create ${posts.name}` } </h3> }
+                    { <h3 className="my-4"> { id ? `Edit ${ editPosts.name }` : `Create ${ posts.name }` } </h3> }
                     { next ? ( <>
                         { ( id ? editQuestions : questions ).map( ( question: any, i: number ) => (
                             <TextField autoFocus={ true } key={ i } onChange={ ( e ) => { handleChange( e, i ) } } className="my-2" value={ question } label={ `Question #${ i + 1 }` } multiline fullWidth InputProps={ {
+                                className: "my-2",
                                 endAdornment: (
                                     <>
                                         <InputAdornment position="end">
@@ -143,11 +144,15 @@ export default function Create ( { bool, id }: { bool?: boolean, id?: string } )
                             Post Quiz
                         </Button> ) }
                     </> ) : ( <div>
-                        <TextField value={ editPosts.name } onChange={ handleTyping } name="name" className="my-4" fullWidth label="name" />
-                        <TextField value={ editPosts.description } onChange={ handleTyping } name="description" className="my-4" multiline fullWidth label="description" />
+                        <TextField InputProps={ {
+                            className: "my-4"
+                        } } value={ editPosts.name } onChange={ handleTyping } name="name" className="my-4" fullWidth label="name" />
+                        <TextField InputProps={ {
+                                className: "my-4"
+                            } } value={ editPosts.description } onChange={ handleTyping } name="description" className="my-4" multiline fullWidth label="description" />
                         <img className="w-full object-contain" src={ id ? editPosts.image as string : posts.image as string } alt="" />
-                        <Button className="block relative my-4"> <input type="file" className="absolute w-full h-full opacity-0 " onChange={ handleImage } /> {id ? "Update Photo" : "Upload Photo"} </Button>
-                    </div> ) } 
+                        <Button className="block relative my-4"> <input type="file" className="absolute w-full h-full opacity-0 " onChange={ handleImage } /> { id ? "Update Photo" : "Upload Photo" } </Button>
+                    </div> ) }
                     <div className="flex justify-end w-full items-center">
                         <IconButton className="" onClick={ () => setNext( false ) }>
                             <FontAwesomeIcon className="text-blue-500 text-lg" icon={ faArrowLeft as IconProp }></FontAwesomeIcon>

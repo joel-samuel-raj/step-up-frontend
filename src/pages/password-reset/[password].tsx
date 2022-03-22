@@ -32,6 +32,7 @@ export default function Password () {
                 ),
             } } label="Password" required type="password" variant="outlined" />
             <TextField color="primary" name="password" className="w-full my-4" InputProps={ {
+                className: "my-4",
                 startAdornment: (
                     <InputAdornment position="start">
                         <FontAwesomeIcon icon={ faLock as IconProp }></FontAwesomeIcon>
