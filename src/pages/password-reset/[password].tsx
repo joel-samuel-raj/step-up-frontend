@@ -23,7 +23,9 @@ export default function Password () {
         } )
     }
     return (
-        <FormControl className="w-[100vw] h-[100vh] justify-center items-center bg-white py-12 px-16 rounded">
+        <FormControl className="w-[100vw] h-[100vh] justify-center items-center bg-white py-12 px-16 rounded" sx={ {
+            '& .MuiTextField-root': { my: 1 },
+        } }>
             <TextField color="primary" name="password" className="w-full" InputProps={ {
                 startAdornment: (
                     <InputAdornment position="start">

@@ -143,7 +143,7 @@ export default function Create ( { bool, id }: { bool?: boolean, id?: string } )
                             Post Quiz
                         </Button> ) }
                     </> ) : ( <Box sx={ {
-                        '& .MuiTextField-root': { m: 1 },
+                        '& .MuiTextField-root': { my: 1 },
                     } }>
                         <TextField value={ editPosts.name } onChange={ handleTyping } name="name" className="my-4" fullWidth label="name" />
                         <TextField value={ editPosts.description } onChange={ handleTyping } name="description" className="my-4" multiline fullWidth label="description" />
