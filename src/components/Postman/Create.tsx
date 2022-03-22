@@ -1,7 +1,7 @@
 import { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { faAdd, faArrowLeft, faArrowRight, faClose } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Alert, Button, Container, IconButton, InputAdornment, Snackbar, TextField } from '@mui/material'
+import { Alert, Box, Button, Container, IconButton, InputAdornment, Snackbar, TextField } from '@mui/material'
 import axios from 'axios'
 import router, { Router } from 'next/router'
 import React, { useState, useReducer, useEffect, useContext } from 'react'
@@ -124,7 +124,6 @@ export default function Create ( { bool, id }: { bool?: boolean, id?: string } )
                     { next ? ( <>
                         { ( id ? editQuestions : questions ).map( ( question: any, i: number ) => (
                             <TextField autoFocus={ true } key={ i } onChange={ ( e ) => { handleChange( e, i ) } } className="my-2" value={ question } label={ `Question #${ i + 1 }` } multiline fullWidth InputProps={ {
-                                className: "my-2",
                                 endAdornment: (
                                     <>
                                         <InputAdornment position="end">
@@ -143,16 +142,14 @@ export default function Create ( { bool, id }: { bool?: boolean, id?: string } )
                         </Button> ) : ( <Button className="float-left" onClick={ () => { submit() } }>
                             Post Quiz
                         </Button> ) }
-                    </> ) : ( <div>
-                        <TextField InputProps={ {
-                            className: "my-4"
-                        } } value={ editPosts.name } onChange={ handleTyping } name="name" className="my-4" fullWidth label="name" />
-                        <TextField InputProps={ {
-                                className: "my-4"
-                            } } value={ editPosts.description } onChange={ handleTyping } name="description" className="my-4" multiline fullWidth label="description" />
+                    </> ) : ( <Box sx={ {
+                        '& .MuiTextField-root': { m: 1 },
+                    } }>
+                        <TextField value={ editPosts.name } onChange={ handleTyping } name="name" className="my-4" fullWidth label="name" />
+                        <TextField value={ editPosts.description } onChange={ handleTyping } name="description" className="my-4" multiline fullWidth label="description" />
                         <img className="w-full object-contain" src={ id ? editPosts.image as string : posts.image as string } alt="" />
                         <Button className="block relative my-4"> <input type="file" className="absolute w-full h-full opacity-0 " onChange={ handleImage } /> { id ? "Update Photo" : "Upload Photo" } </Button>
-                    </div> ) }
+                    </Box> ) }
                     <div className="flex justify-end w-full items-center">
                         <IconButton className="" onClick={ () => setNext( false ) }>
                             <FontAwesomeIcon className="text-blue-500 text-lg" icon={ faArrowLeft as IconProp }></FontAwesomeIcon>

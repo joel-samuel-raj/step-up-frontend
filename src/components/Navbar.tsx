@@ -11,7 +11,7 @@ import { User } from "../utils/types/user"
 import router from 'next/router'
 import { IconProp } from '@fortawesome/fontawesome-svg-core'
 
-export default function Navbar ({loginModel,setloginmodel}: {loginModel?: boolean, setloginmodel?: Function}) {
+export default function Navbar ( { loginModel, setloginmodel }: { loginModel?: boolean, setloginmodel?: Function } ) {
 
     const currentUser: User = useContext( UserContext )
     const stratergy = currentUser.stratergy
@@ -41,7 +41,7 @@ export default function Navbar ({loginModel,setloginmodel}: {loginModel?: boolea
 
     const [ email, setEmail ] = useState( {
     } )
-    
+
     const onClickHandler = ( e: any ) => {
         const { name, value } = e.target
         setNewUser( { ...newUser, [ name ]: value } )
@@ -69,7 +69,7 @@ export default function Navbar ({loginModel,setloginmodel}: {loginModel?: boolea
     }
 
     const createUser = async () => {
-        await axios.post( `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/local/signin`, newUser ).then( () => router.reload() )
+        await axios.post( `${ process.env.NEXT_PUBLIC_BACKEND_URL }/auth/local/signin`, newUser ).then( () => router.reload() )
     }
 
     const loginUser = async () => {
@@ -82,20 +82,21 @@ export default function Navbar ({loginModel,setloginmodel}: {loginModel?: boolea
     }
 
     const resetPassword = async () => {
-        await axios.post( `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/local/reset`, email ).then( res => alert("Success ! Please check Your Mail !") )
+        await axios.post( `${ process.env.NEXT_PUBLIC_BACKEND_URL }/auth/local/reset`, email ).then( res => alert( "Success ! Please check Your Mail !" ) )
     }
 
     const login = () => {
         return (
             <div>
-                 <Button onClick={ () => setModal( true ) } color="inherit">Login</Button>
+                <Button onClick={ () => setModal( true ) } color="inherit">Login</Button>
                 <Modal className="flex justify-center items-center p-4" open={ modal } onClose={ () => setModal( false ) }>
-                    <Box className="relative bg-white py-12 px-16 rounded">
+                    <Box sx={ {
+                        '& .MuiTextField-root': { m: 1 },
+                    } } className="relative bg-white py-12 px-16 rounded">
                         <IconButton className="p-2 w-6 h-6 cursor-pointer bg-red-500 hover:bg-red-600 rounded absolute top-2 right-2" onClick={ () => setModal( false ) }>
                             <FontAwesomeIcon className="text-white text-lg" icon={ faClose as IconProp }></FontAwesomeIcon>
                         </IconButton>
                         <TextField color="primary" name="email" onBlur={ onClickHandler2 } className="w-full my-4" InputProps={ {
-                            className: "my-4",
                             startAdornment: (
                                 <InputAdornment position="start">
                                     <FontAwesomeIcon icon={ faEnvelope as IconProp }></FontAwesomeIcon>
@@ -114,7 +115,7 @@ export default function Navbar ({loginModel,setloginmodel}: {loginModel?: boolea
                             <p onClick={ () => { setModal( false ); setForgotPassword( true ) } } className="cursor-pointer text-sm text-red-800"> Forgot Password </p>
                             <p onClick={ () => { setModal( false ); setCreateModal( true ) } } className="cursor-pointer text-sm text-blue-800"> Create Account </p>
                         </div>
-                        <Link href={`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/google` as string}>
+                        <Link href={ `${ process.env.NEXT_PUBLIC_BACKEND_URL }/auth/google` as string }>
                             <Button color="secondary" variant="contained" className="block w-full mx-auto p-1"> <span> Login with Google </span> </Button>
                         </Link>
                     </Box>
@@ -127,7 +128,6 @@ export default function Navbar ({loginModel,setloginmodel}: {loginModel?: boolea
                         </IconButton>
                         <p className="text-gray-500"> Enter the email registered with this account to get the password reset link</p>
                         <TextField color="primary" onBlur={ ( e ) => onClickHandlerPassword( e.target.value ) } name="name" className="w-full my-4" InputProps={ {
-                            className: "my-4",
                             startAdornment: (
                                 <InputAdornment position="start">
                                     <FontAwesomeIcon icon={ faEnvelope as IconProp }></FontAwesomeIcon>
@@ -139,7 +139,9 @@ export default function Navbar ({loginModel,setloginmodel}: {loginModel?: boolea
                 </Modal>
 
                 <Modal className="flex justify-center items-center p-4" open={ createModal } onClose={ () => setModal( false ) }>
-                    <Box className="relative bg-white py-12 px-16 rounded">
+                    <Box sx={ {
+                        '& .MuiTextField-root': { m: 1, width: '25ch' },
+                    } } className="relative bg-white py-12 px-16 rounded">
                         <IconButton className="p-2 w-6 h-6 cursor-pointer bg-red-500 hover:bg-red-600 rounded absolute top-2 right-2" onClick={ () => setCreateModal( false ) }>
                             <FontAwesomeIcon className="text-white text-lg" icon={ faClose as IconProp }></FontAwesomeIcon>
                         </IconButton>
@@ -150,7 +152,6 @@ export default function Navbar ({loginModel,setloginmodel}: {loginModel?: boolea
                             </Button>
                         </div>
                         <TextField color="primary" onBlur={ onClickHandler } name="name" className="w-full my-4" InputProps={ {
-                            className: "my-4",
                             startAdornment: (
                                 <InputAdornment position="start">
                                     <FontAwesomeIcon icon={ faUser as IconProp }></FontAwesomeIcon>
@@ -158,7 +159,6 @@ export default function Navbar ({loginModel,setloginmodel}: {loginModel?: boolea
                             ),
                         } } label="Name" required type="text" variant="outlined" />
                         <TextField color="primary" onBlur={ onClickHandler } name="rollNumber" className="w-full my-4" InputProps={ {
-                            className: "my-4",
                             startAdornment: (
                                 <InputAdornment position="start">
                                     <FontAwesomeIcon icon={ faAddressBook as IconProp }></FontAwesomeIcon>
@@ -166,7 +166,6 @@ export default function Navbar ({loginModel,setloginmodel}: {loginModel?: boolea
                             ),
                         } } label="Roll Number" required type="text" variant="outlined" />
                         <TextField color="primary" onBlur={ onClickHandler } name="phoneNumber" className="w-full my-4" InputProps={ {
-                            className: "my-4",
                             startAdornment: (
                                 <InputAdornment position="start">
                                     <FontAwesomeIcon icon={ faPhone as IconProp }></FontAwesomeIcon>
@@ -181,7 +180,6 @@ export default function Navbar ({loginModel,setloginmodel}: {loginModel?: boolea
                             ),
                         } } label="Email" required type="email" variant="outlined" />
                         <TextField color="primary" className="w-full mt-4" InputProps={ {
-                            className: "mt-4",
                             startAdornment: (
                                 <InputAdornment position="start">
                                     <FontAwesomeIcon icon={ faLock as IconProp }></FontAwesomeIcon>
@@ -189,7 +187,6 @@ export default function Navbar ({loginModel,setloginmodel}: {loginModel?: boolea
                             ),
                         } } label="Password" required type="password" variant="outlined" />
                         <TextField color="primary" onBlur={ onClickHandler } name="password" className="w-full mt-4" InputProps={ {
-                            className: "mt-4",
                             startAdornment: (
                                 <InputAdornment position="start">
                                     <FontAwesomeIcon icon={ faLock as IconProp }></FontAwesomeIcon>
@@ -203,11 +200,11 @@ export default function Navbar ({loginModel,setloginmodel}: {loginModel?: boolea
         )
     }
 
-    const logout = () => { 
+    const logout = () => {
         const logoutUser = async () => {
             console.log( currentUser )
             if ( currentUser.stratergy as string === 'google' ) {
-                await axios.get( `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/${ stratergy }/logout` ).then( ( res ) => {
+                await axios.get( `${ process.env.NEXT_PUBLIC_BACKEND_URL }/auth/${ stratergy }/logout` ).then( ( res ) => {
                     router.reload()
                     // console.log(res.data)
                 } )
@@ -239,12 +236,12 @@ export default function Navbar ({loginModel,setloginmodel}: {loginModel?: boolea
                         >
                             <MenuIcon />
                         </IconButton>
-                        <Typography onClick={() => {router.push("/")}} variant="h6" component="div" sx={ { flexGrow: 1 } }>
+                        <Typography onClick={ () => { router.push( "/" ) } } variant="h6" component="div" sx={ { flexGrow: 1 } }>
                             StepUp Quiz
                         </Typography>
-                        { (currentUser.name as string === "" || Object.keys(currentUser).length > 3 || currentUser.data as string === "wrong password") ? login() : logout() }
+                        { ( currentUser.name as string === "" || Object.keys( currentUser ).length > 3 || currentUser.data as string === "wrong password" ) ? login() : logout() }
                     </Toolbar>
-                </AppBar> 
+                </AppBar>
             </Box>
             <Box>
                 <Drawer anchor="left" open={ drawer } onClose={ () => setDrawer( false ) }>
@@ -267,11 +264,11 @@ export default function Navbar ({loginModel,setloginmodel}: {loginModel?: boolea
                                 <ListItemText> Winners </ListItemText>
                             </ListItem>
                         </Link>
-                        {currentUser.isAdmin && (<Link href="/Admin">
+                        { currentUser.isAdmin && ( <Link href="/Admin">
                             <ListItem className="flex items-center justify-center" button>
                                 <ListItemText> Admin </ListItemText>
                             </ListItem>
-                        </Link>)}
+                        </Link> ) }
                     </List>
                 </Drawer>
             </Box>
