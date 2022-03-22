@@ -235,7 +235,7 @@ export default function Navbar ({loginModel,setloginmodel}: {loginModel?: boolea
                         <Typography onClick={() => {router.push("/")}} variant="h6" component="div" sx={ { flexGrow: 1 } }>
                             StepUp Quiz
                         </Typography>
-                        { (currentUser.name as string === "" || currentUser.data as string === "wrong password") ? login() : logout() }
+                        { (currentUser.name as string === "" || Object.keys(currentUser).length > 1 || currentUser.data as string === "wrong password") ? login() : logout() }
                     </Toolbar>
                 </AppBar>
             </Box>
