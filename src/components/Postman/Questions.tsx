@@ -1,6 +1,6 @@
 import { faChevronDown, faClose, faPencil } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Accordion, AccordionSummary, Box, Button, Container, IconButton, Modal, AccordionDetails, Divider, Switch } from '@mui/material'
+import { Accordion, AccordionSummary, Box, Button, Container, Modal, AccordionDetails, Divider, Switch } from '@mui/material'
 import axios from 'axios'
 import router from 'next/router'
 import React, { useContext, useEffect, useReducer, useState } from 'react'
@@ -101,17 +101,17 @@ $/posts/update/${data[i]._id}`, data[i])
                 checked={ dat.open }
                 onChange={ (e) => handleSwitch(e, i) }
               />
-              <IconButton className="p-2 w-6 h-6 cursor-pointer bg-purple-800 hover:bg-red-600 rounded absolute top-2 right-2" onClick={ () => {
+              <div className="p-2 w-6 flex justify-center items-center h-6 cursor-pointer bg-purple-800 hover:bg-red-600 rounded absolute top-2 right-2" onClick={ () => {
                 setConfirmModal( true )
                 setId( ( arr ) => [ ...arr, dat._id ] )
               } }>
                 <FontAwesomeIcon className="text-white text-lg" icon={ faClose as IconProp }></FontAwesomeIcon>
-              </IconButton>
-              <IconButton className="p-2 w-6 h-6 cursor-pointer bg-green-500 hover:bg-green-600 rounded absolute top-2 right-10" onClick={ () => {
+              </div>
+              <div className="flex justify-center items-center p-2 w-6 h-6 cursor-pointer bg-green-500 hover:bg-green-600 rounded absolute top-2 right-10" onClick={ () => {
                 setEditModal( true ); setUpdate( dat._id as string )
               } }>
                 <FontAwesomeIcon className="text-white text-lg" icon={ faPencil as IconProp }></FontAwesomeIcon>
-              </IconButton>
+              </div>
             </Box>
           ) ) }
         </div>
@@ -175,9 +175,9 @@ $/posts/update/${data[i]._id}`, data[i])
         onClose={ () => { setQuestionsModal( false ) } }
         style={ { overflow: 'scroll' } }>
         <Box className="bg-white px-4 md:px-16 m-4 md:m-auto md:w-4/5 lg:w-3/5 py-8 rounded relative flex justify-center items-center flex-col">
-          <IconButton className="p-2 w-6 h-6 cursor-pointer bg-red-500 hover:bg-red-600 rounded absolute top-2 right-2" onClick={ () => setQuestionsModal( false ) }>
+          <div className="flex justify-center items-center p-2 w-6 h-6 cursor-pointer bg-red-500 hover:bg-red-600 rounded absolute top-2 right-2" onClick={ () => setQuestionsModal( false ) }>
             <FontAwesomeIcon className="text-white text-lg" icon={ faClose as IconProp }></FontAwesomeIcon>
-          </IconButton>
+          </div>
           <Create />
         </Box>
       </Modal>
@@ -186,9 +186,9 @@ $/posts/update/${data[i]._id}`, data[i])
         open={ editModal }
         onClose={ () => { setEditModal( false ) } }>
         <Box className="bg-white px-4 md:px-16 m-4 md:m-auto md:w-4/5 lg:w-3/5 py-8 rounded relative flex justify-center items-center flex-col">
-          <IconButton className="p-2 w-6 h-6 cursor-pointer bg-red-500 hover:bg-red-600 rounded absolute top-2 right-2" onClick={ () => setEditModal( false ) }>
+          <div className="flex justify-center items-center p-2 w-6 h-6 cursor-pointer bg-red-500 hover:bg-red-600 rounded absolute top-2 right-2" onClick={ () => setEditModal( false ) }>
             <FontAwesomeIcon className="text-white text-lg" icon={ faClose as IconProp }></FontAwesomeIcon>
-          </IconButton>
+          </div>
           <Create id={ update } />
         </Box>
       </Modal>
@@ -197,9 +197,9 @@ $/posts/update/${data[i]._id}`, data[i])
         open={ confirmModal }
         onClose={ () => { setConfirmModal( false ) } }>
         <Box className="bg-white px-16 py-8 rounded relative flex justify-center items-center flex-col">
-          <IconButton className="p-2 w-6 h-6 cursor-pointer bg-red-500 hover:bg-red-600 rounded absolute top-2 right-2" onClick={ () => setConfirmModal( false ) }>
+          <div className="flex justify-center items-center p-2 w-6 h-6 cursor-pointer bg-red-500 hover:bg-red-600 rounded absolute top-2 right-2" onClick={ () => setConfirmModal( false ) }>
             <FontAwesomeIcon className="text-white text-lg" icon={ faClose as IconProp }></FontAwesomeIcon>
-          </IconButton>
+          </div>
           <h4> Are you sure to delele the post ? </h4>
           <div>
             <Button onClick={ () => { handleDelete() } } className="text-yellow-500" > Yes </Button>

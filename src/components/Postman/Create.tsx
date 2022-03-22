@@ -1,7 +1,7 @@
 import { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { faAdd, faArrowLeft, faArrowRight, faClose } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Alert, Box, Button, Container, IconButton, InputAdornment, Snackbar, TextField } from '@mui/material'
+import { Alert, Box, Button, Container, InputAdornment, Snackbar, TextField } from '@mui/material'
 import axios from 'axios'
 import router, { Router } from 'next/router'
 import React, { useState, useReducer, useEffect, useContext } from 'react'
@@ -153,12 +153,12 @@ export default function Create ( { bool, id }: { bool?: boolean, id?: string } )
                         <Button className="block relative my-4"> <input type="file" className="absolute w-full h-full opacity-0 " onChange={ handleImage } /> { id ? "Update Photo" : "Upload Photo" } </Button>
                     </Box> ) }
                     <div className="flex justify-end w-full items-center">
-                        <IconButton className="" onClick={ () => setNext( false ) }>
+                        <div className="mx-4" onClick={ () => setNext( false ) }>
                             <FontAwesomeIcon className="text-blue-500 text-lg" icon={ faArrowLeft as IconProp }></FontAwesomeIcon>
-                        </IconButton>
-                        <IconButton className="" onClick={ () => setNext( true ) }>
+                        </div>
+                        <div className="" onClick={ () => setNext( true ) }>
                             <FontAwesomeIcon className="text-blue-500 text-lg" icon={ faArrowRight as IconProp }></FontAwesomeIcon>
-                        </IconButton>
+                        </div>
                     </div>
                 </Container>
                 <Snackbar open={ createModel } autoHideDuration={ 6000 } onClose={ () => { setCreateModel( false ) } }>

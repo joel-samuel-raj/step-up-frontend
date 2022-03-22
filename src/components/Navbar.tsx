@@ -93,9 +93,9 @@ export default function Navbar ( { loginModel, setloginmodel }: { loginModel?: b
                     <Box sx={ {
                         '& .MuiTextField-root': { my: 1 },
                     } } className="relative bg-white py-12 px-16 rounded">
-                        <IconButton className="p-2 w-6 h-6 cursor-pointer bg-red-500 hover:bg-red-600 rounded absolute top-2 right-2" onClick={ () => setModal( false ) }>
+                        <div className="p-2 flex justify-center items-center w-6 h-6 cursor-pointer bg-red-500 hover:bg-red-600 rounded absolute top-2 right-2" onClick={ () => setModal( false ) }>
                             <FontAwesomeIcon className="text-white text-lg" icon={ faClose as IconProp }></FontAwesomeIcon>
-                        </IconButton>
+                        </div>
                         <TextField color="primary" name="email" onBlur={ onClickHandler2 } className="w-full my-4" InputProps={ {
                             startAdornment: (
                                 <InputAdornment position="start">
@@ -123,9 +123,9 @@ export default function Navbar ( { loginModel, setloginmodel }: { loginModel?: b
 
                 <Modal className="flex justify-center items-center p-4" open={ forgotPassword } onClose={ () => setForgotPassword( false ) }>
                     <Box className="relative bg-white py-12 px-16 rounded">
-                        <IconButton className="p-2 w-6 h-6 cursor-pointer bg-red-500 hover:bg-red-600 rounded absolute top-2 right-2" onClick={ () => setForgotPassword( false ) }>
+                        <div className="p-2 w-6 h-6 cursor-pointer bg-red-500 hover:bg-red-600 rounded absolute top-2 right-2" onClick={ () => setForgotPassword( false ) }>
                             <FontAwesomeIcon className="text-white text-lg" icon={ faClose as IconProp }></FontAwesomeIcon>
-                        </IconButton>
+                        </div>
                         <p className="text-gray-500"> Enter the email registered with this account to get the password reset link</p>
                         <TextField color="primary" onBlur={ ( e ) => onClickHandlerPassword( e.target.value ) } name="name" className="w-full my-4" InputProps={ {
                             startAdornment: (
@@ -142,9 +142,9 @@ export default function Navbar ( { loginModel, setloginmodel }: { loginModel?: b
                     <Box sx={ {
                         '& .MuiTextField-root': { my: 1 },
                     } } className="relative bg-white py-12 px-16 rounded">
-                        <IconButton className="p-2 w-6 h-6 cursor-pointer bg-red-500 hover:bg-red-600 rounded absolute top-2 right-2" onClick={ () => setCreateModal( false ) }>
+                        <div className="flex justify-center items-center p-2 w-6 h-6 cursor-pointer bg-red-500 hover:bg-red-600 rounded absolute top-2 right-2" onClick={ () => setCreateModal( false ) }>
                             <FontAwesomeIcon className="text-white text-lg" icon={ faClose as IconProp }></FontAwesomeIcon>
-                        </IconButton>
+                        </div>
                         <div className="my-4 flex">
                             <img src={ newUser.profilePicture } className="w-16 h-16 rounded-full" alt="" />
                             <Button className="ml-4 relative cursor-pointer"> Choose Profile Picture
@@ -239,7 +239,7 @@ export default function Navbar ( { loginModel, setloginmodel }: { loginModel?: b
                         <Typography onClick={ () => { router.push( "/" ) } } variant="h6" component="div" sx={ { flexGrow: 1 } }>
                             StepUp Quiz
                         </Typography>
-                        { ( currentUser.name as string === "" || Object.keys( currentUser ).length > 3 || currentUser.data as string === "wrong password" ) ? login() : logout() }
+                        { ( currentUser.data ) ? login() : logout() }
                     </Toolbar>
                 </AppBar>
             </Box>
