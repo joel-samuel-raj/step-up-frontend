@@ -239,7 +239,7 @@ export default function Navbar ( { loginModel, setloginmodel }: { loginModel?: b
                         <Typography onClick={ () => { router.push( "/" ) } } variant="h6" component="div" sx={ { flexGrow: 1 } }>
                             StepUp Quiz
                         </Typography>
-                        { ( currentUser.data as string != '' ) ? logout() : login() }
+                        { ( currentUser.data as string === '' ) ? logout() : login() }
                     </Toolbar>
                 </AppBar>
             </Box>
