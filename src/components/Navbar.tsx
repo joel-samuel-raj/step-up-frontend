@@ -140,7 +140,7 @@ export default function Navbar ( { loginModel, setloginmodel }: { loginModel?: b
 
                 <Modal className="flex justify-center items-center p-4" open={ createModal } onClose={ () => setModal( false ) }>
                     <Box sx={ {
-                        '& .MuiTextField-root': { m: 1, width: '25ch' },
+                        '& .MuiTextField-root': { m: 1 },
                     } } className="relative bg-white py-12 px-16 rounded">
                         <IconButton className="p-2 w-6 h-6 cursor-pointer bg-red-500 hover:bg-red-600 rounded absolute top-2 right-2" onClick={ () => setCreateModal( false ) }>
                             <FontAwesomeIcon className="text-white text-lg" icon={ faClose as IconProp }></FontAwesomeIcon>
