@@ -121,7 +121,9 @@ export default function Create ( { bool, id }: { bool?: boolean, id?: string } )
             { ( ( id && ( typeof editPosts.name === 'string' ) ) || ( !id ) ) && ( <>
                 <Container className="my-4">
                     { <h3 className="my-4"> { id ? `Edit ${ editPosts.name }` : `Create ${ posts.name }` } </h3> }
-                    { next ? ( <>
+                    { next ? ( <Box sx={ {
+                        '& .MuiTextField-root': { my: 1 }
+                    } }>
                         { ( id ? editQuestions : questions ).map( ( question: any, i: number ) => (
                             <TextField autoFocus={ true } key={ i } onChange={ ( e ) => { handleChange( e, i ) } } className="my-2" value={ question } label={ `Question #${ i + 1 }` } multiline fullWidth InputProps={ {
                                 endAdornment: (
@@ -142,7 +144,7 @@ export default function Create ( { bool, id }: { bool?: boolean, id?: string } )
                         </Button> ) : ( <Button className="float-left" onClick={ () => { submit() } }>
                             Post Quiz
                         </Button> ) }
-                    </> ) : ( <Box sx={ {
+                    </Box> ) : ( <Box sx={ {
                         '& .MuiTextField-root': { my: 1 },
                     } }>
                         <TextField value={ editPosts.name } onChange={ handleTyping } name="name" className="my-4" fullWidth label="name" />

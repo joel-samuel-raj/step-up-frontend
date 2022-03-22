@@ -41,7 +41,7 @@ export default function Password () {
                     </InputAdornment>
                 ),
             } } label="Confirm Password" onChange={ ( e ) => setNewPassword( e.target.value ) } required type="password" variant="outlined" />
-            <Button variant="contained" onClick={ () => changePassword() } className="block w-full mx-auto p-1 my-4"> Reset Password </Button>
+            <Button variant="contained" onClick={ () => changePassword() } className="block w-full mx-auto p-1 my-4 mt-8"> Reset Password </Button>
             <Snackbar open={ open } autoHideDuration={ 10000 } onClose={ () => { setOpen( false ) } }>
                 <Alert onClose={ () => { setOpen( false ) } } severity="error">
                     { error }

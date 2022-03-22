@@ -110,7 +110,7 @@ export default function Navbar ( { loginModel, setloginmodel }: { loginModel?: b
                                 </InputAdornment>
                             ),
                         } } label="Password" required type="password" variant="outlined" />
-                        <Button variant="contained" onClick={ () => { loginUser() } } className="block w-full mx-auto p-1 my-4"> Login</Button>
+                        <Button variant="contained" onClick={ () => { loginUser() } } className="block w-full mx-auto p-1 my-4 mt-8"> Login</Button>
                         <div className="w-full flex justify-between my-4">
                             <p onClick={ () => { setModal( false ); setForgotPassword( true ) } } className="cursor-pointer text-sm text-red-800"> Forgot Password </p>
                             <p onClick={ () => { setModal( false ); setCreateModal( true ) } } className="cursor-pointer text-sm text-blue-800"> Create Account </p>
@@ -193,7 +193,7 @@ export default function Navbar ( { loginModel, setloginmodel }: { loginModel?: b
                                 </InputAdornment>
                             ),
                         } } label="Confirm Password" required type="password" variant="outlined" />
-                        <Button onClick={ () => createUser() } variant="contained" className="block w-full mx-auto p-1 my-4"> Create Account</Button>
+                        <Button onClick={ () => createUser() } variant="contained" className="block w-full mx-auto p-1 my-4 mt-8"> Create Account</Button>
                     </Box>
                 </Modal>
             </div>
