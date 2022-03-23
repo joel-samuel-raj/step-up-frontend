@@ -10,6 +10,7 @@ import { UserContext } from '../context/UserContext'
 import { User } from "../utils/types/user"
 import router from 'next/router'
 import { IconProp } from '@fortawesome/fontawesome-svg-core'
+import Cookies from 'js-cookie'
 
 export default function Navbar ( { loginModel, setloginmodel }: { loginModel?: boolean, setloginmodel?: Function } ) {
 
@@ -120,9 +121,6 @@ export default function Navbar ( { loginModel, setloginmodel }: { loginModel?: b
                             <p onClick={ () => { setModal( false ); setForgotPassword( true ) } } className="cursor-pointer text-sm text-red-800"> Forgot Password </p>
                             <p onClick={ () => { setModal( false ); setCreateModal( true ) } } className="cursor-pointer text-sm text-blue-800"> Create Account </p>
                         </div>
-                        <Link href={ `${ process.env.NEXT_PUBLIC_BACKEND_URL }/auth/google` as string }>
-                            <Button color="secondary" variant="contained" className="block w-full mx-auto p-1"> <span> Login with Google </span> </Button>
-                        </Link>
                     </Box>
                 </Modal>
 
@@ -201,11 +199,14 @@ export default function Navbar ( { loginModel, setloginmodel }: { loginModel?: b
 
     const logout = () => {
         const logoutUser = async () => {
-            console.log( currentUser )
             if ( currentUser.stratergy as string === 'google' ) {
+                Cookies.remove( "google_acc", {
+                    path: "/",
+                    domain: "http://step-up-backend.herokuapp.com/"
+                })
                 await axios.get( `${ process.env.NEXT_PUBLIC_BACKEND_URL }/auth/${ stratergy }/logout` ).then( ( res ) => {
-                    router.reload()
-                    // console.log(res.data)
+                    console.log(res)
+                    // router.reload()
                 } )
             }
             if ( currentUser.stratergy as string === 'local' ) {

@@ -41,6 +41,7 @@
   "devDependencies": {
     "@netlify/plugin-nextjs": "^4.0.0-rc.2",
     "@types/axios": "^0.14.0",
+    "@types/js-cookie": "^3.0.1",
     "@types/node": "16.11.7",
     "@types/react": "17.0.34",
     "eslint": "7",
