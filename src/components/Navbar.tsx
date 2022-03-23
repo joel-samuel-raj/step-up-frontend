@@ -125,8 +125,10 @@ export default function Navbar ( { loginModel, setloginmodel }: { loginModel?: b
                 </Modal>
 
                 <Modal className="flex justify-center items-center p-4" open={ forgotPassword } onClose={ () => setForgotPassword( false ) }>
-                    <Box className="relative bg-white py-12 px-4 md:px-16 rounded">
-                        <div className="p-2 w-6 h-6 cursor-pointer bg-red-500 hover:bg-red-600 rounded absolute top-2 right-2" onClick={ () => setForgotPassword( false ) }>
+                    <Box sx={ {
+                        '& .MuiTextField-root': { my: 1 },
+                    } } className="relative bg-white py-12 px-4 md:px-16 rounded">
+                        <div className="p-2 flex justify-center items-centerw-6 h-6 cursor-pointer bg-red-500 hover:bg-red-600 rounded absolute top-2 right-2" onClick={ () => setForgotPassword( false ) }>
                             <FontAwesomeIcon className="text-white text-lg" icon={ faClose as IconProp }></FontAwesomeIcon>
                         </div>
                         <p className="text-gray-500"> Enter the email registered with this account to get the password reset link</p>
