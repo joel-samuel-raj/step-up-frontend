@@ -93,7 +93,7 @@ $/posts/update/${data[i]._id}`, data[i])
       <h3 className="m-4"> Admin Page </h3>
     </Container>  
       <Container className="py-4 rounded shadow-lg bg-purple_heart-200">
-        <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 my-4">
           { data.map( ( dat: any, i: number ) => (
             <Box onClick={ () => { handleClick( dat._id ) } } key={ i } className="bg-gradient-to-tr cursor-pointer text-white from-purple-400 to-purple-500 p-2 rounded relative">
               <h4> { dat.name } </h4>
