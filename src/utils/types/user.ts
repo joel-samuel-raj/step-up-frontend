@@ -9,5 +9,5 @@ export class User {
     stratergy? : ""
     password?: ""
     isAdmin?: false
-    data?: ''
+    data?: string
 }  
