@@ -96,7 +96,8 @@ export default function Navbar ( { loginModel, setloginmodel }: { loginModel?: b
                 <Modal className="flex justify-center items-center p-4" open={ modal } onClose={ () => setModal( false ) }>
                     <Box sx={ {
                         '& .MuiTextField-root': { my: 1 },
-                    } } className="relative bg-white py-12 px-16 rounded">
+                    } } className="relative bg-white py-12 px-4 md:px-16 rounded">
+                        <h3 className="mb-4"> Login with Existing Account </h3>
                         <div className="p-2 flex justify-center items-center w-6 h-6 cursor-pointer bg-red-500 hover:bg-red-600 rounded absolute top-2 right-2" onClick={ () => setModal( false ) }>
                             <FontAwesomeIcon className="text-white text-lg" icon={ faClose as IconProp }></FontAwesomeIcon>
                         </div>
@@ -126,7 +127,7 @@ export default function Navbar ( { loginModel, setloginmodel }: { loginModel?: b
                 </Modal>
 
                 <Modal className="flex justify-center items-center p-4" open={ forgotPassword } onClose={ () => setForgotPassword( false ) }>
-                    <Box className="relative bg-white py-12 px-16 rounded">
+                    <Box className="relative bg-white py-12 px-4 md:px-16 rounded">
                         <div className="p-2 w-6 h-6 cursor-pointer bg-red-500 hover:bg-red-600 rounded absolute top-2 right-2" onClick={ () => setForgotPassword( false ) }>
                             <FontAwesomeIcon className="text-white text-lg" icon={ faClose as IconProp }></FontAwesomeIcon>
                         </div>
@@ -145,7 +146,8 @@ export default function Navbar ( { loginModel, setloginmodel }: { loginModel?: b
                 <Modal className="flex justify-center items-center p-4" open={ createModal } onClose={ () => setModal( false ) }>
                     <Box sx={ {
                         '& .MuiTextField-root': { my: 1 },
-                    } } className="relative bg-white py-12 px-16 rounded">
+                    } } className="relative bg-white py-12 px-4 md:px-16 rounded">
+                        <h3> Create New Account </h3>
                         <div className="flex justify-center items-center p-2 w-6 h-6 cursor-pointer bg-red-500 hover:bg-red-600 rounded absolute top-2 right-2" onClick={ () => setCreateModal( false ) }>
                             <FontAwesomeIcon className="text-white text-lg" icon={ faClose as IconProp }></FontAwesomeIcon>
                         </div>
@@ -162,13 +164,6 @@ export default function Navbar ( { loginModel, setloginmodel }: { loginModel?: b
                                 </InputAdornment>
                             ),
                         } } label="Name" required type="text" variant="outlined" />
-                        <TextField color="primary" onBlur={ onClickHandler } name="rollNumber" className="w-full my-4" InputProps={ {
-                            startAdornment: (
-                                <InputAdornment position="start">
-                                    <FontAwesomeIcon icon={ faAddressBook as IconProp }></FontAwesomeIcon>
-                                </InputAdornment>
-                            ),
-                        } } label="Roll Number" required type="text" variant="outlined" />
                         <TextField color="primary" onBlur={ onClickHandler } name="phoneNumber" className="w-full my-4" InputProps={ {
                             startAdornment: (
                                 <InputAdornment position="start">
