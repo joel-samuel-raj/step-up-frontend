@@ -15,9 +15,7 @@ export default function Mcq ( { mcqData }: any ) {
     )
     const handleCheckChange = ( e: any, i: number ) => {
         if ( typeof window !== "undefined" ) {
-            console.log(e.target.checked)
-            setTemplate( prevTemplates => prevTemplates.map((item,idx) => idx === i? {...item, answer: e.target.checked} : item))
-            console.log(template)
+            setTemplate( prevTemplates => prevTemplates.map((item,idx) => idx === i ? {...item, answer: e.target.checked} : item))
             // forceUpdate()
         }
     }
@@ -59,10 +57,6 @@ export default function Mcq ( { mcqData }: any ) {
     useEffect( () => {
         mcqData( template )
     }, [ template ] )
-
-    useEffect(() => {
-        console.log("template", template)
-    }, [template])
 
     return (
         <div onChange={() => handleChange()}>

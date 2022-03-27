@@ -138,18 +138,30 @@ export default function Create ( { bool, id }: { bool?: boolean, id?: string } )
     }
 
     const mcqData = ( data: any ) => {
-        setMcq( data )
+        setMcq(data)
+        console.log(data)
+        console.log(mcq)
     }
+
+    useEffect(() => {
+        console.log("mcq", mcq)
+    }, [mcq])
+
+    useEffect(() => {
+        console.log("post", posts)
+    }, [posts])
 
     const handleMcqChange = ( i: number ) => {
         let object = {
             question: questions![ i ].question,
             options: mcq
         }
+        console.log(object)
         let arr = posts
         arr.questions![i] = object
+        console.log("arr")
         setPosts(arr)
-        // console.log(posts)
+        console.log(posts)
     }
 
     const fate = () => {

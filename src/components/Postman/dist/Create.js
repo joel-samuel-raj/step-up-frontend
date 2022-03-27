@@ -145,16 +145,26 @@ function Create(_a) {
     };
     var mcqData = function (data) {
         setMcq(data);
+        console.log(data);
+        console.log(mcq);
     };
+    react_1.useEffect(function () {
+        console.log("mcq", mcq);
+    }, [mcq]);
+    react_1.useEffect(function () {
+        console.log("post", posts);
+    }, [posts]);
     var handleMcqChange = function (i) {
         var object = {
             question: questions[i].question,
             options: mcq
         };
+        console.log(object);
         var arr = posts;
         arr.questions[i] = object;
+        console.log("arr");
         setPosts(arr);
-        // console.log(posts)
+        console.log(posts);
     };
     var fate = function () {
         return id ? editQuestions : questions;

@@ -31,9 +31,7 @@ function Mcq(_a) {
         }]), template = _c[0], setTemplate = _c[1];
     var handleCheckChange = function (e, i) {
         if (typeof window !== "undefined") {
-            console.log(e.target.checked);
             setTemplate(function (prevTemplates) { return prevTemplates.map(function (item, idx) { return idx === i ? __assign(__assign({}, item), { answer: e.target.checked }) : item; }); });
-            console.log(template);
             // forceUpdate()
         }
     };
@@ -70,9 +68,6 @@ function Mcq(_a) {
     };
     react_1.useEffect(function () {
         mcqData(template);
-    }, [template]);
-    react_1.useEffect(function () {
-        console.log("template", template);
     }, [template]);
     return (react_1["default"].createElement("div", { onChange: function () { return handleChange(); } },
         react_1["default"].createElement("ul", null, template.map(function (item, i) { return (react_1["default"].createElement("li", { key: i }, react_1["default"].createElement("div", { className: "flex justify-start items-center" },
