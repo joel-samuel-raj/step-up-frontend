@@ -5,6 +5,7 @@ import axios from 'axios'
 import router from 'next/router'
 import React, { useContext, useEffect, useReducer, useState } from 'react'
 import Create from './Create'
+import Mcq from './mcq'
 import Editor from "rich-markdown-editor"
 import { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { PostsContext } from '../../context/PostsContext'
@@ -26,6 +27,7 @@ export default function Questions () {
   const [ editModal, setEditModal ] = useState( false )
   const [ id, setId ] = useState<string[]>( [] )
   const [ data, setData ] = useState<any>( [] )
+  const [mcq, setMcq] = useState<any>([{}])
   const [ update, setUpdate ] = useState( "" )
   const [ answers, setAnswers ] = useState<answerType[]>( [] )
   const [ currentAnswers, setCurrentAnswers ] = useState<answerType[]>( [] )
@@ -40,6 +42,11 @@ export default function Questions () {
     setData( allPosts )
     console.log( data )
   }, [ allPosts ] )
+
+  const mcqData = async (data: any) => {
+    setMcq(data)
+    // console.log(mcq)
+}
 
   const handleClick = ( id: string ) => {
     console.log( id )
@@ -119,8 +126,8 @@ $/posts/update/${data[i]._id}`, data[i])
       </Container>
       <Container className="mt-4">
         { currentAnswers.length > 0 && <Box>
-          { currentAnswers.map( ( ans, j ) => ( <div key={ j } className="py-4"> <Accordion className="bg-purple_heart-50">
-            <AccordionSummary className="bg-purple_heart-300 rounded text-purple-900" expandIcon={ <FontAwesomeIcon icon={ faChevronDown as IconProp }></FontAwesomeIcon> }> { ans.userName } </AccordionSummary>
+          { currentAnswers.map( ( ans, j ) => ( <div key={ j } className="py-4"> <Accordion color="primary" className="bg-purple_heart-50">
+            <AccordionSummary color="primary" className="rounded text-purple-900" expandIcon={ <FontAwesomeIcon icon={ faChevronDown as IconProp }></FontAwesomeIcon> }> { ans.userName } </AccordionSummary>
             <AccordionDetails> <Box>
               { handleQuestion( ans.questionId ).questions.map( ( quest: any, k: number ) => ( <div key={ k }>
                 <p className="font-bold mt-8"> { quest } </p>
@@ -207,6 +214,9 @@ $/posts/update/${data[i]._id}`, data[i])
           </div>
         </Box>
       </Modal>
+
+      <Container>
+      </Container>
     </>
   )
 }

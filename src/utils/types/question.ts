@@ -3,6 +3,12 @@ export type questionType = {
     name?: string,
     description?: string
     image?: string | ArrayBuffer | null
-    questions?: string[]
+    questions?: [ {
+        question : string,
+        options?: [{
+            value: string,
+            answer: boolean
+        }]
+    } ]
     open?: boolean
 }

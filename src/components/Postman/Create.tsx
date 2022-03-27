@@ -1,5 +1,5 @@
 import { IconProp } from '@fortawesome/fontawesome-svg-core'
-import { faAdd, faArrowLeft, faArrowRight, faClose } from '@fortawesome/free-solid-svg-icons'
+import { faAdd, faArrowLeft, faArrowRight, faCheckSquare, faClose } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Alert, Box, Button, Container, InputAdornment, Snackbar, TextField } from '@mui/material'
 import axios from 'axios'
@@ -9,13 +9,16 @@ import { ulid } from 'ulid'
 import { postsImage } from '../../assets/images/posts'
 import { PostsContext } from '../../context/PostsContext'
 import { questionType } from '../../utils/types/question'
+import Mcq from './mcq'
 
 export default function Create ( { bool, id }: { bool?: boolean, id?: string } ) {
 
     const allPosts = useContext( PostsContext )
 
     const [ , forceUpdate ] = useReducer( x => x + 1, 0 )
-    const [ questions, setQuestions ] = useState( [ "question #1" ] )
+    const [ questions, setQuestions ] = useState<questionType[ "questions" ]>( [ { question: "question #1" } ] )
+    const [ isMcq, setIsMcq ] = useState( new Array( questions!.length + 1 ).fill( false ) )
+    const [ mcq, setMcq ] = useState<any>( [ {} ] )
     const [ editQuestions, setEditQuestions ] = useState( [ "question #1" ] )
     const [ createModel, setCreateModel ] = useState( false )
     const [ next, setNext ] = useState( false )
@@ -26,7 +29,7 @@ export default function Create ( { bool, id }: { bool?: boolean, id?: string } )
         if ( id ) {
             setEditQuestions( ( prev ) => [ ...prev, `` ] )
         }
-        setQuestions( ( prev ) => [ ...prev, `` ] )
+        setQuestions( ( prev ) => { return [ ...prev!, { question: `` } ] as unknown as [ { question: string } ] } )
     }
 
     const handleTyping = ( e: any ) => {
@@ -52,13 +55,13 @@ export default function Create ( { bool, id }: { bool?: boolean, id?: string } )
         reader.readAsDataURL( file )
     }
 
-    useEffect( () => {
-        if ( !id ) return
-        let arr = allPosts.find( ar => ar._id === id )
-        setEditQuestions( arr!.questions as string[] )
-        setEditPosts( arr as questionType )
-        console.log( posts )
-    }, [] )
+    // useEffect( () => {
+    //     if ( !id ) return
+    //     let arr = allPosts.find( ar => ar._id === id )
+    //     setEditQuestions( arr!.questions as string[] )
+    //     setEditPosts( arr as questionType )
+    //     console.log( posts )
+    // }, [] )
 
     const removeQuestion = ( i: number ) => {
         if ( id ) {
@@ -68,12 +71,33 @@ export default function Create ( { bool, id }: { bool?: boolean, id?: string } )
             setEditQuestions( array )
         }
         else {
-            if ( questions.length === 1 ) return
+            if ( questions!.length === 1 ) return
             let array = questions
-            array.pop()
+            array!.pop()
             setQuestions( array )
         }
         forceUpdate()
+    }
+
+    const questionType = ( i: number ) => {
+        let bool = isMcq
+        bool[ i ] = !bool[ i ]
+        setIsMcq( bool )
+        let arr = {
+            question: questions![ i ].question,
+            options: [ {
+                value: "",
+                answer: false
+            } ] as [ {
+                value: string,
+                answer: boolean
+            } ]
+        }
+        let array = questions
+        array![ i ] = arr
+        setQuestions( array )
+        forceUpdate()
+        // console.log( questions![ i ].options )
     }
 
     const handleChange = ( e: any, i: number ) => {
@@ -82,17 +106,17 @@ export default function Create ( { bool, id }: { bool?: boolean, id?: string } )
             let array = editQuestions
             array[ i ] = value
             setEditQuestions( array )
-            setEditPosts( ( prev ) => ( { ...prev, questions: editQuestions } ) )
+            // setEditPosts( ( prev ) => ( { ...prev, questions: editQuestions } ) )
         }
         else {
             let value = e.target.value
             let array = questions
-            array[ i ] = value
+            array![ i ].question = value
             setQuestions( array )
             setPosts( ( prev ) => ( { ...prev, questions: questions } ) )
         }
         // forceUpdate()
-        console.log( posts )
+        // console.log( posts )
     }
 
     const submit = () => {
@@ -105,11 +129,27 @@ export default function Create ( { bool, id }: { bool?: boolean, id?: string } )
             } )
             return
         }
-        axios.post( `${ process.env.NEXT_PUBLIC_BACKEND_URL }/posts/create`, posts ).then( ( res ) => {
-            console.log( res )
-            setCreateModel( true )
-            router.reload()
-        } )
+        // axios.post( `${ process.env.NEXT_PUBLIC_BACKEND_URL }/posts/create`, posts ).then( ( res ) => {
+        //     console.log( res )
+        //     setCreateModel( true )
+        //     router.reload()
+        // } )
+        console.log(posts)
+    }
+
+    const mcqData = ( data: any ) => {
+        setMcq( data )
+    }
+
+    const handleMcqChange = ( i: number ) => {
+        let object = {
+            question: questions![ i ].question,
+            options: mcq
+        }
+        let arr = posts
+        arr.questions![i] = object
+        setPosts(arr)
+        // console.log(posts)
     }
 
     const fate = () => {
@@ -124,20 +164,29 @@ export default function Create ( { bool, id }: { bool?: boolean, id?: string } )
                     { next ? ( <Box sx={ {
                         '& .MuiTextField-root': { my: 1 }
                     } }>
-                        { ( id ? editQuestions : questions ).map( ( question: any, i: number ) => (
-                            <TextField autoFocus={ true } key={ i } onChange={ ( e ) => { handleChange( e, i ) } } className="my-2" value={ question } label={ `Question #${ i + 1 }` } multiline fullWidth InputProps={ {
-                                endAdornment: (
-                                    <>
-                                        <InputAdornment position="end">
-                                            { i === fate().length - 1 && <FontAwesomeIcon onClick={ () => { addQuesion( i ) } } className="text-blue-600 cursor-pointer" icon={ faAdd as IconProp } /> }
-                                        </InputAdornment>
-                                        <InputAdornment position="end">
-                                            { i === fate().length - 1 &&
-                                                <FontAwesomeIcon className="text-red-600 cursor-pointer" icon={ faClose as IconProp } onClick={ () => { removeQuestion( i ) } } /> }
-                                        </InputAdornment>
-                                    </>
-                                ),
-                            } } />
+                        { ( id ? editQuestions : questions )!.map( ( question: any, i: number ) => (
+                            <div key={ i } className="textBox">
+                                <TextField autoFocus={ true } onChange={ ( e ) => { handleChange( e, i ) } } className="my-2" value={ question.question } label={ `Question #${ i + 1 }` } multiline fullWidth InputProps={ {
+                                    endAdornment: (
+                                        <>
+                                            <InputAdornment position="end">
+                                                {
+                                                    <FontAwesomeIcon className="text-green-500 cursor-pointer" icon={ faCheckSquare as IconProp } onClick={ () => { questionType( i ) } } /> }
+                                            </InputAdornment>
+                                            <InputAdornment position="end">
+                                                { i === fate()!.length - 1 && <FontAwesomeIcon onClick={ () => { addQuesion( i ) } } className="text-blue-600 cursor-pointer" icon={ faAdd as IconProp } /> }
+                                            </InputAdornment>
+                                            <InputAdornment position="end">
+                                                { i === fate()!.length - 1 &&
+                                                    <FontAwesomeIcon className="text-red-600 cursor-pointer" icon={ faClose as IconProp } onClick={ () => { removeQuestion( i ) } } /> }
+                                            </InputAdornment>
+                                        </>
+                                    ),
+                                } } />
+                                {isMcq[i] && (<div onChange = {() => handleMcqChange(i)} >
+                                    <Mcq mcqData={ mcqData } />
+                                </div>)}
+                            </div>
                         ) ) }
                         { id ? ( <Button className="float-left" onClick={ () => { submit() } }>
                             Confirm Changes
