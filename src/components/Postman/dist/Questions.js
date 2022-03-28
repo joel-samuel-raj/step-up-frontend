@@ -1,40 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
-    function verb(n) { return function (v) { return step([n, v]); }; }
-    function step(op) {
-        if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
-            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [op[0] & 2, t.value];
-            switch (op[0]) {
-                case 0: case 1: t = op; break;
-                case 4: _.label++; return { value: op[1], done: false };
-                case 5: _.label++; y = op[1]; op = [0]; continue;
-                case 7: op = _.ops.pop(); _.trys.pop(); continue;
-                default:
-                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                    if (t[2]) _.ops.pop();
-                    _.trys.pop(); continue;
-            }
-            op = body.call(thisArg, _);
-        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
-    }
-};
 var __spreadArrays = (this && this.__spreadArrays) || function () {
     for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
     for (var r = Array(s), k = 0, i = 0; i < il; i++)
@@ -47,29 +11,32 @@ var free_solid_svg_icons_1 = require("@fortawesome/free-solid-svg-icons");
 var react_fontawesome_1 = require("@fortawesome/react-fontawesome");
 var material_1 = require("@mui/material");
 var axios_1 = require("axios");
-var router_1 = require("next/router");
 var react_1 = require("react");
 var Create_1 = require("./Create");
 var rich_markdown_editor_1 = require("rich-markdown-editor");
 var PostsContext_1 = require("../../context/PostsContext");
 var AnswersContext_1 = require("../../context/AnswersContext");
+var mcq_1 = require("./mcq");
 function Questions() {
-    var _this = this;
     var _a = react_1.useReducer(function (x) { return x + 1; }, 0), forceUpdate = _a[1];
-    var allPosts = react_1.useContext(PostsContext_1.PostsContext);
+    var allPosts = react_1.useContext(PostsContext_1.PostsContext).allPosts;
     var allAnswers = react_1.useContext(AnswersContext_1.AnswersContext);
     var _b = react_1.useState(false), model = _b[0], setModel = _b[1];
     var _c = react_1.useState(""), name = _c[0], setName = _c[1];
     var _d = react_1.useState(false), questionsModal = _d[0], setQuestionsModal = _d[1];
     var _e = react_1.useState(false), confirmModal = _e[0], setConfirmModal = _e[1];
     var _f = react_1.useState(false), editModal = _f[0], setEditModal = _f[1];
-    var _g = react_1.useState([]), id = _g[0], setId = _g[1];
-    var _h = react_1.useState([]), data = _h[0], setData = _h[1];
-    var _j = react_1.useState([{}]), mcq = _j[0], setMcq = _j[1];
-    var _k = react_1.useState(""), update = _k[0], setUpdate = _k[1];
-    var _l = react_1.useState([]), answers = _l[0], setAnswers = _l[1];
-    var _m = react_1.useState([]), currentAnswers = _m[0], setCurrentAnswers = _m[1];
-    var _o = react_1.useState(new Array(allPosts.length).fill(true)), open = _o[0], setOpen = _o[1];
+    var _g = react_1.useState(false), createModal = _g[0], setCreateModal = _g[1];
+    var _h = react_1.useState([]), id = _h[0], setId = _h[1];
+    var _j = react_1.useState([]), data = _j[0], setData = _j[1];
+    var _k = react_1.useState([{}]), mcq = _k[0], setMcq = _k[1];
+    var _l = react_1.useState(""), update = _l[0], setUpdate = _l[1];
+    var _m = react_1.useState([]), answers = _m[0], setAnswers = _m[1];
+    var _o = react_1.useState([]), currentAnswers = _o[0], setCurrentAnswers = _o[1];
+    var _p = react_1.useState(new Array(allPosts.length).fill(true)), open = _p[0], setOpen = _p[1];
+    var mcqData = function (data) {
+        console.log(data);
+    };
     react_1.useEffect(function () {
         setAnswers(allAnswers);
     }, [allAnswers]);
@@ -77,26 +44,19 @@ function Questions() {
         setData(allPosts);
         console.log(data);
     }, [allPosts]);
-    var mcqData = function (data) { return __awaiter(_this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            setMcq(data);
-            return [2 /*return*/];
-        });
-    }); };
     var handleClick = function (id) {
-        console.log(id);
         var dat = answers.filter(function (answer) { return answer.questionId === id; });
         setCurrentAnswers(dat);
-        console.log(dat);
+        console.log(answers);
     };
     var handleDelete = function () {
-        axios_1["default"].get("/" + process.env.NEXT_PUBLIC_BACKEND_URL + "\n$/posts/delete/" + id.pop()).then(function () {
-            router_1["default"].reload();
+        axios_1["default"].get(process.env.NEXT_PUBLIC_BACKEND_URL + "\n/posts/delete/" + id.pop()).then(function () {
+            // router.reload()
+            setConfirmModal(false);
         });
     };
     var handleQuestion = function (id) {
         var arr = data.find(function (dat) { return dat._id === id; });
-        // console.log( arr )
         return arr;
     };
     var handleValidate = function (j, key) {
@@ -109,7 +69,7 @@ function Questions() {
         }
         setCurrentAnswers(array);
         console.log(currentAnswers);
-        axios_1["default"].post("/" + process.env.NEXT_PUBLIC_BACKEND_URL + "\n$/posts/answers/validate/" + currentAnswers[j]._id, currentAnswers[j]);
+        axios_1["default"].post(process.env.NEXT_PUBLIC_BACKEND_URL + "\n/posts/answers/validate/" + currentAnswers[j]._id, currentAnswers[j]);
         forceUpdate();
     };
     var handleSwitch = function (e, i) {
@@ -118,7 +78,7 @@ function Questions() {
         arr[i].open = e.target.checked;
         setData(arr);
         console.log(data);
-        axios_1["default"].post("/" + process.env.NEXT_PUBLIC_BACKEND_URL + "\n$/posts/update/" + data[i]._id, data[i]);
+        axios_1["default"].post(process.env.NEXT_PUBLIC_BACKEND_URL + "\n/posts/update/" + data[i]._id, data[i]);
     };
     return (react_1["default"].createElement(react_1["default"].Fragment, null,
         react_1["default"].createElement(material_1.Container, null,
@@ -153,10 +113,10 @@ function Questions() {
                     react_1["default"].createElement(material_1.Box, null, handleQuestion(ans.questionId).questions.map(function (quest, k) { return (react_1["default"].createElement("div", { key: k },
                         react_1["default"].createElement("p", { className: "font-bold mt-8" },
                             " ",
-                            quest,
+                            quest.question,
                             " "),
-                        react_1["default"].createElement("div", { className: "p-2 px-4 mt-4 bg-white rounded" },
-                            react_1["default"].createElement(rich_markdown_editor_1["default"], { readOnly: true, value: ans.answers[k] }, " ")),
+                        ans.answers[k].answer ? (react_1["default"].createElement("div", { className: "p-2 px-4 mt-4 bg-white rounded" },
+                            react_1["default"].createElement(rich_markdown_editor_1["default"], { readOnly: true, value: ans.answers[k].answer }, " "))) : (react_1["default"].createElement(mcq_1["default"], { mcqData: mcqData, iconFlag: false, readFlag: true, preData: ans.answers[k].options, ansData: quest })),
                         react_1["default"].createElement(material_1.Divider, null))); })),
                     react_1["default"].createElement("div", { className: "flex items-center justify-around" },
                         react_1["default"].createElement(material_1.Button, { className: "mt-4 text-blue-500", onClick: function () { handleValidate(j, "validate"); } }, " Validate "),
@@ -200,12 +160,12 @@ function Questions() {
             react_1["default"].createElement(material_1.Box, { className: "bg-white px-4 md:px-16 m-4 md:m-auto md:w-4/5 lg:w-3/5 py-8 rounded relative flex justify-center items-center flex-col" },
                 react_1["default"].createElement("div", { className: "flex justify-center items-center p-2 w-6 h-6 cursor-pointer bg-red-500 hover:bg-red-600 rounded absolute top-2 right-2", onClick: function () { return setQuestionsModal(false); } },
                     react_1["default"].createElement(react_fontawesome_1.FontAwesomeIcon, { className: "text-white text-lg", icon: free_solid_svg_icons_1.faClose })),
-                react_1["default"].createElement(Create_1["default"], null))),
+                react_1["default"].createElement(Create_1["default"], { close: function (bool) { setQuestionsModal(bool); setCreateModal(!bool); } }))),
         react_1["default"].createElement(material_1.Modal, { style: { overflow: 'scroll' }, className: "p-4 flex justify-center items-center", open: editModal, onClose: function () { setEditModal(false); } },
             react_1["default"].createElement(material_1.Box, { className: "bg-white px-4 md:px-16 m-4 md:m-auto md:w-4/5 lg:w-3/5 py-8 rounded relative flex justify-center items-center flex-col" },
                 react_1["default"].createElement("div", { className: "flex justify-center items-center p-2 w-6 h-6 cursor-pointer bg-red-500 hover:bg-red-600 rounded absolute top-2 right-2", onClick: function () { return setEditModal(false); } },
                     react_1["default"].createElement(react_fontawesome_1.FontAwesomeIcon, { className: "text-white text-lg", icon: free_solid_svg_icons_1.faClose })),
-                react_1["default"].createElement(Create_1["default"], { id: update }))),
+                react_1["default"].createElement(Create_1["default"], { close: function (bool) { setEditModal(bool); setCreateModal(!bool); }, id: update }))),
         react_1["default"].createElement(material_1.Modal, { className: "flex justify-center items-center", open: confirmModal, onClose: function () { setConfirmModal(false); } },
             react_1["default"].createElement(material_1.Box, { className: "bg-white px-16 py-8 rounded relative flex justify-center items-center flex-col" },
                 react_1["default"].createElement("div", { className: "flex justify-center items-center p-2 w-6 h-6 cursor-pointer bg-red-500 hover:bg-red-600 rounded absolute top-2 right-2", onClick: function () { return setConfirmModal(false); } },
@@ -214,6 +174,8 @@ function Questions() {
                 react_1["default"].createElement("div", null,
                     react_1["default"].createElement(material_1.Button, { onClick: function () { handleDelete(); }, className: "text-yellow-500" }, " Yes "),
                     react_1["default"].createElement(material_1.Button, { onClick: function () { setConfirmModal(false); }, className: "text-red-500" }, " No ")))),
-        react_1["default"].createElement(material_1.Container, null)));
+        react_1["default"].createElement(material_1.Container, null),
+        react_1["default"].createElement(material_1.Snackbar, { open: createModal, autoHideDuration: 6000, onClose: function () { setCreateModal(false); } },
+            react_1["default"].createElement(material_1.Alert, { onClose: function () { setCreateModal(false); }, severity: "success", sx: { width: '100%' } }, "Post Created Succesfully \uD83D\uDE0D"))));
 }
 exports["default"] = Questions;

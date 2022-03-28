@@ -11,23 +11,26 @@ import { PostsContext } from '../../context/PostsContext'
 import { questionType } from '../../utils/types/question'
 import Mcq from './mcq'
 
-export default function Create ( { bool, id }: { bool?: boolean, id?: string } ) {
+export default function Create ( { close, id }: { close?: any, id?: string } ) {
 
-    const allPosts = useContext( PostsContext )
+    const { allPosts, setAllPosts } = useContext( PostsContext )
 
     const [ , forceUpdate ] = useReducer( x => x + 1, 0 )
     const [ questions, setQuestions ] = useState<questionType[ "questions" ]>( [ { question: "question #1" } ] )
     const [ isMcq, setIsMcq ] = useState( new Array( questions!.length + 1 ).fill( false ) )
     const [ mcq, setMcq ] = useState<any>( [ {} ] )
-    const [ editQuestions, setEditQuestions ] = useState( [ "question #1" ] )
+    const [ editQuestions, setEditQuestions ] = useState<any>( [ "question #1" ] )
     const [ createModel, setCreateModel ] = useState( false )
     const [ next, setNext ] = useState( false )
     const [ posts, setPosts ] = useState<questionType>( { image: postsImage, questions: questions } )
     const [ editPosts, setEditPosts ] = useState<questionType>( { image: postsImage } )
+    const [ settingDone, setSettingDone ] = useState( false )
+    const [ changeDone, setChangeDone ] = useState( false )
+    const [ currentIndex, setCurrentIndex ] = useState( 0 )
 
     const addQuesion = ( i: number ) => {
         if ( id ) {
-            setEditQuestions( ( prev ) => [ ...prev, `` ] )
+            setEditQuestions( ( prev: any ) => { return [ ...prev!, { question: `` } ] as unknown as [ { question: string } ] } )
         }
         setQuestions( ( prev ) => { return [ ...prev!, { question: `` } ] as unknown as [ { question: string } ] } )
     }
@@ -55,13 +58,14 @@ export default function Create ( { bool, id }: { bool?: boolean, id?: string } )
         reader.readAsDataURL( file )
     }
 
-    // useEffect( () => {
-    //     if ( !id ) return
-    //     let arr = allPosts.find( ar => ar._id === id )
-    //     setEditQuestions( arr!.questions as string[] )
-    //     setEditPosts( arr as questionType )
-    //     console.log( posts )
-    // }, [] )
+    useEffect( () => {
+        if ( !id ) return
+        let arr = allPosts.find( ar => ar._id === id )
+        setEditQuestions( arr!.questions )
+        setEditPosts( arr as questionType )
+        console.log( "editPosts", editPosts )
+        setSettingDone( true )
+    }, [] )
 
     const removeQuestion = ( i: number ) => {
         if ( id ) {
@@ -83,6 +87,25 @@ export default function Create ( { bool, id }: { bool?: boolean, id?: string } )
         let bool = isMcq
         bool[ i ] = !bool[ i ]
         setIsMcq( bool )
+        console.log( isMcq[ i ] )
+        if ( id ) {
+            let arr = {
+                question: editQuestions![ i ].question,
+                options: [ {
+                    value: "",
+                    answer: false
+                } ] as [ {
+                    value: string,
+                    answer: boolean
+                } ]
+            }
+            let array = editQuestions
+            array![ i ] = arr
+            setEditQuestions( array )
+            console.log( editQuestions )
+            forceUpdate()
+            return
+        }
         let arr = {
             question: questions![ i ].question,
             options: [ {
@@ -96,6 +119,7 @@ export default function Create ( { bool, id }: { bool?: boolean, id?: string } )
         let array = questions
         array![ i ] = arr
         setQuestions( array )
+        console.log( questions )
         forceUpdate()
         // console.log( questions![ i ].options )
     }
@@ -104,9 +128,9 @@ export default function Create ( { bool, id }: { bool?: boolean, id?: string } )
         if ( id ) {
             let value = e.target.value
             let array = editQuestions
-            array[ i ] = value
+            array[ i ].question = value
             setEditQuestions( array )
-            // setEditPosts( ( prev ) => ( { ...prev, questions: editQuestions } ) )
+            setEditPosts( ( prev ) => ( { ...prev, questions: editQuestions } ) )
         }
         else {
             let value = e.target.value
@@ -125,44 +149,61 @@ export default function Create ( { bool, id }: { bool?: boolean, id?: string } )
             console.log( editQuestions )
             axios.post( `${ process.env.NEXT_PUBLIC_BACKEND_URL }/posts/update/${ id }`, editPosts ).then( ( res ) => {
                 console.log( res )
-                router.reload()
+                close( false )
+                // router.reload()
             } )
             return
         }
-        // axios.post( `${ process.env.NEXT_PUBLIC_BACKEND_URL }/posts/create`, posts ).then( ( res ) => {
-        //     console.log( res )
-        //     setCreateModel( true )
-        //     router.reload()
-        // } )
-        console.log(posts)
+        axios.post( `${ process.env.NEXT_PUBLIC_BACKEND_URL }/posts/create`, posts ).then( ( res ) => {
+            console.log( res )
+            // setCreateModel( true )
+            // router.reload()
+            setAllPosts( ( prev: any ) => ( [ ...prev, posts ] ) )
+            close( false )
+        } )
+        console.log( posts )
     }
 
     const mcqData = ( data: any ) => {
-        setMcq(data)
-        console.log(data)
-        console.log(mcq)
+        setMcq( data )
     }
 
-    useEffect(() => {
-        console.log("mcq", mcq)
-    }, [mcq])
+    useEffect( () => {
+        if ( !id ) return
 
-    useEffect(() => {
-        console.log("post", posts)
-    }, [posts])
+    }, [] )
 
-    const handleMcqChange = ( i: number ) => {
-        let object = {
-            question: questions![ i ].question,
-            options: mcq
+    useEffect( () => {
+        console.log( currentIndex )
+        if ( settingDone && changeDone ) {
+            let object = {
+                question: editQuestions![ currentIndex ].question,
+                options: mcq
+            }
+            editPosts.questions![ currentIndex ] = object
+            setEditPosts( editPosts )
+            console.log( editPosts )
+            return
         }
-        console.log(object)
-        let arr = posts
-        arr.questions![i] = object
-        console.log("arr")
-        setPosts(arr)
-        console.log(posts)
-    }
+        if ( !id ) {
+            let object = {
+                question: questions![ currentIndex ].question,
+                options: mcq
+            }
+            posts.questions![ currentIndex ] = object
+            setPosts( posts )
+            console.log( posts )
+        }
+    }, [ mcq, settingDone ] )
+
+    useEffect( () => {
+        if ( typeof editPosts.questions === 'undefined' ) return
+        editPosts.questions!.forEach( ( ques, i ) => {
+            if ( ques.options ) {
+                setIsMcq( ( prev ) => prev.map( ( pre, idx ) => idx === i ? true : pre ) )
+            }
+        } )
+    }, [ editPosts ] )
 
     const fate = () => {
         return id ? editQuestions : questions
@@ -170,14 +211,14 @@ export default function Create ( { bool, id }: { bool?: boolean, id?: string } )
 
     return (
         <>
-            { ( ( id && ( typeof editPosts.name === 'string' ) ) || ( !id ) ) && ( <>
+            { allPosts && ( ( id && ( typeof editPosts.name === 'string' ) ) || ( !id ) ) && ( <>
                 <Container className="my-4">
                     { <h3 className="my-4"> { id ? `Edit ${ editPosts.name }` : `Create ${ posts.name }` } </h3> }
                     { next ? ( <Box sx={ {
                         '& .MuiTextField-root': { my: 1 }
                     } }>
                         { ( id ? editQuestions : questions )!.map( ( question: any, i: number ) => (
-                            <div key={ i } className="textBox">
+                            <div onChange={ () => { setCurrentIndex( i ); setChangeDone( true ) } } key={ i } className="textBox">
                                 <TextField autoFocus={ true } onChange={ ( e ) => { handleChange( e, i ) } } className="my-2" value={ question.question } label={ `Question #${ i + 1 }` } multiline fullWidth InputProps={ {
                                     endAdornment: (
                                         <>
@@ -195,9 +236,10 @@ export default function Create ( { bool, id }: { bool?: boolean, id?: string } )
                                         </>
                                     ),
                                 } } />
-                                {isMcq[i] && (<div onChange = {() => handleMcqChange(i)} >
-                                    <Mcq mcqData={ mcqData } />
-                                </div>)}
+                                { ( isMcq[ i ] ) && ( <div className="mb-8">
+                                    { id && editPosts.questions![ i ] ? <Mcq mcqData={ mcqData } preData={ editPosts.questions![ i ].options } /> : <Mcq mcqData={ mcqData } /> }
+
+                                </div> ) }
                             </div>
                         ) ) }
                         { id ? ( <Button className="float-left" onClick={ () => { submit() } }>
@@ -222,11 +264,6 @@ export default function Create ( { bool, id }: { bool?: boolean, id?: string } )
                         </div>
                     </div>
                 </Container>
-                <Snackbar open={ createModel } autoHideDuration={ 6000 } onClose={ () => { setCreateModel( false ) } }>
-                    <Alert onClose={ () => { setCreateModel( false ) } } severity="success" sx={ { width: '100%' } }>
-                        Post Created Succesfully 😍
-                    </Alert>
-                </Snackbar>
             </> ) }
         </>
     )

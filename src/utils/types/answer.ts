@@ -5,7 +5,13 @@ export type answerType = {
     userName?: "",
     userId?: "",
     questionId?: "",
-    answers?: string[],
+    answers?: [{
+        answer?: string,
+        options?: [ {
+            value: string,
+            answer: boolean
+        }]
+    }],
     validate?: boolean,
     star?: boolean,
     userEmail?: string,

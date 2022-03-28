@@ -34,7 +34,6 @@ export default function Navbar ( { loginModel, setloginmodel }: { loginModel?: b
 
     React.useEffect( () => {
         if (!currentUser.data) {
-            console.log("name", currentUser)
             setLog(true)
         }
     }, [currentUser])

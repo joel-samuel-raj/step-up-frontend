@@ -14,11 +14,6 @@ export default function Winners () {
         setAnswers( allAnswers.filter( answer => answer.validate === true ) as answerType[] )
     }, [ allAnswers ] )
 
-    const getQuestions = ( id: string ) => {
-        return allPosts.find( post => post._id === id )
-    }
-
-
     return (
         <>
             <Navbar></Navbar>

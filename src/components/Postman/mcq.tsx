@@ -5,7 +5,7 @@ import { Checkbox, TextField } from '@mui/material'
 import React, { useEffect, useReducer, useState } from 'react'
 import { ulid } from 'ulid'
 
-export default function Mcq ( { mcqData }: any ) {
+export default function Mcq ( { mcqData, preData, ansData, iconFlag, readFlag }: any ) {
     const [ , forceUpdate ] = useReducer( x => x + 1, 0 )
     const [ template, setTemplate ] = useState(
         [ {
@@ -13,17 +13,20 @@ export default function Mcq ( { mcqData }: any ) {
             answer: false
         } ]
     )
+    const [flag, setFlag ] = useState(true)
+    const [write, setWrite ] = useState(true)
+    const [correctAns, setCorrectAns ] = useState<any>({})
     const handleCheckChange = ( e: any, i: number ) => {
-        if ( typeof window !== "undefined" ) {
+        if ( typeof window !== "undefined" && write ) {
             setTemplate( prevTemplates => prevTemplates.map((item,idx) => idx === i ? {...item, answer: e.target.checked} : item))
-            // forceUpdate()
+            forceUpdate()
         }
     }
 
     const handleInputChange = ( e: any, i: number ) => {
-        if ( typeof window !== "undefined" ) {
+        if ( typeof window !== "undefined" && write ) {
             const newTemplate = [ ...template ]
-            newTemplate.splice( i, 1, { ...template[ i ], value: e.target.value } )
+            newTemplate.splice( i, 1, { ...template[ i ], value: e.target.value as string } )
             setTemplate( newTemplate )
             forceUpdate()
         }
@@ -44,32 +47,54 @@ export default function Mcq ( { mcqData }: any ) {
         let array = template
         array.splice( i, 1 )
         setTemplate( array )
-        console.log( template )
         forceUpdate()
-    }
-
-    const handleChange = () => {
-        console.log({
-            options : template
-        })
     }
 
     useEffect( () => {
         mcqData( template )
     }, [ template ] )
 
+    useEffect(() => {
+        if(preData) {
+            setTemplate( preData )
+            console.log(preData)
+        } 
+    }, [])
+
+    useEffect(() => {
+        if(iconFlag === false) {
+            setFlag(iconFlag)
+        }
+    }, [iconFlag])
+
+    useEffect(() => {
+        setWrite(!readFlag)
+    }, [readFlag])
+
+    useEffect(() => {
+        setCorrectAns(ansData)
+    }, [ansData])
+ 
+    const colourChange = (bool: boolean, i:number) => {
+        let classes = "m-2 p-2 rounded"
+        if ( !ansData || (typeof correctAns.options === 'undefined')) return ""
+        return correctAns.options[i].answer === bool ? `${classes} bg-green-200` : `${classes} bg-red-300`  
+    }
+
     return (
-        <div onChange={() => handleChange()}>
+        <div>
             <ul>
                 { template.map( ( item, i ) => (
                     <li key={ i }>
                         { <div className="flex justify-start items-center">
                             <Checkbox className="check" checked={ item.answer } onClick={ ( e ) => { handleCheckChange( e, i ) } } />
-                            <TextField variant="standard" type="text" className="bg-transparent" placeholder="Type..." onChange={ ( e ) => { handleInputChange( e, i ) } } />
-                            <span className="mx-4 grid gap-1 grid-cols-2">
-                                { i === template.length - 1 && <FontAwesomeIcon className="text-red-500" onClick={ () => { removeField( i ) } } icon={ faClose as IconProp } /> }
-                                { i === template.length - 1 && <FontAwesomeIcon className="text-blue-500" icon={ faAdd as IconProp } onClick={ () => { addField() } } /> }
+                            <span className={colourChange(item.answer, i)}>
+                                <TextField variant="standard" type="text" value={item.value}  placeholder="Type..." onChange={ ( e ) => { handleInputChange( e, i ) } } />
                             </span>
+                             <span className="mx-4 grid gap-1 grid-cols-2">
+                                { (i === template.length - 1 && flag) && <FontAwesomeIcon className="text-red-500" onClick={ () => { removeField( i ) } } icon={ faClose as IconProp } /> }
+                                { (i === template.length - 1 && flag) && <FontAwesomeIcon className="text-blue-500" icon={ faAdd as IconProp } onClick={ () => { addField() } } /> }
+                            </span> 
                         </div> }
                     </li>
                 ) ) }

@@ -1,23 +1,23 @@
 import { faChevronDown, faClose, faPencil } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Accordion, AccordionSummary, Box, Button, Container, Modal, AccordionDetails, Divider, Switch } from '@mui/material'
+import { Accordion, AccordionSummary, Box, Button, Container, Modal, AccordionDetails, Divider, Switch, Alert, Snackbar } from '@mui/material'
 import axios from 'axios'
 import router from 'next/router'
 import React, { useContext, useEffect, useReducer, useState } from 'react'
 import Create from './Create'
-import Mcq from './mcq'
 import Editor from "rich-markdown-editor"
 import { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { PostsContext } from '../../context/PostsContext'
 import { AnswersContext } from '../../context/AnswersContext'
 import { answerType } from '../../utils/types/answer'
+import Mcq from './mcq'
 
 
 export default function Questions () {
 
   const [ , forceUpdate ] = useReducer( x => x + 1, 0 )
 
-  const allPosts = useContext( PostsContext )
+  const { allPosts } = useContext( PostsContext )
   const allAnswers = useContext( AnswersContext )
 
   const [ model, setModel ] = useState( false )
@@ -25,14 +25,18 @@ export default function Questions () {
   const [ questionsModal, setQuestionsModal ] = useState( false )
   const [ confirmModal, setConfirmModal ] = useState( false )
   const [ editModal, setEditModal ] = useState( false )
+  const [ createModal, setCreateModal ] = useState( false )
   const [ id, setId ] = useState<string[]>( [] )
   const [ data, setData ] = useState<any>( [] )
-  const [mcq, setMcq] = useState<any>([{}])
+  const [ mcq, setMcq ] = useState<any>( [ {} ] )
   const [ update, setUpdate ] = useState( "" )
   const [ answers, setAnswers ] = useState<answerType[]>( [] )
   const [ currentAnswers, setCurrentAnswers ] = useState<answerType[]>( [] )
-  const [open, setOpen] = useState<boolean[]>(new Array(allPosts.length).fill(true) as boolean[])
+  const [ open, setOpen ] = useState<boolean[]>( new Array( allPosts.length ).fill( true ) as boolean[] )
 
+  const mcqData = ( data: any ) => {
+    console.log( data )
+  }
 
   useEffect( () => {
     setAnswers( allAnswers as answerType[] )
@@ -43,28 +47,22 @@ export default function Questions () {
     console.log( data )
   }, [ allPosts ] )
 
-  const mcqData = async (data: any) => {
-    setMcq(data)
-    // console.log(mcq)
-}
-
   const handleClick = ( id: string ) => {
-    console.log( id )
     let dat = answers.filter( answer => answer.questionId! === id )
     setCurrentAnswers( dat )
-    console.log( dat )
+    console.log( answers )
   }
 
   const handleDelete = () => {
-    axios.get( `/${process.env.NEXT_PUBLIC_BACKEND_URL}
-$/posts/delete/${ id.pop() }` ).then( () => {
-      router.reload()
+    axios.get( `${ process.env.NEXT_PUBLIC_BACKEND_URL }
+/posts/delete/${ id.pop() }` ).then( () => {
+      // router.reload()
+      setConfirmModal( false )
     } )
   }
 
   const handleQuestion = ( id: any ) => {
     let arr = data.find( ( dat: any ) => dat._id === id )
-    // console.log( arr )
     return arr
   }
 
@@ -79,26 +77,26 @@ $/posts/delete/${ id.pop() }` ).then( () => {
 
     setCurrentAnswers( array )
     console.log( currentAnswers )
-    axios.post( `/${process.env.NEXT_PUBLIC_BACKEND_URL}
-$/posts/answers/validate/${ currentAnswers[ j ]._id }`, currentAnswers[ j ] )
+    axios.post( `${ process.env.NEXT_PUBLIC_BACKEND_URL }
+/posts/answers/validate/${ currentAnswers[ j ]._id }`, currentAnswers[ j ] )
     forceUpdate()
   }
 
-  const handleSwitch = (e:any,  i: number ) => {
+  const handleSwitch = ( e: any, i: number ) => {
     e.stopPropagation()
     let arr = data
     arr[ i ].open = e.target.checked
     setData( arr )
     console.log( data )
-    axios.post(`/${process.env.NEXT_PUBLIC_BACKEND_URL}
-$/posts/update/${data[i]._id}`, data[i])
+    axios.post( `${ process.env.NEXT_PUBLIC_BACKEND_URL }
+/posts/update/${ data[ i ]._id }`, data[ i ] )
   }
 
   return (
     <>
-    <Container>
-      <h3 className="m-4"> Admin Page </h3>
-    </Container>  
+      <Container>
+        <h3 className="m-4"> Admin Page </h3>
+      </Container>
       <Container className="py-4 rounded shadow-lg bg-purple_heart-200">
         <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 my-4">
           { data.map( ( dat: any, i: number ) => (
@@ -106,7 +104,7 @@ $/posts/update/${data[i]._id}`, data[i])
               <h4> { dat.name } </h4>
               <Switch
                 checked={ dat.open }
-                onChange={ (e) => handleSwitch(e, i) }
+                onChange={ ( e ) => handleSwitch( e, i ) }
               />
               <div className="p-2 w-6 flex justify-center items-center h-6 cursor-pointer bg-purple-800 hover:bg-red-600 rounded absolute top-2 right-2" onClick={ () => {
                 setConfirmModal( true )
@@ -130,10 +128,10 @@ $/posts/update/${data[i]._id}`, data[i])
             <AccordionSummary color="primary" className="rounded text-purple-900" expandIcon={ <FontAwesomeIcon icon={ faChevronDown as IconProp }></FontAwesomeIcon> }> { ans.userName } </AccordionSummary>
             <AccordionDetails> <Box>
               { handleQuestion( ans.questionId ).questions.map( ( quest: any, k: number ) => ( <div key={ k }>
-                <p className="font-bold mt-8"> { quest } </p>
-                <div className="p-2 px-4 mt-4 bg-white rounded">
-                  <Editor readOnly={ true } value={ ans.answers![ k ] }> </Editor>
-                </div>
+                <p className="font-bold mt-8"> { quest.question } </p>
+                { ans.answers![ k ].answer ? ( <div className="p-2 px-4 mt-4 bg-white rounded">
+                  <Editor readOnly={ true } value={ ans.answers![ k ].answer }> </Editor>
+                </div> ) : ( <Mcq mcqData={ mcqData } iconFlag={ false } readFlag={ true } preData={ ans.answers![ k ].options } ansData={ quest } /> ) }
                 <Divider></Divider>
               </div> ) ) }
             </Box>
@@ -185,18 +183,18 @@ $/posts/update/${data[i]._id}`, data[i])
           <div className="flex justify-center items-center p-2 w-6 h-6 cursor-pointer bg-red-500 hover:bg-red-600 rounded absolute top-2 right-2" onClick={ () => setQuestionsModal( false ) }>
             <FontAwesomeIcon className="text-white text-lg" icon={ faClose as IconProp }></FontAwesomeIcon>
           </div>
-          <Create />
+          <Create close={ ( bool: boolean ) => { setQuestionsModal( bool ); setCreateModal( !bool ) } } />
         </Box>
       </Modal>
 
-      <Modal style={{ overflow: 'scroll' }} className="p-4 flex justify-center items-center"
+      <Modal style={ { overflow: 'scroll' } } className="p-4 flex justify-center items-center"
         open={ editModal }
         onClose={ () => { setEditModal( false ) } }>
         <Box className="bg-white px-4 md:px-16 m-4 md:m-auto md:w-4/5 lg:w-3/5 py-8 rounded relative flex justify-center items-center flex-col">
           <div className="flex justify-center items-center p-2 w-6 h-6 cursor-pointer bg-red-500 hover:bg-red-600 rounded absolute top-2 right-2" onClick={ () => setEditModal( false ) }>
             <FontAwesomeIcon className="text-white text-lg" icon={ faClose as IconProp }></FontAwesomeIcon>
           </div>
-          <Create id={ update } />
+          <Create close={ ( bool: boolean ) => { setEditModal( bool ); setCreateModal( !bool ) } } id={ update } />
         </Box>
       </Modal>
       <Modal
@@ -217,6 +215,11 @@ $/posts/update/${data[i]._id}`, data[i])
 
       <Container>
       </Container>
+      <Snackbar open={ createModal } autoHideDuration={ 6000 } onClose={ () => { setCreateModal( false ) } }>
+        <Alert onClose={ () => { setCreateModal( false ) } } severity="success" sx={ { width: '100%' } }>
+          Post Created Succesfully 😍
+        </Alert>
+      </Snackbar>
     </>
   )
 }

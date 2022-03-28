@@ -2,15 +2,20 @@ import axios from "axios"
 import { createContext, useEffect, useState } from "react"
 import { questionType } from "../utils/types/question"
 
-export const PostsContext = createContext<[questionType]>( [{}] )
+type context = {
+    allPosts : [questionType],
+    setAllPosts: any
+}
+
+export const PostsContext = createContext<context>( { allPosts: [{}], setAllPosts: () => {} } )
 export const PostsProvider = ( props: any ) => {
-    const [ posts, setPosts ] = useState<[questionType]>( [{}] )
+    const [ allPosts, setAllPosts ] = useState<[questionType]>( [{}] )
     useEffect( function () {
-        axios.get( `${process.env.NEXT_PUBLIC_BACKEND_URL}/posts/getPosts` ).then( res => setPosts( res.data ) )
+        axios.get( `${process.env.NEXT_PUBLIC_BACKEND_URL}/posts/getPosts` ).then( res => setAllPosts( res.data ) )
 
     }, [] )
     return (
-        <PostsContext.Provider value={ posts }>
+        <PostsContext.Provider value={{ allPosts, setAllPosts }}>
             { props.children }
         </PostsContext.Provider>
     )

@@ -23,20 +23,23 @@ var react_fontawesome_1 = require("@fortawesome/react-fontawesome");
 var material_1 = require("@mui/material");
 var react_1 = require("react");
 function Mcq(_a) {
-    var mcqData = _a.mcqData;
+    var mcqData = _a.mcqData, preData = _a.preData, ansData = _a.ansData, iconFlag = _a.iconFlag, readFlag = _a.readFlag;
     var _b = react_1.useReducer(function (x) { return x + 1; }, 0), forceUpdate = _b[1];
     var _c = react_1.useState([{
             value: "",
             answer: false
         }]), template = _c[0], setTemplate = _c[1];
+    var _d = react_1.useState(true), flag = _d[0], setFlag = _d[1];
+    var _e = react_1.useState(true), write = _e[0], setWrite = _e[1];
+    var _f = react_1.useState({}), correctAns = _f[0], setCorrectAns = _f[1];
     var handleCheckChange = function (e, i) {
-        if (typeof window !== "undefined") {
+        if (typeof window !== "undefined" && write) {
             setTemplate(function (prevTemplates) { return prevTemplates.map(function (item, idx) { return idx === i ? __assign(__assign({}, item), { answer: e.target.checked }) : item; }); });
-            // forceUpdate()
+            forceUpdate();
         }
     };
     var handleInputChange = function (e, i) {
-        if (typeof window !== "undefined") {
+        if (typeof window !== "undefined" && write) {
             var newTemplate = __spreadArrays(template);
             newTemplate.splice(i, 1, __assign(__assign({}, template[i]), { value: e.target.value }));
             setTemplate(newTemplate);
@@ -58,23 +61,41 @@ function Mcq(_a) {
         var array = template;
         array.splice(i, 1);
         setTemplate(array);
-        console.log(template);
         forceUpdate();
-    };
-    var handleChange = function () {
-        console.log({
-            options: template
-        });
     };
     react_1.useEffect(function () {
         mcqData(template);
     }, [template]);
-    return (react_1["default"].createElement("div", { onChange: function () { return handleChange(); } },
+    react_1.useEffect(function () {
+        if (preData) {
+            setTemplate(preData);
+            console.log(preData);
+        }
+    }, []);
+    react_1.useEffect(function () {
+        if (iconFlag === false) {
+            setFlag(iconFlag);
+        }
+    }, [iconFlag]);
+    react_1.useEffect(function () {
+        setWrite(!readFlag);
+    }, [readFlag]);
+    react_1.useEffect(function () {
+        setCorrectAns(ansData);
+    }, [ansData]);
+    var colourChange = function (bool, i) {
+        var classes = "m-2 p-2 rounded";
+        if (!ansData || (typeof correctAns.options === 'undefined'))
+            return "";
+        return correctAns.options[i].answer === bool ? classes + " bg-green-200" : classes + " bg-red-300";
+    };
+    return (react_1["default"].createElement("div", null,
         react_1["default"].createElement("ul", null, template.map(function (item, i) { return (react_1["default"].createElement("li", { key: i }, react_1["default"].createElement("div", { className: "flex justify-start items-center" },
             react_1["default"].createElement(material_1.Checkbox, { className: "check", checked: item.answer, onClick: function (e) { handleCheckChange(e, i); } }),
-            react_1["default"].createElement(material_1.TextField, { variant: "standard", type: "text", className: "bg-transparent", placeholder: "Type...", onChange: function (e) { handleInputChange(e, i); } }),
+            react_1["default"].createElement("span", { className: colourChange(item.answer, i) },
+                react_1["default"].createElement(material_1.TextField, { variant: "standard", type: "text", value: item.value, placeholder: "Type...", onChange: function (e) { handleInputChange(e, i); } })),
             react_1["default"].createElement("span", { className: "mx-4 grid gap-1 grid-cols-2" },
-                i === template.length - 1 && react_1["default"].createElement(react_fontawesome_1.FontAwesomeIcon, { className: "text-red-500", onClick: function () { removeField(i); }, icon: free_solid_svg_icons_1.faClose }),
-                i === template.length - 1 && react_1["default"].createElement(react_fontawesome_1.FontAwesomeIcon, { className: "text-blue-500", icon: free_solid_svg_icons_1.faAdd, onClick: function () { addField(); } }))))); }))));
+                (i === template.length - 1 && flag) && react_1["default"].createElement(react_fontawesome_1.FontAwesomeIcon, { className: "text-red-500", onClick: function () { removeField(i); }, icon: free_solid_svg_icons_1.faClose }),
+                (i === template.length - 1 && flag) && react_1["default"].createElement(react_fontawesome_1.FontAwesomeIcon, { className: "text-blue-500", icon: free_solid_svg_icons_1.faAdd, onClick: function () { addField(); } }))))); }))));
 }
 exports["default"] = Mcq;
