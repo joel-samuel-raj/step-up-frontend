@@ -1,25 +1,20 @@
 import axios from "axios"
 import { createContext, useEffect, useState } from "react"
+import { answerType } from "../utils/types/answer"
 
-type answer = {
-    _id?: string,
-    userName?: "",
-    userId?: "",
-    questionId?: "",
-    answers?: string[],
-    validate?: boolean,
-    userEmail?: string,
-    userPhone?: number
+type context = {
+    allAnswers : [answerType],
+    setAllAnswers: any
 }
 
-export const AnswersContext = createContext<[answer]>([{}])
+export const AnswersContext = createContext<context>({ allAnswers: [{}], setAllAnswers: () => {} })
 export const AnswersProvider = ( props: any ) => {
-    const [ answers, setAnswers ] = useState<[ answer ]>( [ {} ] )
+    const [ allAnswers, setAllAnswers ] = useState<[ answerType ]>( [ {} ] )
     useEffect( () => {
-        axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/posts/answers/get`).then(res => setAnswers(res.data))
+        axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/posts/answers/get`).then(res => setAllAnswers(res.data))
     }, [])
     return (
-        <AnswersContext.Provider value={ answers }>
+        <AnswersContext.Provider value={ {allAnswers, setAllAnswers} }>
             {props.children}
         </AnswersContext.Provider>
     )

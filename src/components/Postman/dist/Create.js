@@ -22,6 +22,7 @@ var free_solid_svg_icons_1 = require("@fortawesome/free-solid-svg-icons");
 var react_fontawesome_1 = require("@fortawesome/react-fontawesome");
 var material_1 = require("@mui/material");
 var axios_1 = require("axios");
+var router_1 = require("next/router");
 var react_1 = require("react");
 var posts_1 = require("../../assets/images/posts");
 var PostsContext_1 = require("../../context/PostsContext");
@@ -37,11 +38,11 @@ function Create(_a) {
     var _h = react_1.useState(false), createModel = _h[0], setCreateModel = _h[1];
     var _j = react_1.useState(false), next = _j[0], setNext = _j[1];
     var _k = react_1.useState({ image: posts_1.postsImage, questions: questions }), posts = _k[0], setPosts = _k[1];
-    var _l = react_1.useState({ image: posts_1.postsImage }), editPosts = _l[0], setEditPosts = _l[1];
+    var _l = react_1.useState({}), editPosts = _l[0], setEditPosts = _l[1];
     var _m = react_1.useState(false), settingDone = _m[0], setSettingDone = _m[1];
     var _o = react_1.useState(false), changeDone = _o[0], setChangeDone = _o[1];
     var _p = react_1.useState(0), currentIndex = _p[0], setCurrentIndex = _p[1];
-    var addQuesion = function (i) {
+    var addQuestion = function (i) {
         if (id) {
             setEditQuestions(function (prev) { return __spreadArrays(prev, [{ question: "" }]); });
         }
@@ -77,7 +78,7 @@ function Create(_a) {
         setEditPosts(arr);
         console.log("editPosts", editPosts);
         setSettingDone(true);
-    }, []);
+    }, [currentIndex]);
     var removeQuestion = function (i) {
         if (id) {
             if (editQuestions.length === 1)
@@ -154,14 +155,14 @@ function Create(_a) {
             axios_1["default"].post(process.env.NEXT_PUBLIC_BACKEND_URL + "/posts/update/" + id, editPosts).then(function (res) {
                 console.log(res);
                 close(false);
-                // router.reload()
+                router_1["default"].reload();
             });
             return;
         }
         axios_1["default"].post(process.env.NEXT_PUBLIC_BACKEND_URL + "/posts/create", posts).then(function (res) {
             console.log(res);
             // setCreateModel( true )
-            // router.reload()
+            router_1["default"].reload();
             setAllPosts(function (prev) { return (__spreadArrays(prev, [posts])); });
             close(false);
         });
@@ -221,17 +222,17 @@ function Create(_a) {
                     react_1["default"].createElement(material_1.TextField, { autoFocus: true, onChange: function (e) { handleChange(e, i); }, className: "my-2", value: question.question, label: "Question #" + (i + 1), multiline: true, fullWidth: true, InputProps: {
                             endAdornment: (react_1["default"].createElement(react_1["default"].Fragment, null,
                                 react_1["default"].createElement(material_1.InputAdornment, { position: "end" }, react_1["default"].createElement(react_fontawesome_1.FontAwesomeIcon, { className: "text-green-500 cursor-pointer", icon: free_solid_svg_icons_1.faCheckSquare, onClick: function () { questionType(i); } })),
-                                react_1["default"].createElement(material_1.InputAdornment, { position: "end" }, i === fate().length - 1 && react_1["default"].createElement(react_fontawesome_1.FontAwesomeIcon, { onClick: function () { addQuesion(i); }, className: "text-blue-600 cursor-pointer", icon: free_solid_svg_icons_1.faAdd })),
+                                react_1["default"].createElement(material_1.InputAdornment, { position: "end" }, i === fate().length - 1 && react_1["default"].createElement(react_fontawesome_1.FontAwesomeIcon, { onClick: function () { addQuestion(i); }, className: "text-blue-600 cursor-pointer", icon: free_solid_svg_icons_1.faAdd })),
                                 react_1["default"].createElement(material_1.InputAdornment, { position: "end" }, i === fate().length - 1 &&
                                     react_1["default"].createElement(react_fontawesome_1.FontAwesomeIcon, { className: "text-red-600 cursor-pointer", icon: free_solid_svg_icons_1.faClose, onClick: function () { removeQuestion(i); } }))))
                         } }),
-                    (isMcq[i]) && (react_1["default"].createElement("div", { className: "mb-8" }, id && editPosts.questions[i] ? react_1["default"].createElement(mcq_1["default"], { mcqData: mcqData, preData: editPosts.questions[i].options }) : react_1["default"].createElement(mcq_1["default"], { mcqData: mcqData }))))); }),
+                    (isMcq[i]) && (react_1["default"].createElement("div", { className: "mb-8" }, id && editPosts.questions[i] ? react_1["default"].createElement(mcq_1["default"], { changer: [1, 2], mcqData: mcqData, preData: editPosts.questions[i].options }) : react_1["default"].createElement(mcq_1["default"], { changer: [1, 2], mcqData: mcqData }))))); }),
                 id ? (react_1["default"].createElement(material_1.Button, { className: "float-left", onClick: function () { submit(); } }, "Confirm Changes")) : (react_1["default"].createElement(material_1.Button, { className: "float-left", onClick: function () { submit(); } }, "Post Quiz")))) : (react_1["default"].createElement(material_1.Box, { sx: {
                     '& .MuiTextField-root': { my: 1 }
                 } },
                 react_1["default"].createElement(material_1.TextField, { value: editPosts.name, onChange: handleTyping, name: "name", className: "my-4", fullWidth: true, label: "name" }),
                 react_1["default"].createElement(material_1.TextField, { value: editPosts.description, onChange: handleTyping, name: "description", className: "my-4", multiline: true, fullWidth: true, label: "description" }),
-                react_1["default"].createElement("img", { className: "w-full object-contain", src: id ? editPosts.image : posts.image, alt: "" }),
+                react_1["default"].createElement("img", { className: "w-full object-contain", src: id ? process.env.NEXT_PUBLIC_BACKEND_URL + "/" + editPosts._id + ".jpg" : posts.image, alt: "" }),
                 react_1["default"].createElement(material_1.Button, { className: "block relative my-4" },
                     " ",
                     react_1["default"].createElement("input", { type: "file", className: "absolute w-full h-full opacity-0 ", onChange: handleImage }),

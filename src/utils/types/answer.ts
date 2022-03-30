@@ -1,6 +1,7 @@
 import { questionType } from "./question"
 
 export type answerType = {
+    ulid? : string,
     _id?: string,
     userName?: "",
     userId?: "",
@@ -16,5 +17,6 @@ export type answerType = {
     star?: boolean,
     userEmail?: string,
     userPhone?: number,
-    question?: questionType
+    question?: questionType,
+    progress?: boolean
 }

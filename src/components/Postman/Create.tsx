@@ -23,12 +23,12 @@ export default function Create ( { close, id }: { close?: any, id?: string } ) {
     const [ createModel, setCreateModel ] = useState( false )
     const [ next, setNext ] = useState( false )
     const [ posts, setPosts ] = useState<questionType>( { image: postsImage, questions: questions } )
-    const [ editPosts, setEditPosts ] = useState<questionType>( { image: postsImage } )
+    const [ editPosts, setEditPosts ] = useState<questionType>( { } )
     const [ settingDone, setSettingDone ] = useState( false )
     const [ changeDone, setChangeDone ] = useState( false )
     const [ currentIndex, setCurrentIndex ] = useState( 0 )
 
-    const addQuesion = ( i: number ) => {
+    const addQuestion = ( i: number ) => {
         if ( id ) {
             setEditQuestions( ( prev: any ) => { return [ ...prev!, { question: `` } ] as unknown as [ { question: string } ] } )
         }
@@ -65,7 +65,7 @@ export default function Create ( { close, id }: { close?: any, id?: string } ) {
         setEditPosts( arr as questionType )
         console.log( "editPosts", editPosts )
         setSettingDone( true )
-    }, [] )
+    }, [currentIndex] )
 
     const removeQuestion = ( i: number ) => {
         if ( id ) {
@@ -150,14 +150,14 @@ export default function Create ( { close, id }: { close?: any, id?: string } ) {
             axios.post( `${ process.env.NEXT_PUBLIC_BACKEND_URL }/posts/update/${ id }`, editPosts ).then( ( res ) => {
                 console.log( res )
                 close( false )
-                // router.reload()
+                router.reload()
             } )
             return
         }
         axios.post( `${ process.env.NEXT_PUBLIC_BACKEND_URL }/posts/create`, posts ).then( ( res ) => {
             console.log( res )
             // setCreateModel( true )
-            // router.reload()
+            router.reload()
             setAllPosts( ( prev: any ) => ( [ ...prev, posts ] ) )
             close( false )
         } )
@@ -170,7 +170,6 @@ export default function Create ( { close, id }: { close?: any, id?: string } ) {
 
     useEffect( () => {
         if ( !id ) return
-
     }, [] )
 
     useEffect( () => {
@@ -227,7 +226,7 @@ export default function Create ( { close, id }: { close?: any, id?: string } ) {
                                                     <FontAwesomeIcon className="text-green-500 cursor-pointer" icon={ faCheckSquare as IconProp } onClick={ () => { questionType( i ) } } /> }
                                             </InputAdornment>
                                             <InputAdornment position="end">
-                                                { i === fate()!.length - 1 && <FontAwesomeIcon onClick={ () => { addQuesion( i ) } } className="text-blue-600 cursor-pointer" icon={ faAdd as IconProp } /> }
+                                                { i === fate()!.length - 1 && <FontAwesomeIcon onClick={ () => { addQuestion( i ) } } className="text-blue-600 cursor-pointer" icon={ faAdd as IconProp } /> }
                                             </InputAdornment>
                                             <InputAdornment position="end">
                                                 { i === fate()!.length - 1 &&
@@ -237,7 +236,7 @@ export default function Create ( { close, id }: { close?: any, id?: string } ) {
                                     ),
                                 } } />
                                 { ( isMcq[ i ] ) && ( <div className="mb-8">
-                                    { id && editPosts.questions![ i ] ? <Mcq mcqData={ mcqData } preData={ editPosts.questions![ i ].options } /> : <Mcq mcqData={ mcqData } /> }
+                                    { id && editPosts.questions![ i ] ? <Mcq changer={[1,2]} mcqData={ mcqData } preData={ editPosts.questions![ i ].options } /> : <Mcq changer={[1,2]} mcqData={ mcqData } /> }
 
                                 </div> ) }
                             </div>
@@ -252,7 +251,7 @@ export default function Create ( { close, id }: { close?: any, id?: string } ) {
                     } }>
                         <TextField value={ editPosts.name } onChange={ handleTyping } name="name" className="my-4" fullWidth label="name" />
                         <TextField value={ editPosts.description } onChange={ handleTyping } name="description" className="my-4" multiline fullWidth label="description" />
-                        <img className="w-full object-contain" src={ id ? editPosts.image as string : posts.image as string } alt="" />
+                        <img className="w-full object-contain" src={ id ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/${editPosts._id}.jpg` : posts.image as string} alt="" />
                         <Button className="block relative my-4"> <input type="file" className="absolute w-full h-full opacity-0 " onChange={ handleImage } /> { id ? "Update Photo" : "Upload Photo" } </Button>
                     </Box> ) }
                     <div className="flex justify-end w-full items-center">

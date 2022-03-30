@@ -6,8 +6,7 @@ import { PostsContext } from '../context/PostsContext'
 import { answerType } from '../utils/types/answer'
 
 export default function Winners () {
-    const allAnswers = useContext( AnswersContext )
-    const allPosts = useContext( PostsContext )
+    const { allAnswers } = useContext( AnswersContext )
     const [ answers, setAnswers ] = useState<answerType[]>( [] )
 
     useEffect( () => {
@@ -23,7 +22,7 @@ export default function Winners () {
                     { answers.map( ( answer, i ) => ( <div className="relative my-4" key={ i }>
                         <div className="relative rounded"> 
                             <div className="top-0 bottom-0 left-0 right-0 bg-purple_heart-500 absolute z-10 opacity-80 rounded"></div>
-                            <img src={answer.question!.image as string} alt="" />
+                            <img src={`${process.env.NEXT_PUBLIC_BACKEND_URL}/${answer!.questionId}.jpg`} alt="" />
                         </div>
                         <div className="absolute text-white z-20 top-4 left-4">
                             <h3> {answer.userName} </h3>

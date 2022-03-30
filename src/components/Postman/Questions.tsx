@@ -17,8 +17,8 @@ export default function Questions () {
 
   const [ , forceUpdate ] = useReducer( x => x + 1, 0 )
 
-  const { allPosts } = useContext( PostsContext )
-  const allAnswers = useContext( AnswersContext )
+  const { allPosts, setAllPosts } = useContext( PostsContext )
+  const { allAnswers } = useContext( AnswersContext )
 
   const [ model, setModel ] = useState( false )
   const [ name, setName ] = useState( "" )
@@ -48,7 +48,7 @@ export default function Questions () {
   }, [ allPosts ] )
 
   const handleClick = ( id: string ) => {
-    let dat = answers.filter( answer => answer.questionId! === id )
+    let dat = answers.filter( answer => answer.questionId! === id && answer.progress === false )
     setCurrentAnswers( dat )
     console.log( answers )
   }
@@ -56,9 +56,14 @@ export default function Questions () {
   const handleDelete = () => {
     axios.get( `${ process.env.NEXT_PUBLIC_BACKEND_URL }
 /posts/delete/${ id.pop() }` ).then( () => {
-      // router.reload()
-      setConfirmModal( false )
+      router.reload()
     } )
+    // setAllPosts((prev: any) => prev.map((post: any) => {
+    //   if ( post._id != id ) {
+    //     return post 
+    //   }
+    // }))
+    // setConfirmModal( false )
   }
 
   const handleQuestion = ( id: any ) => {
@@ -78,7 +83,7 @@ export default function Questions () {
     setCurrentAnswers( array )
     console.log( currentAnswers )
     axios.post( `${ process.env.NEXT_PUBLIC_BACKEND_URL }
-/posts/answers/validate/${ currentAnswers[ j ]._id }`, currentAnswers[ j ] )
+/posts/answers/validate/${ currentAnswers[ j ].ulid }`, currentAnswers[ j ] )
     forceUpdate()
   }
 
@@ -131,13 +136,13 @@ export default function Questions () {
                 <p className="font-bold mt-8"> { quest.question } </p>
                 { ans.answers![ k ].answer ? ( <div className="p-2 px-4 mt-4 bg-white rounded">
                   <Editor readOnly={ true } value={ ans.answers![ k ].answer }> </Editor>
-                </div> ) : ( <Mcq mcqData={ mcqData } iconFlag={ false } readFlag={ true } preData={ ans.answers![ k ].options } ansData={ quest } /> ) }
+                </div> ) : ( <Mcq mcqData={ mcqData } changer={[1,2]} iconFlag={ false } readFlag={ true } preData={ ans.answers![ k ].options } ansData={ quest } /> ) }
                 <Divider></Divider>
               </div> ) ) }
             </Box>
               <div className="flex items-center justify-around">
-                <Button className="mt-4 text-blue-500" onClick={ () => { handleValidate( j, "validate" ) } }> Validate </Button>
-                <Button className="mt-4 text-yellow-500" onClick={ () => { handleValidate( j, "star" ) } }> Star </Button>
+                <Button className="mt-4 text-blue-500" onClick={ () => { handleValidate( j, "validate" ) } }> Declare as Winner 🏆 </Button>
+                <Button className="mt-4 text-yellow-500" onClick={ () => { handleValidate( j, "star" ) } }> Add to Watchlist ⭐ </Button>
               </div>
             </AccordionDetails>
           </Accordion> </div> ) ) }

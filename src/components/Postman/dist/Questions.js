@@ -11,6 +11,7 @@ var free_solid_svg_icons_1 = require("@fortawesome/free-solid-svg-icons");
 var react_fontawesome_1 = require("@fortawesome/react-fontawesome");
 var material_1 = require("@mui/material");
 var axios_1 = require("axios");
+var router_1 = require("next/router");
 var react_1 = require("react");
 var Create_1 = require("./Create");
 var rich_markdown_editor_1 = require("rich-markdown-editor");
@@ -19,21 +20,21 @@ var AnswersContext_1 = require("../../context/AnswersContext");
 var mcq_1 = require("./mcq");
 function Questions() {
     var _a = react_1.useReducer(function (x) { return x + 1; }, 0), forceUpdate = _a[1];
-    var allPosts = react_1.useContext(PostsContext_1.PostsContext).allPosts;
-    var allAnswers = react_1.useContext(AnswersContext_1.AnswersContext);
-    var _b = react_1.useState(false), model = _b[0], setModel = _b[1];
-    var _c = react_1.useState(""), name = _c[0], setName = _c[1];
-    var _d = react_1.useState(false), questionsModal = _d[0], setQuestionsModal = _d[1];
-    var _e = react_1.useState(false), confirmModal = _e[0], setConfirmModal = _e[1];
-    var _f = react_1.useState(false), editModal = _f[0], setEditModal = _f[1];
-    var _g = react_1.useState(false), createModal = _g[0], setCreateModal = _g[1];
-    var _h = react_1.useState([]), id = _h[0], setId = _h[1];
-    var _j = react_1.useState([]), data = _j[0], setData = _j[1];
-    var _k = react_1.useState([{}]), mcq = _k[0], setMcq = _k[1];
-    var _l = react_1.useState(""), update = _l[0], setUpdate = _l[1];
-    var _m = react_1.useState([]), answers = _m[0], setAnswers = _m[1];
-    var _o = react_1.useState([]), currentAnswers = _o[0], setCurrentAnswers = _o[1];
-    var _p = react_1.useState(new Array(allPosts.length).fill(true)), open = _p[0], setOpen = _p[1];
+    var _b = react_1.useContext(PostsContext_1.PostsContext), allPosts = _b.allPosts, setAllPosts = _b.setAllPosts;
+    var allAnswers = react_1.useContext(AnswersContext_1.AnswersContext).allAnswers;
+    var _c = react_1.useState(false), model = _c[0], setModel = _c[1];
+    var _d = react_1.useState(""), name = _d[0], setName = _d[1];
+    var _e = react_1.useState(false), questionsModal = _e[0], setQuestionsModal = _e[1];
+    var _f = react_1.useState(false), confirmModal = _f[0], setConfirmModal = _f[1];
+    var _g = react_1.useState(false), editModal = _g[0], setEditModal = _g[1];
+    var _h = react_1.useState(false), createModal = _h[0], setCreateModal = _h[1];
+    var _j = react_1.useState([]), id = _j[0], setId = _j[1];
+    var _k = react_1.useState([]), data = _k[0], setData = _k[1];
+    var _l = react_1.useState([{}]), mcq = _l[0], setMcq = _l[1];
+    var _m = react_1.useState(""), update = _m[0], setUpdate = _m[1];
+    var _o = react_1.useState([]), answers = _o[0], setAnswers = _o[1];
+    var _p = react_1.useState([]), currentAnswers = _p[0], setCurrentAnswers = _p[1];
+    var _q = react_1.useState(new Array(allPosts.length).fill(true)), open = _q[0], setOpen = _q[1];
     var mcqData = function (data) {
         console.log(data);
     };
@@ -45,15 +46,20 @@ function Questions() {
         console.log(data);
     }, [allPosts]);
     var handleClick = function (id) {
-        var dat = answers.filter(function (answer) { return answer.questionId === id; });
+        var dat = answers.filter(function (answer) { return answer.questionId === id && answer.progress === false; });
         setCurrentAnswers(dat);
         console.log(answers);
     };
     var handleDelete = function () {
         axios_1["default"].get(process.env.NEXT_PUBLIC_BACKEND_URL + "\n/posts/delete/" + id.pop()).then(function () {
-            // router.reload()
-            setConfirmModal(false);
+            router_1["default"].reload();
         });
+        // setAllPosts((prev: any) => prev.map((post: any) => {
+        //   if ( post._id != id ) {
+        //     return post 
+        //   }
+        // }))
+        // setConfirmModal( false )
     };
     var handleQuestion = function (id) {
         var arr = data.find(function (dat) { return dat._id === id; });
@@ -69,7 +75,7 @@ function Questions() {
         }
         setCurrentAnswers(array);
         console.log(currentAnswers);
-        axios_1["default"].post(process.env.NEXT_PUBLIC_BACKEND_URL + "\n/posts/answers/validate/" + currentAnswers[j]._id, currentAnswers[j]);
+        axios_1["default"].post(process.env.NEXT_PUBLIC_BACKEND_URL + "\n/posts/answers/validate/" + currentAnswers[j].ulid, currentAnswers[j]);
         forceUpdate();
     };
     var handleSwitch = function (e, i) {
@@ -116,11 +122,11 @@ function Questions() {
                             quest.question,
                             " "),
                         ans.answers[k].answer ? (react_1["default"].createElement("div", { className: "p-2 px-4 mt-4 bg-white rounded" },
-                            react_1["default"].createElement(rich_markdown_editor_1["default"], { readOnly: true, value: ans.answers[k].answer }, " "))) : (react_1["default"].createElement(mcq_1["default"], { mcqData: mcqData, iconFlag: false, readFlag: true, preData: ans.answers[k].options, ansData: quest })),
+                            react_1["default"].createElement(rich_markdown_editor_1["default"], { readOnly: true, value: ans.answers[k].answer }, " "))) : (react_1["default"].createElement(mcq_1["default"], { mcqData: mcqData, changer: [1, 2], iconFlag: false, readFlag: true, preData: ans.answers[k].options, ansData: quest })),
                         react_1["default"].createElement(material_1.Divider, null))); })),
                     react_1["default"].createElement("div", { className: "flex items-center justify-around" },
-                        react_1["default"].createElement(material_1.Button, { className: "mt-4 text-blue-500", onClick: function () { handleValidate(j, "validate"); } }, " Validate "),
-                        react_1["default"].createElement(material_1.Button, { className: "mt-4 text-yellow-500", onClick: function () { handleValidate(j, "star"); } }, " Star ")))),
+                        react_1["default"].createElement(material_1.Button, { className: "mt-4 text-blue-500", onClick: function () { handleValidate(j, "validate"); } }, " Declare as Winner \uD83C\uDFC6 "),
+                        react_1["default"].createElement(material_1.Button, { className: "mt-4 text-yellow-500", onClick: function () { handleValidate(j, "star"); } }, " Add to Watchlist \u2B50 ")))),
             " ")); }))),
         react_1["default"].createElement(material_1.Container, { className: "my-4" }, currentAnswers.length > 0 && react_1["default"].createElement(material_1.Box, null,
             react_1["default"].createElement(material_1.Divider, { className: "bg-purple_heart-500 rounded-full my-4" }),
