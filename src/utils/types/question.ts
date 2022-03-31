@@ -12,3 +12,5 @@ export type questionType = {
     } ]
     open?: boolean
 }
+
+//dist
