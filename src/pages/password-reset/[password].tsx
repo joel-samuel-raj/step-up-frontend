@@ -20,12 +20,18 @@ export default function Password () {
             // console.log(JSON.parse(JSON.stringify(e)))
             setError(e.message)
             setOpen( true )
-        } )
+            alert("Token expired try again !")
+        } ).then( ( res ) => {
+            if ( res ) {
+                alert("passwords updated successfully")
+            }
+        })
     }
     return (
         <FormControl className="w-[100vw] h-[100vh] justify-center items-center bg-white py-12 px-16 rounded" sx={ {
             '& .MuiTextField-root': { my: 1 },
         } }>
+            <h3 className="my-8 mx-0"> Reset Password </h3>
             <TextField color="primary" name="password" className="w-full" InputProps={ {
                 startAdornment: (
                     <InputAdornment position="start">

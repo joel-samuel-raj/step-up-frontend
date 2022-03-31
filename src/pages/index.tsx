@@ -65,13 +65,13 @@ const Home: NextPage = () => {
   }
 
   const handleSubmit = ( j: any, object: questionType, flag?: boolean ) => {
-    if ( !flag && question!.questions!.length === answer!.answers!.length) {
-      alert("Fill all the Fields to submit !")
-      return
-    }
     if ( !user.name ) {
       setLoginModel( true )
       console.log( loginModel )
+      return
+    }
+    if ( !flag && question!.questions!.length === answer!.answers!.length) {
+      alert("Fill all the Fields to submit !")
       return
     }
     if ( user.name ) {

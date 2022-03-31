@@ -23,6 +23,8 @@ export default function Navbar ( { loginModel, setloginmodel }: { loginModel?: b
     const [ forgotPassword, setForgotPassword ] = React.useState( false )
     const [log, setLog] = React.useState( false )
 
+    const defaultDp = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pg0KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDE5LjAuMCwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPg0KPHN2ZyB2ZXJzaW9uPSIxLjEiIGlkPSJMYXllcl8xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4PSIwcHgiIHk9IjBweCINCgkgdmlld0JveD0iMCAwIDM4OS4zNCAzODkuMzQiIHN0eWxlPSJlbmFibGUtYmFja2dyb3VuZDpuZXcgMCAwIDM4OS4zNCAzODkuMzQ7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxwYXRoIHN0eWxlPSJmaWxsOiMxRUE2QzY7IiBkPSJNMzQ3LjQxNSwzMzAuM2MwLDAuMDQsMCwwLjA4LDAsMC4xM2MtNDAuMzcsMzYuNjEtOTMuOTYsNTguOTEtMTUyLjc0LDU4LjkxDQoJYy01OC43OSwwLTExMi4zOC0yMi4zLTE1Mi43NS01OC45MWMwLTAuMDUsMC0wLjA5LDAtMC4xM2MwLTYwLjg5LDM1LjYzLTExMy40NSw4Ny4xNy0xMzcuOThjMTkuMzcsMTkuMzIsNDIuMDUsMjkuNzMsNjUuNTgsMjkuNzMNCgljMjMuNTQsMCw0Ni4yMS0xMC40MSw2NS41OS0yOS43M0MzMTEuODA1LDIxNi44NSwzNDcuNDE1LDI2OS40MSwzNDcuNDE1LDMzMC4zeiIvPg0KPHBhdGggc3R5bGU9ImZpbGw6I0ZDRDA5RjsiIGQ9Ik0xOTQuNjc1LDBjNDYuNjYsMCw4NC40OSwzNy44Miw4NC40OSw4NC40OGMwLDQ2LjY3LTM3LjgzLDExMC40OS04NC40OSwxMTAuNDkNCglzLTg0LjQ5LTYzLjgyLTg0LjQ5LTExMC40OUMxMTAuMTg1LDM3LjgyLDE0OC4wMTUsMCwxOTQuNjc1LDB6Ii8+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8L3N2Zz4NCg=="
+
     const [ newUser, setNewUser ] = useState( {
         name: "",
         rollNumber: "",
@@ -73,7 +75,15 @@ export default function Navbar ( { loginModel, setloginmodel }: { loginModel?: b
     }
 
     const createUser = async () => {
-        await axios.post( `${ process.env.NEXT_PUBLIC_BACKEND_URL }/auth/local/signin`, newUser ).then( () => router.reload() )
+        await axios.post( `${ process.env.NEXT_PUBLIC_BACKEND_URL }/auth/local/signin`, newUser ).then( (res) => {
+            if ( res.data = "User Account exists already !" ) {
+                alert(res.data)
+                return
+            }
+            else {
+                router.reload()
+            }
+        } )
     }
 
     const loginUser = async () => {
@@ -127,7 +137,7 @@ export default function Navbar ( { loginModel, setloginmodel }: { loginModel?: b
                     <Box sx={ {
                         '& .MuiTextField-root': { my: 1 },
                     } } className="relative bg-white py-12 px-4 md:px-16 rounded">
-                        <div className="p-2 flex justify-center items-centerw-6 h-6 cursor-pointer bg-red-500 hover:bg-red-600 rounded absolute top-2 right-2" onClick={ () => setForgotPassword( false ) }>
+                        <div className="p-2 flex justify-center items-center w-6 h-6 cursor-pointer bg-red-500 hover:bg-red-600 rounded absolute top-2 right-2" onClick={ () => setForgotPassword( false ) }>
                             <FontAwesomeIcon className="text-white text-lg" icon={ faClose as IconProp }></FontAwesomeIcon>
                         </div>
                         <p className="text-gray-500"> Enter the email registered with this account to get the password reset link</p>
@@ -238,7 +248,7 @@ export default function Navbar ( { loginModel, setloginmodel }: { loginModel?: b
                             <MenuIcon />
                         </IconButton>
                         <Typography onClick={ () => { router.push( "/" ) } } variant="h6" component="div" sx={ { flexGrow: 1 } }>
-                            StepUp Quiz
+                            GCT Quiz App
                         </Typography>
                         {  log  ? logout() : login() }
                     </Toolbar>
@@ -250,7 +260,7 @@ export default function Navbar ( { loginModel, setloginmodel }: { loginModel?: b
                         <Link href="/Profile">
                             <ListItem className="flex items-center justify-center" button>
                                 <ListItemIcon>
-                                    <img className="h-8 rounded-full object-contain" src={ currentUser.profilePicture } alt="" />
+                                    <img className="h-8 rounded-full object-contain" src={ currentUser.profilePicture || defaultDp } alt="" />
                                 </ListItemIcon>
                                 <ListItemText> My Profile </ListItemText>
                             </ListItem>
