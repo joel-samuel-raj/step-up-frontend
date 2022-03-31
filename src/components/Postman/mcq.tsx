@@ -118,3 +118,5 @@ export default function Mcq ( { mcqData, changer, preData, ansData, iconFlag, re
         </div>
     )
 }
+
+//dist

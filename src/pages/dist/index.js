@@ -100,11 +100,13 @@ var Home = function () {
     };
     var editorValue = function (j) {
         if (!(existingAnswer === {} || existingAnswer === undefined)) {
-            if (existingAnswer.answers[j]) {
-                return existingAnswer.answers[j].answer;
-            }
-            else {
-                return " ";
+            if (existingAnswer.answers) {
+                if (existingAnswer.answers[j]) {
+                    return existingAnswer.answers[j].answer;
+                }
+                else {
+                    return " ";
+                }
             }
         }
         else {
@@ -188,3 +190,4 @@ var Home = function () {
             React.createElement(material_1.Alert, { onClose: function () { return setLoginModel(false); }, severity: "error", sx: { width: '100%' } }, "Please Login To Submit !"))));
 };
 exports["default"] = Home;
+//dist

@@ -10,4 +10,6 @@ export class User {
     password?: ""
     isAdmin?: false
     data?: string
-}  
+} 
+
+//dist

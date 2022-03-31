@@ -114,3 +114,4 @@ function Mcq(_a) {
                 (i === template.length - 1 && flag) && react_1["default"].createElement(react_fontawesome_1.FontAwesomeIcon, { className: "text-blue-500", icon: free_solid_svg_icons_1.faAdd, onClick: function () { addField(); } }))))); }))));
 }
 exports["default"] = Mcq;
+//dist

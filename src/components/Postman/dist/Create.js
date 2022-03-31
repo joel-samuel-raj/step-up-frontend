@@ -246,3 +246,4 @@ function Create(_a) {
                     react_1["default"].createElement(react_fontawesome_1.FontAwesomeIcon, { className: "text-blue-500 text-lg", icon: free_solid_svg_icons_1.faArrowRight }))))))));
 }
 exports["default"] = Create;
+//dist

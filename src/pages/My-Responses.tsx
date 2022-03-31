@@ -5,3 +5,5 @@ export default function MyResponses() {
     <div>My-Responses</div>
   )
 }
+
+//dist

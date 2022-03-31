@@ -185,3 +185,4 @@ function Questions() {
             react_1["default"].createElement(material_1.Alert, { onClose: function () { setCreateModal(false); }, severity: "success", sx: { width: '100%' } }, "Post Created Succesfully \uD83D\uDE0D"))));
 }
 exports["default"] = Questions;
+//dist

@@ -11,7 +11,10 @@ export const AnswersContext = createContext<context>({ allAnswers: [{}], setAllA
 export const AnswersProvider = ( props: any ) => {
     const [ allAnswers, setAllAnswers ] = useState<[ answerType ]>( [ {} ] )
     useEffect( () => {
-        axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/posts/answers/get`).then(res => setAllAnswers(res.data))
+        axios.get( `${ process.env.NEXT_PUBLIC_BACKEND_URL }/posts/answers/get` ).then( res => {
+            setAllAnswers( res.data )
+            console.log(res.data)
+        } )
     }, [])
     return (
         <AnswersContext.Provider value={ {allAnswers, setAllAnswers} }>
@@ -19,3 +22,5 @@ export const AnswersProvider = ( props: any ) => {
         </AnswersContext.Provider>
     )
 }
+
+//dist

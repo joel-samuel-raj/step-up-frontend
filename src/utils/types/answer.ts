@@ -20,3 +20,4 @@ export type answerType = {
     question?: questionType,
     progress?: boolean
 }
+//dist
