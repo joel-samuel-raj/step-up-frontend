@@ -190,3 +190,4 @@ var Home = function () {
             React.createElement(material_1.Alert, { onClose: function () { return setLoginModel(false); }, severity: "error", sx: { width: '100%' } }, "Please Login To Submit !"))));
 };
 exports["default"] = Home;
+//dist
