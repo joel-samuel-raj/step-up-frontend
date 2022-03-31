@@ -19,7 +19,7 @@ module.exports = {
       }
     ]
   },
-  "presets": [ "next/babel" ],
+  // "presets": [ "next/babel" ],
   async rewrites() {
     return [
       {

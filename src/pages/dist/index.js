@@ -100,11 +100,13 @@ var Home = function () {
     };
     var editorValue = function (j) {
         if (!(existingAnswer === {} || existingAnswer === undefined)) {
-            if (existingAnswer.answers[j]) {
-                return existingAnswer.answers[j].answer;
-            }
-            else {
-                return " ";
+            if (existingAnswer.answers) {
+                if (existingAnswer.answers[j]) {
+                    return existingAnswer.answers[j].answer;
+                }
+                else {
+                    return " ";
+                }
             }
         }
         else {

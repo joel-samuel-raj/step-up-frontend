@@ -11,7 +11,9 @@ export const PostsContext = createContext<context>( { allPosts: [{}], setAllPost
 export const PostsProvider = ( props: any ) => {
     const [ allPosts, setAllPosts ] = useState<[questionType]>( [{}] )
     useEffect( function () {
-        axios.get( `${process.env.NEXT_PUBLIC_BACKEND_URL}/posts/getPosts` ).then( res => setAllPosts( res.data ) )
+        axios.get( `${process.env.NEXT_PUBLIC_BACKEND_URL}/posts/getPosts` ).then( res => {setAllPosts( res.data )
+        console.log(res.data)
+        } )
 
     }, [] )
     return (

@@ -104,12 +104,14 @@ const Home: NextPage = () => {
   }
 
   const editorValue = (j: number) => {
-    if(!(existingAnswer === {} || existingAnswer === undefined)) {
-      if(existingAnswer.answers[j]) {
-        return existingAnswer.answers[j].answer
-      }
-      else {
-        return " "
+    if ( !( existingAnswer === {} || existingAnswer === undefined ) ) {
+      if(existingAnswer.answers) {
+        if(existingAnswer.answers[j]) {
+          return existingAnswer.answers[j].answer
+        }
+        else {
+          return " "
+        }
       }
     }
     else {
