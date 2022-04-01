@@ -76,11 +76,13 @@ export default function Navbar ( { loginModel, setloginmodel }: { loginModel?: b
 
     const createUser = async () => {
         await axios.post( `${ process.env.NEXT_PUBLIC_BACKEND_URL }/auth/local/signin`, newUser ).then( (res) => {
-            if ( res.data = "User Account exists already !" ) {
+            console.log(res)
+            if ( res.status === 280 ) {
                 alert(res.data)
                 return
             }
             else {
+                alert(res.data)
                 router.reload()
             }
         } )
