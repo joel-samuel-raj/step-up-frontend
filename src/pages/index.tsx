@@ -70,7 +70,8 @@ const Home: NextPage = () => {
       console.log( loginModel )
       return
     }
-    if ( !flag && question!.questions!.length === answer!.answers!.length) {
+    if ( !flag && !(answer!.question!.questions!.length === answer!.answers!.length)) {
+      console.log(answer!.question!.questions!.length === answer!.answers!.length)
       alert("Fill all the Fields to submit !")
       return
     }
