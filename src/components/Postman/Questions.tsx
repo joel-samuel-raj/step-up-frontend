@@ -87,6 +87,11 @@ export default function Questions () {
     forceUpdate()
   }
 
+  const classChange = (bool: boolean) => {
+    let classes = "cursor-pointer p-2 rounded relative"
+    return bool ? `${classes} bg-gradient-to-tr from-purple-400 to-purple-500 text-white` : `${classes} bg-gradient-to-tr from-red-400 to-red-500 text-white`
+  } 
+
   const handleSwitch = ( e: any, i: number ) => {
     e.stopPropagation()
     let arr = data
@@ -105,9 +110,9 @@ export default function Questions () {
       <Container className="py-4 rounded shadow-lg bg-purple_heart-200">
         <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 my-4">
           { data.map( ( dat: any, i: number ) => (
-            <Box onClick={ () => { handleClick( dat._id ) } } key={ i } className="bg-gradient-to-tr cursor-pointer text-white from-purple-400 to-purple-500 p-2 rounded relative">
+            <Box onClick={ () => { handleClick( dat._id ) } } key={ i } className={classChange(dat.open)}>
               <h4> { dat.name } </h4>
-              <Switch
+              <Switch color="primary"
                 checked={ dat.open }
                 onChange={ ( e ) => handleSwitch( e, i ) }
               />
@@ -129,11 +134,11 @@ export default function Questions () {
       </Container>
       <Container className="mt-4">
         { currentAnswers.length > 0 && <Box>
-          { currentAnswers.map( ( ans, j ) => ( <div key={ j } className="py-4"> <Accordion color="primary" className="bg-purple_heart-50">
+          { currentAnswers.map( ( ans, j ) => ( <div key={ j } className="py-4"> <Accordion sx={{backgorundColor : "gray"}} className="bg-purple_heart-50">
             <AccordionSummary color="primary" className="rounded text-purple-900" expandIcon={ <FontAwesomeIcon icon={ faChevronDown as IconProp }></FontAwesomeIcon> }> { ans.userName } </AccordionSummary>
             <AccordionDetails> <Box>
               { handleQuestion( ans.questionId ).questions.map( ( quest: any, k: number ) => ( <div key={ k }>
-                <p className="font-bold mt-8"> { quest.question } </p>
+                <p className="font-bold mt-8 whitespace-pre-line"> { quest.question } </p>
                 { ans.answers![ k ].answer ? ( <div className="p-2 px-4 mt-4 bg-white rounded">
                   <Editor readOnly={ true } value={ ans.answers![ k ].answer }> </Editor>
                 </div> ) : ( <Mcq mcqData={ mcqData } changer={[1,2]} iconFlag={ false } readFlag={ true } preData={ ans.answers![ k ].options } ansData={ quest } /> ) }
@@ -183,24 +188,31 @@ export default function Questions () {
         className="flex justify-center items-center p-4"
         open={ questionsModal }
         onClose={ () => { setQuestionsModal( false ) } }
-        style={ { overflow: 'scroll' } }>
-        <Box className="bg-white px-4 md:px-16 m-4 md:m-auto md:w-4/5 lg:w-3/5 py-8 rounded relative flex justify-center items-center flex-col">
-          <div className="flex justify-center items-center p-2 w-6 h-6 cursor-pointer bg-red-500 hover:bg-red-600 rounded absolute top-2 right-2" onClick={ () => setQuestionsModal( false ) }>
-            <FontAwesomeIcon className="text-white text-lg" icon={ faClose as IconProp }></FontAwesomeIcon>
-          </div>
-          <Create close={ ( bool: boolean ) => { setQuestionsModal( bool ); setCreateModal( !bool ) } } />
-        </Box>
+        style={ { overflow: 'auto' } }>
+          <Modal open={ questionsModal }
+        onClose={ () => { setQuestionsModal( false ) } }
+        style={ { overflow: 'auto' } }>
+            <Box className="bg-white my-4 px-4 md:px-16 m-4 md:m-auto md:w-4/5 lg:w-3/5 py-8 rounded relative flex justify-center items-center flex-col">
+              <div className="flex justify-center items-center p-2 w-6 h-6 cursor-pointer bg-red-500 hover:bg-red-600 rounded absolute top-2 right-2" onClick={ () => setQuestionsModal( false ) }>
+                <FontAwesomeIcon className="text-white text-lg" icon={ faClose as IconProp }></FontAwesomeIcon>
+              </div>
+              <Create close={ ( bool: boolean ) => { setQuestionsModal( bool ); setCreateModal( !bool ) } } />
+            </Box>
+          </Modal>
       </Modal>
 
-      <Modal style={ { overflow: 'scroll' } } className="p-4 flex justify-center items-center"
+      <Modal style={ { overflow: 'auto' } } className="p-4 flex justify-center items-center"
         open={ editModal }
         onClose={ () => { setEditModal( false ) } }>
-        <Box className="bg-white px-4 md:px-16 m-4 md:m-auto md:w-4/5 lg:w-3/5 py-8 rounded relative flex justify-center items-center flex-col">
-          <div className="flex justify-center items-center p-2 w-6 h-6 cursor-pointer bg-red-500 hover:bg-red-600 rounded absolute top-2 right-2" onClick={ () => setEditModal( false ) }>
-            <FontAwesomeIcon className="text-white text-lg" icon={ faClose as IconProp }></FontAwesomeIcon>
-          </div>
-          <Create close={ ( bool: boolean ) => { setEditModal( bool ); setCreateModal( !bool ) } } id={ update } />
-        </Box>
+        <Modal open={ editModal }
+        onClose={ () => { setEditModal( false ) } } style={ { overflow: 'auto' } }>
+          <Box className="bg-white my-4 px-4 md:px-16 m-4 md:m-auto md:w-4/5 lg:w-3/5 py-8 rounded relative flex justify-center items-center flex-col">
+            <div className="flex justify-center items-center p-2 w-6 h-6 cursor-pointer bg-red-500 hover:bg-red-600 rounded absolute top-2 right-2" onClick={ () => setEditModal( false ) }>
+              <FontAwesomeIcon className="text-white text-lg" icon={ faClose as IconProp }></FontAwesomeIcon>
+            </div>
+            <Create close={ ( bool: boolean ) => { setEditModal( bool ); setCreateModal( !bool ) } } id={ update } />
+          </Box>
+        </Modal>
       </Modal>
       <Modal
         className="flex justify-center items-center"
@@ -210,7 +222,7 @@ export default function Questions () {
           <div className="flex justify-center items-center p-2 w-6 h-6 cursor-pointer bg-red-500 hover:bg-red-600 rounded absolute top-2 right-2" onClick={ () => setConfirmModal( false ) }>
             <FontAwesomeIcon className="text-white text-lg" icon={ faClose as IconProp }></FontAwesomeIcon>
           </div>
-          <h4> Are you sure to delele the post ? </h4>
+          <h4> Are you sure to delele the quiz ? </h4>
           <div>
             <Button onClick={ () => { handleDelete() } } className="text-yellow-500" > Yes </Button>
             <Button onClick={ () => { setConfirmModal( false ) } } className="text-red-500" > No </Button>

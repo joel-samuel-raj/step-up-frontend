@@ -104,7 +104,7 @@ export default function Navbar ( { loginModel, setloginmodel }: { loginModel?: b
     const login = () => {
         return (
             <div>
-                <Button onClick={ () => setModal( true ) } color="inherit">Login</Button>
+                <Button className="poppins" onClick={ () => setModal( true ) } color="inherit">Login</Button>
                 <Modal className="flex justify-center items-center p-4" open={ modal } onClose={ () => setModal( false ) }>
                     <Box sx={ {
                         '& .MuiTextField-root': { my: 1 },
@@ -229,14 +229,14 @@ export default function Navbar ( { loginModel, setloginmodel }: { loginModel?: b
         }
         return (
             <>
-                <Button onClick={ () => { logoutUser() } } color="inherit">Logout</Button>
+                <Button className="poppins" onClick={ () => { logoutUser() } } color="inherit">Logout</Button>
             </>
         )
     }
 
     return (
         <>
-            <Box className="mb-20" sx={ { flexGrow: 1 } }>
+            <Box className="mb-20 relative" sx={ { flexGrow: 1 } }>
                 <AppBar>
                     <Toolbar>
                         <IconButton
@@ -249,22 +249,24 @@ export default function Navbar ( { loginModel, setloginmodel }: { loginModel?: b
                         >
                             <MenuIcon />
                         </IconButton>
-                        <Typography onClick={ () => { router.push( "/" ) } } variant="h6" component="div" sx={ { flexGrow: 1 } }>
+                        <h5 onClick={ () => { router.push( "/" ) } } >
                             GCT Quiz App
-                        </Typography>
-                        {  log  ? logout() : login() }
+                        </h5>
+                        <div className="absolute right-4 cursor-pointer">
+                            {  log  ? logout() : login() }
+                        </div>
                     </Toolbar>
                 </AppBar>
             </Box>
             <Box>
                 <Drawer anchor="left" open={ drawer } onClose={ () => setDrawer( false ) }>
                     <List sx={ { width: "100%", padding: "1rem" } }>
-                        <Link href="/Profile">
+                        <Link href="/Dashboard">
                             <ListItem className="flex items-center justify-center" button>
                                 <ListItemIcon>
                                     <img className="h-8 rounded-full object-contain" src={ currentUser.profilePicture || defaultDp } alt="" />
                                 </ListItemIcon>
-                                <ListItemText> My Profile </ListItemText>
+                                <ListItemText> Dashboard </ListItemText>
                             </ListItem>
                         </Link>
                         <Link href="/">

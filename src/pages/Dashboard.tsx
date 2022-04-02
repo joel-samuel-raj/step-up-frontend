@@ -11,7 +11,8 @@ import { answerType } from '../utils/types/answer'
 const Profile = () => {
 
   const user: User = useContext( UserContext )
-  const {allAnswers} = useContext( AnswersContext )
+  const { allAnswers } = useContext( AnswersContext )
+  const { allPosts } = useContext( PostsContext )
 
   const admin = () => {
     if ( user.isAdmin! ) {
@@ -34,17 +35,21 @@ const Profile = () => {
       { ans.length > 0 ? ( <> {
         ans[ 0 ].question && ( <Container className="my-6 py-6 border-b-2 border-purple-900 rounded">
           <h3> All Responses 📚 </h3>
-          { ans.map( ( answer, i ) => ( <div key={ i }>
-            <p> { '👉🏼' + answer.question!.name } </p>
-          </div> ) ) }
+          { ans.map( ( answer, i ) => {
+            return allPosts.find( ( post ) => post._id === answer.questionId ) ? ( <div key={ i }>
+              <p> { '👉🏼' + answer.question!.name } </p>
+            </div> ) : ( <> </> )
+          } ) }
         </Container> ) }
         { ans[ 0 ].question && ( <Container className="my-6 py-6 border-b-2 border-purple-900 rounded">
           <h3> Watch List ⭐ </h3>
           { ans.map( ( answer, i ) => {
             if ( answer.star ) {
-              return ( <div key={ i }>
-                <p> { '👉🏼' + answer.question!.name } </p>
-              </div> )
+              ans.map( ( answer, i ) => {
+                return allPosts.find( ( post ) => post._id === answer.questionId ) ? ( <div key={ i }>
+                  <p> { '👉🏼' + answer.question!.name } </p>
+                </div> ) : ( <> </> )
+              } )
             }
           } ) }
         </Container> ) }
@@ -52,18 +57,20 @@ const Profile = () => {
           <h3> Winning Responses 😍 </h3>
           { ans.map( ( answer, i ) => {
             if ( answer.validate ) {
-              return ( <div key={ i }>
-                <p> { '👉🏼' + answer.question!.name } </p>
-              </div> )
+              ans.map( ( answer, i ) => {
+                return allPosts.find( ( post ) => post._id === answer.questionId ) ? ( <div key={ i }>
+                  <p> { '👉🏼' + answer.question!.name } </p>
+                </div> ) : ( <> </> )
+              } )
             }
           } ) }
-        </Container> )  
-        } </> ) : ( <> 
+        </Container> )
+        } </> ) : ( <>
           <Container>
             <h2> Submit a Response ! </h2>
           </Container>
         </> )
-    }
+      }
     </>
   )
 }

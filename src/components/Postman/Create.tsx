@@ -212,7 +212,7 @@ export default function Create ( { close, id }: { close?: any, id?: string } ) {
         <>
             { allPosts && ( ( id && ( typeof editPosts.name === 'string' ) ) || ( !id ) ) && ( <>
                 <Container className="my-4">
-                    { <h3 className="my-4"> { id ? `Edit ${ editPosts.name }` : `Create ${ posts.name }` } </h3> }
+                    { <h3 className="my-4"> { editPosts.name || posts.name ? (id ? `Edit ${ editPosts.name }` : `Create ${ posts.name }`) : "Create Quiz" } </h3> }
                     { next ? ( <Box sx={ {
                         '& .MuiTextField-root': { my: 1 }
                     } }>
@@ -249,8 +249,8 @@ export default function Create ( { close, id }: { close?: any, id?: string } ) {
                     </Box> ) : ( <Box sx={ {
                         '& .MuiTextField-root': { my: 1 },
                     } }>
-                        <TextField value={ editPosts.name } onChange={ handleTyping } name="name" className="my-4" fullWidth label="name" />
-                        <TextField value={ editPosts.description } onChange={ handleTyping } name="description" className="my-4" multiline fullWidth label="description" />
+                        <TextField value={ editPosts.name } onChange={ handleTyping } name="name" className="my-4" fullWidth label="Name" />
+                        <TextField value={ editPosts.description } onChange={ handleTyping } name="description" className="my-4" multiline fullWidth label="Description" />
                         <img className="w-full object-contain" src={ id ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/${editPosts._id}.jpg` : posts.image as string} alt="" />
                         <Button className="block relative my-4"> <input type="file" className="absolute w-full h-full opacity-0 " onChange={ handleImage } /> { id ? "Update Photo" : "Upload Photo" } </Button>
                     </Box> ) }

@@ -1,4 +1,4 @@
-import { Button, Container, Box, Divider, Snackbar, Alert } from "@mui/material"
+import { Button, Container, Box, Divider, Snackbar, Alert, Modal } from "@mui/material"
 import type { NextPage } from "next"
 import Navbar from "../components/Navbar"
 import Mcq from "../components/Postman/mcq"
@@ -13,11 +13,14 @@ import { questionType } from "../utils/types/question"
 import { AnswersContext } from "../context/AnswersContext"
 import { ulid } from "ulid"
 import router from "next/router"
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {faClose } from '@fortawesome/free-solid-svg-icons'
+import { IconProp } from "@fortawesome/fontawesome-svg-core"
 
 const Home: NextPage = () => {
 
   const { allPosts } = useContext( PostsContext )
-  const { allAnswers, setAllAnswers} = useContext( AnswersContext )
+  const { allAnswers, setAllAnswers } = useContext( AnswersContext )
   const user: User = useContext( UserContext )
 
   const [ , forceUpdate ] = useReducer( x => x + 1, 0 )
@@ -25,14 +28,17 @@ const Home: NextPage = () => {
   const [ mcq, setMcq ] = useState<any>( [ {} ] )
   const [ data, setData ] = useState<[ questionType ]>( [ {} ] )
   const [ loginModel, setLoginModel ] = useState( false )
+  const [ responseModel, setResponseModel ] = useState( false )
   const [ answer, setAnswer ] = useState<answerType>( { answers: [ { answer: "" } ] } )
   const [ question, setQuestion ] = useState<questionType>( {} )
   const [ currentIndex, setCurrentIndex ] = useState( 0 )
+  const [ currentQuestion, setCurrentQuestion ] = useState( -1 )
   const [ clicked, setClicked ] = useState( false )
+  const [ answerModal, setAnswerModal ] = useState( new Array( 1000 ).fill( false ) )
 
   const [ existingAnswer, setExistingAnswer ] = useState<any>( {} )
 
-  useEffect( () => { 
+  useEffect( () => {
     console.log( process.env.NEXT_PUBLIC_BACKEND_URL )
     if ( allPosts.length > 0 ) {
       let arr: questionType[] = allPosts.filter( ( post: any ) => post.open === true )
@@ -42,24 +48,24 @@ const Home: NextPage = () => {
     }
   }, [ allPosts, question, allAnswers, answer ] )
 
-  useEffect(() => {
+  useEffect( () => {
     let array = allAnswers.find( answer => answer.userId === user._id && answer.questionId === question._id )
     setExistingAnswer( array )
-    if(array) {
-      if(array._id) {
+    if ( array ) {
+      if ( array._id ) {
         setAnswer( array as answerType )
       }
     }
     console.log( answer )
     // console.log( array )
     forceUpdate()
-  }, [question, existingAnswer, answer])
+  }, [ question, existingAnswer, answer ] )
 
   const handleChange = ( e: string, j: number ) => {
     let array = answer
     array![ 'answers' ]![ j ] = {
       answer: e as string
-    }  
+    }
     setAnswer( array )
     console.log( answer )
   }
@@ -70,14 +76,14 @@ const Home: NextPage = () => {
       console.log( loginModel )
       return
     }
-    if ( !flag && !(answer!.question!.questions!.length === answer!.answers!.length)) {
-      console.log(answer!.question!.questions!.length === answer!.answers!.length)
-      alert("Fill all the Fields to submit !")
+    if ( !flag && !( answer!.question!.questions!.length === answer!.answers!.length ) ) {
+      console.log( answer!.question!.questions!.length === answer!.answers!.length )
+      alert( "Fill all the Fields to submit !" )
       return
     }
     if ( user.name ) {
       let obj: any = {
-        ulid : ulid(),
+        ulid: ulid(),
         userName: user.name,
         userId: user._id,
         questionId: j,
@@ -87,49 +93,50 @@ const Home: NextPage = () => {
         progress: flag,
         question: object
       }
-      if(!(existingAnswer === {} || existingAnswer === undefined)) {
-        axios.post( `${ process.env.NEXT_PUBLIC_BACKEND_URL }/posts/answers/update/${existingAnswer.ulid}`, obj ).then( () => {
+      setResponseModel(true)
+      if ( !( existingAnswer === {} || existingAnswer === undefined ) ) {
+        axios.post( `${ process.env.NEXT_PUBLIC_BACKEND_URL }/posts/answers/update/${ existingAnswer.ulid }`, obj ).then( () => {
           setQuestion( {} )
-          setAllAnswers((prev: any) => ([...prev, obj]))
+          setAllAnswers( ( prev: any ) => ( [ ...prev, obj ] ) )
           router.reload()
         } )
-        return 
+        return
       }
       axios.post( `${ process.env.NEXT_PUBLIC_BACKEND_URL }/posts/answers/post`, obj ).then( () => {
         setQuestion( {} )
-        setAllAnswers((prev: any) => ([...prev, obj]))
+        setAllAnswers( ( prev: any ) => ( [ ...prev, obj ] ) )
         router.reload()
       } )
       console.log( "obj" )
     }
   }
 
-  const editorValue = (j: number) => {
+  const editorValue = ( j: number ) => {
     if ( !( existingAnswer === {} || existingAnswer === undefined ) ) {
-      if(existingAnswer.answers) {
-        if(existingAnswer.answers[j]) {
-          return existingAnswer.answers[j].answer
+      if ( existingAnswer.answers ) {
+        if ( existingAnswer.answers[ j ] ) {
+          return existingAnswer.answers[ j ].answer
         }
         else {
-          return " "
+          return 
         }
       }
     }
     else {
-      console.log(existingAnswer)
-      return " "
+      console.log( existingAnswer )
+      return 
     }
   }
 
   const templateData = ( j: number ) => {
     if ( question.questions![ j ].options!.length > 0 ) {
-      if(!(existingAnswer === {} || typeof existingAnswer === 'undefined')) {
-        if(existingAnswer.answers) {
-          if(existingAnswer.answers[j]) {
+      if ( !( existingAnswer === {} || typeof existingAnswer === 'undefined' ) ) {
+        if ( existingAnswer.answers ) {
+          if ( existingAnswer.answers[ j ] ) {
             if ( existingAnswer.answers[ j ].options ) {
-              if(existingAnswer.answers[j].options.length > 1) {
+              if ( existingAnswer.answers[ j ].options.length > 1 ) {
                 let arr = existingAnswer.answers![ j ].options
-                console.log(arr)
+                console.log( arr )
                 return arr
               }
             }
@@ -147,6 +154,11 @@ const Home: NextPage = () => {
       }
     }
     // forceUpdate()
+  }
+
+  const handleModalClose = ( i: number ) => {
+    setAnswerModal( ( prev ) => prev.map( ( pre, j ) => j === i ? false : pre ) )
+    console.log( answerModal )
   }
 
   const mcqData = ( data: any ) => {
@@ -167,11 +179,15 @@ const Home: NextPage = () => {
   return (
     <>
       <Navbar />
-      <Container className="my-4 mt-20"> 
+      <Container className="my-4 mt-20">
         <h3 className="m-4"> Available Quiz 👇🏼 </h3>
-        <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           { data.map( ( dat: any, i: number ) => (
-            <Box key={ i } onClick={ () => { setQuestion( data[ i ] ) } } className="bg-gradient-to-tr cursor-pointer text-white from-purple-400 to-purple-900 rounded relative">
+            <Box key={ i } onClick={ () => {
+              setQuestion( data[ i ] ); setAnswerModal( ( prev ) => prev.map( ( pre, l ) => {
+                return l === i ? true : pre
+              } ) ); setCurrentQuestion( i ); console.log( answerModal, currentQuestion )
+            } } className="bg-gradient-to-tr cursor-pointer text-white from-purple-400 to-purple-900 rounded relative">
               <h3 className="m-4"> { dat.name } </h3>
               <img className="w-full object-contain rounded" src={ `${ process.env.NEXT_PUBLIC_BACKEND_URL }/${ dat._id }.jpg` } alt="" />
               <Divider className="m-4 bg-purple-900"></Divider>
@@ -180,27 +196,32 @@ const Home: NextPage = () => {
           ) ) }
         </div>
       </Container>
-      { question._id && <Container className="mt-12 mb-4">
-        <h3 className="my-4"> Take Quiz ✅ </h3>
-        <div className="py-8 px-2 rounded shadow-lg border-2 border-purple-500">
-          <h3 className="text-center"> { question.name } </h3>
-          { question.questions!.map( ( quest, j: number ) => ( <div onChange={() => {setCurrentIndex(j); setClicked(true)}} key={ j } className="p-4">
-            <p className="text-lg"> { quest.question } </p> 
-            { quest!.options!.length > 1 ? <Mcq iconFlag={false} inputFlag={false} mcqData={mcqData} changer={[question._id, existingAnswer]} preData={templateData(j)}/> : <div className="my-4"> 
-              <Editor value={ editorValue(j) } onChange={ ( value ) => { handleChange( value(), j ); setCurrentIndex(j) } } placeholder="Start Writing Here..."
-              />
-            </div> }
+      { currentQuestion >= 0 && <Modal className="flex justify-center" open={ answerModal[ currentQuestion ] } onClose={ () => handleModalClose( currentQuestion ) }>
+        <Box style={ { overflow: "auto" } } className="w-11/12 relative bg-white m-4 p-4 lg:px-12 h-full">
+          <div className="p-2 flex justify-center items-center w-6 h-6 cursor-pointer bg-red-500 hover:bg-red-600 rounded absolute top-4 right-2" onClick={ () => handleModalClose( currentQuestion ) }>
+            <FontAwesomeIcon className="text-white text-lg" icon={ faClose as IconProp }></FontAwesomeIcon>
           </div>
-          ) ) } 
-          <div className="flex m-4">
-            <Button variant="contained" className="bg-green-500 mr-4" onClick={ () => { handleSubmit( question._id, question, false ) } }> Submit </Button>
-            <Button onClick={ () => { handleSubmit( question._id, question, true ) } }> Save Progress </Button>
+          <h3 className="my-4"> Take Quiz ✅ </h3>
+          <div className="py-8 px-2 rounded shadow-lg border-2 border-purple-500">
+            <h3 className="text-center"> { question.name } </h3>
+            { question.questions!.map( ( quest, j: number ) => ( <div onChange={ () => { setCurrentIndex( j ); setClicked( true ) } } key={ j } className="p-4">
+              <p className="text-lg whitespace-pre-line"> { quest.question } </p>
+              { quest!.options!.length > 1 ? <Mcq iconFlag={ false } inputFlag={ false } mcqData={ mcqData } changer={ [ question._id, existingAnswer ] } preData={ templateData( j ) } /> : <div className="my-4">
+                <Editor value={ editorValue( j ) } onChange={ ( value ) => { handleChange( value(), j ); setCurrentIndex( j ) } } placeholder="Start Writing Here..."
+                />
+              </div> }
+            </div>
+            ) ) }
+            <div className="flex m-4">
+              <Button variant="contained" className="bg-green-500 mr-4" onClick={ () => { handleSubmit( question._id, question, false ) } }> Submit </Button>
+              <Button variant="outlined" onClick={ () => { handleSubmit( question._id, question, true ) } }> Save Progress </Button>
+            </div>
           </div>
-        </div>
-      </Container> }
-      <Snackbar anchorOrigin={ { vertical: 'top', horizontal: 'right' } } open={ loginModel } autoHideDuration={ 6000 } onClose={ () => setLoginModel( false ) }>
-        <Alert onClose={ () => setLoginModel( false ) } severity="error" sx={ { width: '100%' } }>
-          Please Login To Submit !
+        </Box> 
+      </Modal> }
+      <Snackbar anchorOrigin={ { vertical: 'top', horizontal: 'right' } } open={ responseModel } autoHideDuration={ 6000 } onClose={ () => setResponseModel( false ) }>
+        <Alert onClose={ () => setLoginModel( false ) } severity="success" sx={ { width: '100%' } }>
+          Response saved successfully !
         </Alert>
       </Snackbar>
     </>
