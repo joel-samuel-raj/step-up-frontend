@@ -213,7 +213,9 @@ const Home: NextPage = () => {
             </div>
             ) ) }
             <div className="flex m-4">
-              <Button variant="contained" className="bg-green-500 mr-4" onClick={ () => { handleSubmit( question._id, question, false ) } }> Submit </Button>
+              <div className="mr-4"> 
+                <Button variant="contained" className="bg-green-500" onClick={ () => { handleSubmit( question._id, question, false ) } }> Submit </Button>
+              </div>
               <Button variant="outlined" onClick={ () => { handleSubmit( question._id, question, true ) } }> Save Progress </Button>
             </div>
           </div>
