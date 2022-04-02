@@ -88,7 +88,7 @@ export default function Questions () {
   }
 
   const classChange = (bool: boolean) => {
-    let classes = "cursor-pointer p-2 rounded relative"
+    let classes = "cursor-pointer p-2 pr-14 rounded relative"
     return bool ? `${classes} bg-gradient-to-tr from-purple-400 to-purple-500 text-white` : `${classes} bg-gradient-to-tr from-red-400 to-red-500 text-white`
   } 
 
@@ -191,7 +191,7 @@ export default function Questions () {
         style={ { overflow: 'auto' } }>
           <Modal open={ questionsModal }
         onClose={ () => { setQuestionsModal( false ) } }
-        style={ { overflow: 'auto' } }>
+        style={ { overflow: 'auto', padding: "1rem" } }>
             <Box className="bg-white my-4 px-4 md:px-16 m-4 md:m-auto md:w-4/5 lg:w-3/5 py-8 rounded relative flex justify-center items-center flex-col">
               <div className="flex justify-center items-center p-2 w-6 h-6 cursor-pointer bg-red-500 hover:bg-red-600 rounded absolute top-2 right-2" onClick={ () => setQuestionsModal( false ) }>
                 <FontAwesomeIcon className="text-white text-lg" icon={ faClose as IconProp }></FontAwesomeIcon>
@@ -205,7 +205,7 @@ export default function Questions () {
         open={ editModal }
         onClose={ () => { setEditModal( false ) } }>
         <Modal open={ editModal }
-        onClose={ () => { setEditModal( false ) } } style={ { overflow: 'auto' } }>
+        onClose={ () => { setEditModal( false ) } } style={ { overflow: 'auto', padding: "1rem" } }>
           <Box className="bg-white my-4 px-4 md:px-16 m-4 md:m-auto md:w-4/5 lg:w-3/5 py-8 rounded relative flex justify-center items-center flex-col">
             <div className="flex justify-center items-center p-2 w-6 h-6 cursor-pointer bg-red-500 hover:bg-red-600 rounded absolute top-2 right-2" onClick={ () => setEditModal( false ) }>
               <FontAwesomeIcon className="text-white text-lg" icon={ faClose as IconProp }></FontAwesomeIcon>
