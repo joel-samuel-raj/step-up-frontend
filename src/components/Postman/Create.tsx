@@ -150,8 +150,19 @@ export default function Create ( { close, id }: { close?: any, id?: string } ) {
     }
 
     const submit = () => {
-        if ( id ) {
-            storage.ref( `/images/${ editPosts.ulid }` ).put( image as File ).on( "state_changed", ( snapshot ) => console.log( snapshot ), alert )
+        if ( id && image ) {
+            storage.ref( `/images/${ editPosts.ulid }` ).put( image as File ).on( "state_changed", ( snapshot ) => console.log( snapshot ), alert, () => {
+                storage.ref( "images" ).child( editPosts.ulid as string ).getDownloadURL().then( url => editPosts.image = url as string ).then( () => {
+                    axios.post( `${ process.env.NEXT_PUBLIC_BACKEND_URL }/posts/update/${id}`, editPosts ).then( ( res ) => {
+                        console.log( res )
+                        close( false )
+                        router.reload()
+                    } )
+                } )
+            } )
+            return
+        }
+        if(id) {
             console.log( editPosts )
             console.log( editQuestions )
             axios.post( `${ process.env.NEXT_PUBLIC_BACKEND_URL }/posts/update/${ id }`, editPosts ).then( ( res ) => {
@@ -262,7 +273,7 @@ export default function Create ( { close, id }: { close?: any, id?: string } ) {
                                             return ( <Mcq changer={ [ 1, 2 ] } mcqData={ mcqData } /> )
                                         }
                                     } ) } */}
-                                     { id && editPosts.questions![ i ] ? <Mcq changer={ [ 1, 2 ] } mcqData={ mcqData } preData={ editPosts.questions![ i ].options } /> : <Mcq changer={ [ 1, 2 ] } mcqData={ mcqData } /> } 
+                                    { id && editPosts.questions![ i ] ? <Mcq changer={ [ 1, 2 ] } mcqData={ mcqData } preData={ editPosts.questions![ i ].options } /> : <Mcq changer={ [ 1, 2 ] } mcqData={ mcqData } /> }
                                 </div> ) }
                             </div>
                         ) ) }
