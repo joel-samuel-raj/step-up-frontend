@@ -28,7 +28,7 @@ export default function Create ( { close, id }: { close?: any, id?: string } ) {
     const [ settingDone, setSettingDone ] = useState( false )
     const [ changeDone, setChangeDone ] = useState( false )
     const [ currentIndex, setCurrentIndex ] = useState( 0 )
-    const [ image, setImage ] = useState<File>(  )
+    const [ image, setImage ] = useState<File>()
 
     const addQuestion = ( i: number ) => {
         if ( id ) {
@@ -48,7 +48,7 @@ export default function Create ( { close, id }: { close?: any, id?: string } ) {
             setPosts( obj )
         }
     }
- 
+
     const handleImage = ( e: any ) => {
         let file = e.target.files[ 0 ]
         setImage( file )
@@ -58,10 +58,10 @@ export default function Create ( { close, id }: { close?: any, id?: string } ) {
             setPosts( ( prev ) => ( { ...prev, image: e.target!.result } ) )
             // forceUpdate()
         }
-        setPosts((prev) => ({...prev, ulid : ulid() as string}))
-        console.log(posts)
+        setPosts( ( prev ) => ( { ...prev, ulid: ulid() as string } ) )
+        console.log( posts )
         reader.readAsDataURL( file )
-        
+
     }
 
     useEffect( () => {
@@ -127,7 +127,7 @@ export default function Create ( { close, id }: { close?: any, id?: string } ) {
         setQuestions( array )
         console.log( questions )
         forceUpdate()
-        // console.log( questions![ i ].options )
+        console.log( questions![ i ].options )
     }
 
     const handleChange = ( e: any, i: number ) => {
@@ -151,7 +151,7 @@ export default function Create ( { close, id }: { close?: any, id?: string } ) {
 
     const submit = () => {
         if ( id ) {
-            storage.ref( `/images/${ editPosts.ulid }` ).put( image as File ).on( "state_changed", (snapshot) => console.log(snapshot) , alert )
+            storage.ref( `/images/${ editPosts.ulid }` ).put( image as File ).on( "state_changed", ( snapshot ) => console.log( snapshot ), alert )
             console.log( editPosts )
             console.log( editQuestions )
             axios.post( `${ process.env.NEXT_PUBLIC_BACKEND_URL }/posts/update/${ id }`, editPosts ).then( ( res ) => {
@@ -161,10 +161,10 @@ export default function Create ( { close, id }: { close?: any, id?: string } ) {
             } )
             return
         }
-        storage.ref( `/images/${ posts.ulid }` ).put( image as File ).on( "state_changed", (snapshot) => console.log(snapshot) , alert, () => {
-            console.log(posts.ulid)
+        storage.ref( `/images/${ posts.ulid }` ).put( image as File ).on( "state_changed", ( snapshot ) => console.log( snapshot ), alert, () => {
+            console.log( posts.ulid )
             storage.ref( "images" ).child( posts.ulid as string ).getDownloadURL().then( url => posts.image = url as string ).then( () => {
-                console.log(posts)
+                console.log( posts )
                 axios.post( `${ process.env.NEXT_PUBLIC_BACKEND_URL }/posts/create`, posts ).then( ( res ) => {
                     console.log( res.data )
                     setCreateModel( true )
@@ -172,10 +172,10 @@ export default function Create ( { close, id }: { close?: any, id?: string } ) {
                     setAllPosts( ( prev: any ) => ( [ ...prev, posts ] ) )
                     close( false )
                 } )
-            })
+            } )
         } )
         console.log( posts )
-        
+
     }
 
     const mcqData = ( data: any ) => {
@@ -250,20 +250,19 @@ export default function Create ( { close, id }: { close?: any, id?: string } ) {
                                     ),
                                 } } />
                                 { ( isMcq[ i ] ) && ( <div className="mb-8">
-                                {(() => {
-                                        if(id && editPosts.questions![i]) {
-                                            if(editPosts.questions![i].options) {
-                                                if(editPosts.questions![i].options!.length > 2) {
-                                                    return (<Mcq changer={ [ 1, 2 ] } mcqData={ mcqData } preData={ editPosts.questions![ i ].options } />)
+                                    {/* { ( () => {
+                                        if ( id && editPosts.questions![ i ] ) {
+                                            if ( editPosts.questions![ i ].options ) {
+                                                if ( editPosts.questions![ i ].options!.length > 2 ) {
+                                                    return ( <Mcq changer={ [ 1, 2 ] } mcqData={ mcqData } preData={ editPosts.questions![ i ].options } /> )
                                                 }
                                             }
                                         }
                                         else {
-                                            return (<Mcq changer={ [ 1, 2 ] } mcqData={ mcqData } />)
+                                            return ( <Mcq changer={ [ 1, 2 ] } mcqData={ mcqData } /> )
                                         }
-                                    })}
-                                    {/* { id && editPosts.questions![ i ] ? <Mcq changer={ [ 1, 2 ] } mcqData={ mcqData } preData={ editPosts.questions![ i ].options } /> : <Mcq changer={ [ 1, 2 ] } mcqData={ mcqData } /> } */}
-
+                                    } ) } */}
+                                     { id && editPosts.questions![ i ] ? <Mcq changer={ [ 1, 2 ] } mcqData={ mcqData } preData={ editPosts.questions![ i ].options } /> : <Mcq changer={ [ 1, 2 ] } mcqData={ mcqData } /> } 
                                 </div> ) }
                             </div>
                         ) ) }
