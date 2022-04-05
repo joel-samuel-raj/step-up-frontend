@@ -98,10 +98,10 @@ export default function Mcq ( { mcqData, changer, preData, ansData, iconFlag, re
             <ul>
                 { template.length && template.map( ( item, i ) => (
                     <li key={ i }>
-                        { <div className="flex justify-start items-center">
+                        { <div className="flex w-full justify-start items-center">
                             <Checkbox className="check" checked={ item.answer } onClick={ ( e ) => { handleCheckChange( e, i ) } } />
                             <span className={ colourChange( item.answer, i ) }>
-                                <TextField variant="standard" type="text" value={ item.value } placeholder="Type..." onKeyPress={(e) => {
+                                <TextField fullWidth multiline variant="standard" type="text" value={ item.value } placeholder="Type..." onKeyPress={(e) => {
                                     if(e.code === "Enter") {
                                         addField()
                                     }

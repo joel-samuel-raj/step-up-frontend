@@ -17,7 +17,7 @@ export default function Create ( { close, id }: { close?: any, id?: string } ) {
     const { allPosts, setAllPosts } = useContext( PostsContext )
 
     const [ , forceUpdate ] = useReducer( x => x + 1, 0 )
-    const [ questions, setQuestions ] = useState<questionType[ "questions" ]>( [ { question: "question #1" } ] )
+    const [ questions, setQuestions ] = useState<any>( [ { question: "question #1" } ] )
     const [ isMcq, setIsMcq ] = useState( new Array( questions!.length + 1 ).fill( false ) )
     const [ mcq, setMcq ] = useState<any>( [ {} ] )
     const [ editQuestions, setEditQuestions ] = useState<any>( [ "question #1" ] )
@@ -34,7 +34,7 @@ export default function Create ( { close, id }: { close?: any, id?: string } ) {
         if ( id ) {
             setEditQuestions( ( prev: any ) => { return [ ...prev!, { question: `` } ] as unknown as [ { question: string } ] } )
         }
-        setQuestions( ( prev ) => { return [ ...prev!, { question: `` } ] as unknown as [ { question: string } ] } )
+        setQuestions( ( prev: any ) => { return [ ...prev!, { question: `` } ] as unknown as [ { question: string } ] } )
     }
 
     const handleTyping = ( e: any ) => {
@@ -90,6 +90,34 @@ export default function Create ( { close, id }: { close?: any, id?: string } ) {
     }
 
     const questionType = ( i: number ) => {
+        if ( isMcq[ i ] ) {
+            if ( id ) {
+                let arr = {
+                    question: editQuestions![ i ].question,
+                }
+                let array = editQuestions
+                array![ i ] = arr
+                setEditQuestions( ( prev: any[] ) => prev.map( ( p, j ): any => j === i ? arr : p ) )
+                console.log( editQuestions )
+                // forceUpdate()
+            }
+            else {
+                let arr = {
+                    question: questions![ i ].question,
+                }
+                let array = questions
+                array![ i ] = arr
+                setQuestions( ( prev: any[] ) => prev.map( ( p, j ): any => j === i ? arr : p ) )
+                console.log( questions )
+                forceUpdate()
+                console.log( questions![ i ].options )
+            }
+            let bool = isMcq
+            bool[ i ] = !bool[ i ]
+            setIsMcq( bool )
+            console.log( isMcq[ i ] )
+            return
+        }
         let bool = isMcq
         bool[ i ] = !bool[ i ]
         setIsMcq( bool )
@@ -153,7 +181,7 @@ export default function Create ( { close, id }: { close?: any, id?: string } ) {
         if ( id && image ) {
             storage.ref( `/images/${ editPosts.ulid }` ).put( image as File ).on( "state_changed", ( snapshot ) => console.log( snapshot ), alert, () => {
                 storage.ref( "images" ).child( editPosts.ulid as string ).getDownloadURL().then( url => editPosts.image = url as string ).then( () => {
-                    axios.post( `${ process.env.NEXT_PUBLIC_BACKEND_URL }/posts/update/${id}`, editPosts ).then( ( res ) => {
+                    axios.post( `${ process.env.NEXT_PUBLIC_BACKEND_URL }/posts/update/${ id }`, editPosts ).then( ( res ) => {
                         console.log( res )
                         close( false )
                         router.reload()
@@ -162,7 +190,7 @@ export default function Create ( { close, id }: { close?: any, id?: string } ) {
             } )
             return
         }
-        if(id) {
+        if ( id ) {
             console.log( editPosts )
             console.log( editQuestions )
             axios.post( `${ process.env.NEXT_PUBLIC_BACKEND_URL }/posts/update/${ id }`, editPosts ).then( ( res ) => {
