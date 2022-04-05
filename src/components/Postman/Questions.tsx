@@ -33,6 +33,7 @@ export default function Questions () {
   const [ answers, setAnswers ] = useState<answerType[]>( [] )
   const [ currentAnswers, setCurrentAnswers ] = useState<answerType[]>( [] )
   const [ open, setOpen ] = useState<boolean[]>( new Array( allPosts.length ).fill( true ) as boolean[] )
+  
 
   const mcqData = ( data: any ) => {
     console.log( data )
@@ -50,7 +51,7 @@ export default function Questions () {
   const handleClick = ( id: string ) => {
     let dat = answers.filter( answer => answer.questionId! === id && answer.progress === false )
     setCurrentAnswers( dat )
-    console.log( answers )
+    console.log( "currentAnswers", dat )
   }
 
   const handleDelete = () => {

@@ -8,6 +8,7 @@ import React, { useState, useReducer, useEffect, useContext } from 'react'
 import { ulid } from 'ulid'
 import { postsImage } from '../../assets/images/posts'
 import { PostsContext } from '../../context/PostsContext'
+import storage from '../../utils/Functions/firebase'
 import { questionType } from '../../utils/types/question'
 import Mcq from './mcq'
 
@@ -23,10 +24,11 @@ export default function Create ( { close, id }: { close?: any, id?: string } ) {
     const [ createModel, setCreateModel ] = useState( false )
     const [ next, setNext ] = useState( false )
     const [ posts, setPosts ] = useState<questionType>( { image: postsImage, questions: questions } )
-    const [ editPosts, setEditPosts ] = useState<questionType>( { } )
+    const [ editPosts, setEditPosts ] = useState<questionType>( {} )
     const [ settingDone, setSettingDone ] = useState( false )
     const [ changeDone, setChangeDone ] = useState( false )
     const [ currentIndex, setCurrentIndex ] = useState( 0 )
+    const [ image, setImage ] = useState<File>(  )
 
     const addQuestion = ( i: number ) => {
         if ( id ) {
@@ -46,16 +48,20 @@ export default function Create ( { close, id }: { close?: any, id?: string } ) {
             setPosts( obj )
         }
     }
-
+ 
     const handleImage = ( e: any ) => {
         let file = e.target.files[ 0 ]
+        setImage( file )
         const reader = new FileReader()
         reader.onload = ( e ) => {
             setEditPosts( ( prev ) => ( { ...prev, image: e.target!.result } ) )
             setPosts( ( prev ) => ( { ...prev, image: e.target!.result } ) )
             // forceUpdate()
         }
+        setPosts((prev) => ({...prev, ulid : ulid() as string}))
+        console.log(posts)
         reader.readAsDataURL( file )
+        
     }
 
     useEffect( () => {
@@ -65,7 +71,7 @@ export default function Create ( { close, id }: { close?: any, id?: string } ) {
         setEditPosts( arr as questionType )
         console.log( "editPosts", editPosts )
         setSettingDone( true )
-    }, [currentIndex] )
+    }, [ currentIndex ] )
 
     const removeQuestion = ( i: number ) => {
         if ( id ) {
@@ -145,6 +151,7 @@ export default function Create ( { close, id }: { close?: any, id?: string } ) {
 
     const submit = () => {
         if ( id ) {
+            storage.ref( `/images/${ editPosts.ulid }` ).put( image as File ).on( "state_changed", (snapshot) => console.log(snapshot) , alert )
             console.log( editPosts )
             console.log( editQuestions )
             axios.post( `${ process.env.NEXT_PUBLIC_BACKEND_URL }/posts/update/${ id }`, editPosts ).then( ( res ) => {
@@ -154,14 +161,21 @@ export default function Create ( { close, id }: { close?: any, id?: string } ) {
             } )
             return
         }
-        axios.post( `${ process.env.NEXT_PUBLIC_BACKEND_URL }/posts/create`, posts ).then( ( res ) => {
-            console.log( res )
-            // setCreateModel( true )
-            router.reload()
-            setAllPosts( ( prev: any ) => ( [ ...prev, posts ] ) )
-            close( false )
+        storage.ref( `/images/${ posts.ulid }` ).put( image as File ).on( "state_changed", (snapshot) => console.log(snapshot) , alert, () => {
+            console.log(posts.ulid)
+            storage.ref( "images" ).child( posts.ulid as string ).getDownloadURL().then( url => posts.image = url as string ).then( () => {
+                console.log(posts)
+                axios.post( `${ process.env.NEXT_PUBLIC_BACKEND_URL }/posts/create`, posts ).then( ( res ) => {
+                    console.log( res.data )
+                    setCreateModel( true )
+                    router.reload()
+                    setAllPosts( ( prev: any ) => ( [ ...prev, posts ] ) )
+                    close( false )
+                } )
+            })
         } )
         console.log( posts )
+        
     }
 
     const mcqData = ( data: any ) => {
@@ -212,7 +226,7 @@ export default function Create ( { close, id }: { close?: any, id?: string } ) {
         <>
             { allPosts && ( ( id && ( typeof editPosts.name === 'string' ) ) || ( !id ) ) && ( <>
                 <Container className="my-4">
-                    { <h3 className="my-4"> { editPosts.name || posts.name ? (id ? `Edit ${ editPosts.name }` : `Create ${ posts.name }`) : "Create Quiz" } </h3> }
+                    { <h3 className="my-4"> { editPosts.name || posts.name ? ( id ? `Edit ${ editPosts.name }` : `Create ${ posts.name }` ) : "Create Quiz" } </h3> }
                     { next ? ( <Box sx={ {
                         '& .MuiTextField-root': { my: 1 }
                     } }>
@@ -236,7 +250,19 @@ export default function Create ( { close, id }: { close?: any, id?: string } ) {
                                     ),
                                 } } />
                                 { ( isMcq[ i ] ) && ( <div className="mb-8">
-                                    { id && editPosts.questions![ i ] ? <Mcq changer={[1,2]} mcqData={ mcqData } preData={ editPosts.questions![ i ].options } /> : <Mcq changer={[1,2]} mcqData={ mcqData } /> }
+                                {(() => {
+                                        if(id && editPosts.questions![i]) {
+                                            if(editPosts.questions![i].options) {
+                                                if(editPosts.questions![i].options!.length > 2) {
+                                                    return (<Mcq changer={ [ 1, 2 ] } mcqData={ mcqData } preData={ editPosts.questions![ i ].options } />)
+                                                }
+                                            }
+                                        }
+                                        else {
+                                            return (<Mcq changer={ [ 1, 2 ] } mcqData={ mcqData } />)
+                                        }
+                                    })}
+                                    {/* { id && editPosts.questions![ i ] ? <Mcq changer={ [ 1, 2 ] } mcqData={ mcqData } preData={ editPosts.questions![ i ].options } /> : <Mcq changer={ [ 1, 2 ] } mcqData={ mcqData } /> } */}
 
                                 </div> ) }
                             </div>
@@ -251,7 +277,7 @@ export default function Create ( { close, id }: { close?: any, id?: string } ) {
                     } }>
                         <TextField value={ editPosts.name } onChange={ handleTyping } name="name" className="my-4" fullWidth label="Name" />
                         <TextField value={ editPosts.description } onChange={ handleTyping } name="description" className="my-4" multiline fullWidth label="Description" />
-                        <img className="w-full object-contain" src={ id ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/${editPosts._id}.jpg` : posts.image as string} alt="" />
+                        <img className="w-full object-contain" src={ id ? `${ editPosts.image }` : posts.image as string } alt="" />
                         <Button className="block relative my-4"> <input type="file" className="absolute w-full h-full opacity-0 " onChange={ handleImage } /> { id ? "Update Photo" : "Upload Photo" } </Button>
                     </Box> ) }
                     <div className="flex justify-end w-full items-center">

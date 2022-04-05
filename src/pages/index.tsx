@@ -182,22 +182,23 @@ const Home: NextPage = () => {
       <Container className="my-4 mt-20">
         <h3 className="m-4"> Available Quiz 👇🏼 </h3>
         <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-          { data.map( ( dat: any, i: number ) => (
+          { data.map( ( dat: any, i: number ) => {
+            console.log(dat); return (
             <Box key={ i } onClick={ () => {
               setQuestion( data[ i ] ); setAnswerModal( ( prev ) => prev.map( ( pre, l ) => {
                 return l === i ? true : pre
               } ) ); setCurrentQuestion( i ); console.log( answerModal, currentQuestion )
             } } className="bg-gradient-to-tr cursor-pointer text-white from-purple-400 to-purple-900 rounded relative">
               <h3 className="m-4"> { dat.name } </h3>
-              <img className="w-full object-contain rounded" src={ `${ process.env.NEXT_PUBLIC_BACKEND_URL }/${ dat._id }.jpg` } alt="" />
+              <img className="w-full object-contain rounded" src={ dat.image as string  } alt="" />
               <Divider className="m-4 bg-purple-900"></Divider>
               <p className="m-4"> { dat.description } </p>
             </Box>
-          ) ) }
+          )} ) }
         </div>
       </Container>
       { currentQuestion >= 0 && <Modal className="flex justify-center" open={ answerModal[ currentQuestion ] } onClose={ () => handleModalClose( currentQuestion ) }>
-        <Box style={ { overflow: "auto" } } className="w-11/12 relative bg-white m-4 p-4 lg:px-12 h-full">
+        <Box style={ { overflow: "auto" } } className="w-11/12 relative bg-white m-4 p-4 lg:px-12 h-11/12">
           <div className="p-2 flex justify-center items-center w-6 h-6 cursor-pointer bg-red-500 hover:bg-red-600 rounded absolute top-4 right-2" onClick={ () => handleModalClose( currentQuestion ) }>
             <FontAwesomeIcon className="text-white text-lg" icon={ faClose as IconProp }></FontAwesomeIcon>
           </div>

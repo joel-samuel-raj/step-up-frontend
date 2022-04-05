@@ -104,7 +104,7 @@ export default function Navbar ( { loginModel, setloginmodel }: { loginModel?: b
     const login = () => {
         return (
             <div>
-                <Button className="poppins" onClick={ () => setModal( true ) } color="inherit">Login</Button>
+                <Button onClick={ () => setModal( true ) } color="inherit">Login</Button>
                 <Modal className="flex justify-center items-center p-4" open={ modal } onClose={ () => setModal( false ) }>
                     <Box sx={ {
                         '& .MuiTextField-root': { my: 1 },
@@ -229,7 +229,7 @@ export default function Navbar ( { loginModel, setloginmodel }: { loginModel?: b
         }
         return (
             <>
-                <Button className="poppins" onClick={ () => { logoutUser() } } color="inherit">Logout</Button>
+                <Button onClick={ () => { logoutUser() } } color="inherit">Logout</Button>
             </>
         )
     }
@@ -249,9 +249,9 @@ export default function Navbar ( { loginModel, setloginmodel }: { loginModel?: b
                         >
                             <MenuIcon />
                         </IconButton>
-                        <h5 onClick={ () => { router.push( "/" ) } } >
+                        <Typography variant="h6" component="div" onClick={ () => { router.push( "/" ) } } >
                             GCT Quiz App
-                        </h5>
+                        </Typography>
                         <div className="absolute right-4 cursor-pointer">
                             {  log  ? logout() : login() }
                         </div>
