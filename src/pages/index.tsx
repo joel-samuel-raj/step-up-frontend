@@ -28,6 +28,7 @@ const Home: NextPage = () => {
   const [ mcq, setMcq ] = useState<any>( [ {} ] )
   const [ data, setData ] = useState<[ questionType ]>( [ {} ] )
   const [ loginModel, setLoginModel ] = useState( false )
+  const [ loginModel1, setLoginModel1 ] = useState( false )
   const [ responseModel, setResponseModel ] = useState( false )
   const [ answer, setAnswer ] = useState<answerType>( { answers: [ { answer: "" } ] } )
   const [ question, setQuestion ] = useState<questionType>( {} )
@@ -76,9 +77,9 @@ const Home: NextPage = () => {
       console.log( loginModel )
       return
     }
-    if ( !flag && !( answer!.question!.questions!.length === answer!.answers!.length ) ) {
-      console.log( answer!.question!.questions!.length === answer!.answers!.length )
-      alert( "Fill all the Fields to submit !" )
+    if ( !flag && !( question!.questions!.length === answer!.answers!.length ) ) {
+      console.log( question!.questions!.length === answer!.answers!.length )
+      alert( "Please fill answer all the questions to submit !" )
       return
     }
     if ( user.name ) {
@@ -184,7 +185,9 @@ const Home: NextPage = () => {
         <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           { data.map( ( dat: any, i: number ) => {
             console.log(dat); return (
-            <Box key={ i } onClick={ () => {
+              <Box key={ i } onClick={ !user.name ? () => {
+                setLoginModel(true)
+            } : () => {
               setQuestion( data[ i ] ); setAnswerModal( ( prev ) => prev.map( ( pre, l ) => {
                 return l === i ? true : pre
               } ) ); setCurrentQuestion( i ); console.log( answerModal, currentQuestion )
@@ -225,6 +228,11 @@ const Home: NextPage = () => {
       <Snackbar anchorOrigin={ { vertical: 'top', horizontal: 'right' } } open={ responseModel } autoHideDuration={ 6000 } onClose={ () => setResponseModel( false ) }>
         <Alert onClose={ () => setLoginModel( false ) } severity="success" sx={ { width: '100%' } }>
           Response saved successfully !
+        </Alert>
+      </Snackbar>
+      <Snackbar anchorOrigin={ { vertical: 'top', horizontal: 'right' } } open={ loginModel } autoHideDuration={ 6000 } onClose={ () => setLoginModel( false ) }>
+        <Alert onClose={ () => setLoginModel( false ) } severity="warning" sx={ { width: '100%' } }>
+          Please login to continue !
         </Alert>
       </Snackbar>
     </>

@@ -288,7 +288,7 @@ export default function Create ( { close, id }: { close?: any, id?: string } ) {
                                         </>
                                     ),
                                 } } />
-                                { ( isMcq[ i ] ) && ( <div className="mb-8">
+                                { ( isMcq[ i ] ) && ( <div className="mb-8 w-full">
                                     {/* { ( () => {
                                         if ( id && editPosts.questions![ i ] ) {
                                             if ( editPosts.questions![ i ].options ) {

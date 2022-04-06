@@ -86,7 +86,7 @@ export default function Mcq ( { mcqData, changer, preData, ansData, iconFlag, re
         if ( !ansData || ( typeof correctAns.options === 'undefined' ) ) return ""
         console.log( bool )
         if ( bool ) {
-            return correctAns.options[ i ].answer === bool ? `${ classes } bg-green-200` : `${ classes } bg-red-300`
+            return correctAns.options[ i ].answer === bool ? `${ classes } bg-green-200` : `${ classes } bg-red-300` 
         }
         if ( correctAns.options[ i ].answer ) {
             return `${ classes } bg-green-200`
@@ -98,24 +98,24 @@ export default function Mcq ( { mcqData, changer, preData, ansData, iconFlag, re
             <ul>
                 { template.length && template.map( ( item, i ) => (
                     <li key={ i }>
-                        { <div className="flex w-full justify-start items-center">
+                        { <div className="text-grid justify-start items-center">
                             <Checkbox className="check" checked={ item.answer } onClick={ ( e ) => { handleCheckChange( e, i ) } } />
                             <span className={ colourChange( item.answer, i ) }>
-                                <TextField fullWidth multiline variant="standard" type="text" value={ item.value } placeholder="Type..." onKeyPress={(e) => {
+                                <TextField multiline fullWidth variant="standard" type="text" value={ item.value } placeholder="Type..." onKeyPress={(e) => {
                                     if(e.code === "Enter") {
                                         addField()
-                                    }
+                                    }         
                                 }} onChange={ ( e ) => { handleInputChange( e, i ) } } />
                             </span>
-                            <span className="mx-4 grid gap-1 grid-cols-2">
-                                { ( i === template.length - 1 && flag ) && <FontAwesomeIcon className="text-red-500" onClick={ () => { removeField( i ) } } icon={ faClose as IconProp } /> }
+                            <span className="flex">
+                                { ( i === template.length - 1 && flag ) && <FontAwesomeIcon className="text-red-500 ml-4 mr-2" onClick={ () => { removeField( i ) } } icon={ faClose as IconProp } /> }
                                 { ( i === template.length - 1 && flag ) && <FontAwesomeIcon className="text-blue-500" icon={ faAdd as IconProp } onClick={ () => { addField() } } /> }
                             </span>
                         </div> }
                     </li>
                 ) ) }
             </ul>
-        </div>
+        </div> 
     )
 }
 

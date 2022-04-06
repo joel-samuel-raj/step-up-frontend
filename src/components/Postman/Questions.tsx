@@ -1,4 +1,5 @@
 import { faChevronDown, faClose, faPencil } from '@fortawesome/free-solid-svg-icons'
+import { CSVLink } from "react-csv"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Accordion, AccordionSummary, Box, Button, Container, Modal, AccordionDetails, Divider, Switch, Alert, Snackbar } from '@mui/material'
 import axios from 'axios'
@@ -11,7 +12,6 @@ import { PostsContext } from '../../context/PostsContext'
 import { AnswersContext } from '../../context/AnswersContext'
 import { answerType } from '../../utils/types/answer'
 import Mcq from './mcq'
-
 
 export default function Questions () {
 
@@ -33,7 +33,37 @@ export default function Questions () {
   const [ answers, setAnswers ] = useState<answerType[]>( [] )
   const [ currentAnswers, setCurrentAnswers ] = useState<answerType[]>( [] )
   const [ open, setOpen ] = useState<boolean[]>( new Array( allPosts.length ).fill( true ) as boolean[] )
-  
+  const [ datas, setDatas ] = useState<any>( [] )
+
+  useEffect( () => {
+    if ( currentAnswers.length < 1 ) return
+    console.log( currentAnswers )
+    let header = currentAnswers[ 0 ]!.answers!.map( ( _, i ) => `question ${ i + 1}` )
+    header.splice( 0, 0, "Student Name" )
+    let excel = currentAnswers.map( curr => {
+      let array = curr!.answers!.map( ( { options, answer }, i ) => {
+        if ( answer ) {
+          return answer
+        }
+        if ( options ) {
+          if ( options.length > 1 ) {
+            let optData = options.map( ( opt, j ) => {
+              if ( opt.answer === true ) {
+                return opt.value
+              }
+            } )
+            return optData.filter( ( dat ) => dat != undefined )
+          }
+        }
+      } )
+      array.splice(0,0, curr.userName)
+      return array
+    } )
+    excel.splice( 0, 0, header )
+    console.log( excel )
+    setDatas( excel )
+  }, [ currentAnswers ] )
+
 
   const mcqData = ( data: any ) => {
     console.log( data )
@@ -88,10 +118,10 @@ export default function Questions () {
     forceUpdate()
   }
 
-  const classChange = (bool: boolean) => {
+  const classChange = ( bool: boolean ) => {
     let classes = "cursor-pointer p-2 pr-14 rounded relative"
-    return bool ? `${classes} bg-gradient-to-tr from-purple-400 to-purple-500 text-white` : `${classes} bg-gradient-to-tr from-red-400 to-red-500 text-white`
-  } 
+    return bool ? `${ classes } bg-gradient-to-tr from-purple-400 to-purple-500 text-white` : `${ classes } bg-gradient-to-tr from-red-400 to-red-500 text-white`
+  }
 
   const handleSwitch = ( e: any, i: number ) => {
     e.stopPropagation()
@@ -108,41 +138,43 @@ export default function Questions () {
       <Container>
         <h3 className="m-4"> Admin Page </h3>
       </Container>
-      <Container className="py-4 rounded shadow-lg bg-purple_heart-200">
-        <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 my-4">
-          { data.map( ( dat: any, i: number ) => (
-            <Box onClick={ () => { handleClick( dat._id ) } } key={ i } className={classChange(dat.open)}>
-              <h4> { dat.name } </h4>
-              <Switch color="primary"
-                checked={ dat.open }
-                onChange={ ( e ) => handleSwitch( e, i ) }
-              />
-              <div className="p-2 w-6 flex justify-center items-center h-6 cursor-pointer bg-purple-800 hover:bg-red-600 rounded absolute top-2 right-2" onClick={ () => {
-                setConfirmModal( true )
-                setId( ( arr ) => [ ...arr, dat._id ] )
-              } }>
-                <FontAwesomeIcon className="text-white text-lg" icon={ faClose as IconProp }></FontAwesomeIcon>
-              </div>
-              <div className="flex justify-center items-center p-2 w-6 h-6 cursor-pointer bg-green-500 hover:bg-green-600 rounded absolute top-2 right-10" onClick={ () => {
-                setEditModal( true ); setUpdate( dat._id as string )
-              } }>
-                <FontAwesomeIcon className="text-white text-lg" icon={ faPencil as IconProp }></FontAwesomeIcon>
-              </div>
-            </Box>
-          ) ) }
+      <Container className="px-4 ">
+        <div className="rounded shadow-lg bg-purple_heart-200 p-4">
+          <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 my-4">
+            { data.map( ( dat: any, i: number ) => (
+              <Box onClick={ () => { handleClick( dat._id ) } } key={ i } className={ classChange( dat.open ) }>
+                <h4> { dat.name } </h4>
+                <Switch color="primary"
+                  checked={ dat.open }
+                  onChange={ ( e ) => handleSwitch( e, i ) }
+                />
+                <div className="p-2 w-6 flex justify-center items-center h-6 cursor-pointer bg-purple-800 hover:bg-red-600 rounded absolute top-2 right-2" onClick={ () => {
+                  setConfirmModal( true )
+                  setId( ( arr ) => [ ...arr, dat._id ] )
+                } }>
+                  <FontAwesomeIcon className="text-white text-lg" icon={ faClose as IconProp }></FontAwesomeIcon>
+                </div>
+                <div className="flex justify-center items-center p-2 w-6 h-6 cursor-pointer bg-green-500 hover:bg-green-600 rounded absolute top-2 right-10" onClick={ () => {
+                  setEditModal( true ); setUpdate( dat._id as string )
+                } }>
+                  <FontAwesomeIcon className="text-white text-lg" icon={ faPencil as IconProp }></FontAwesomeIcon>
+                </div>
+              </Box>
+            ) ) }
+          </div>
+          <Button className="mt-4" onClick={ () => { setQuestionsModal( true ) } } variant="contained"> Create New Quiz </Button>
         </div>
-        <Button className="mt-4" onClick={ () => { setQuestionsModal( true ) } } variant="contained"> Create New Quiz </Button>
       </Container>
       <Container className="mt-4">
         { currentAnswers.length > 0 && <Box>
-          { currentAnswers.map( ( ans, j ) => ( <div key={ j } className="py-4"> <Accordion sx={{backgorundColor : "gray"}} className="bg-purple_heart-50">
+          { currentAnswers.map( ( ans, j ) => ( <div key={ j } className="py-4"> <Accordion sx={ { backgorundColor: "gray" } } className="bg-purple_heart-50">
             <AccordionSummary color="primary" className="rounded text-purple-900" expandIcon={ <FontAwesomeIcon icon={ faChevronDown as IconProp }></FontAwesomeIcon> }> { ans.userName } </AccordionSummary>
             <AccordionDetails> <Box>
               { handleQuestion( ans.questionId ).questions.map( ( quest: any, k: number ) => ( <div key={ k }>
                 <p className="font-bold mt-8 whitespace-pre-line"> { quest.question } </p>
                 { ans.answers![ k ].answer ? ( <div className="p-2 px-4 mt-4 bg-white rounded">
                   <Editor readOnly={ true } value={ ans.answers![ k ].answer }> </Editor>
-                </div> ) : ( <Mcq mcqData={ mcqData } changer={[1,2]} iconFlag={ false } readFlag={ true } preData={ ans.answers![ k ].options } ansData={ quest } /> ) }
+                </div> ) : ( <Mcq mcqData={ mcqData } changer={ [ 1, 2 ] } iconFlag={ false } readFlag={ true } preData={ ans.answers![ k ].options } ansData={ quest } /> ) }
                 <Divider></Divider>
               </div> ) ) }
             </Box>
@@ -152,6 +184,9 @@ export default function Questions () {
               </div>
             </AccordionDetails>
           </Accordion> </div> ) ) }
+          <CSVLink filename={currentAnswers[0]!.question!.name! + Date.now() as string + ".csv"} data={ datas }>
+            <Button variant="contained" className="mt-4 bg-green-500 text-white"> Export </Button>
+          </CSVLink>
         </Box> }
       </Container>
 
@@ -190,23 +225,23 @@ export default function Questions () {
         open={ questionsModal }
         onClose={ () => { setQuestionsModal( false ) } }
         style={ { overflow: 'auto' } }>
-          <Modal open={ questionsModal }
-        onClose={ () => { setQuestionsModal( false ) } }
-        style={ { overflow: 'auto', padding: "1rem" } }>
-            <Box className="bg-white my-4 px-4 md:px-16 m-4 md:m-auto md:w-4/5 lg:w-3/5 py-8 rounded relative flex justify-center items-center flex-col">
-              <div className="flex justify-center items-center p-2 w-6 h-6 cursor-pointer bg-red-500 hover:bg-red-600 rounded absolute top-2 right-2" onClick={ () => setQuestionsModal( false ) }>
-                <FontAwesomeIcon className="text-white text-lg" icon={ faClose as IconProp }></FontAwesomeIcon>
-              </div>
-              <Create close={ ( bool: boolean ) => { setQuestionsModal( bool ); setCreateModal( !bool ) } } />
-            </Box>
-          </Modal>
+        <Modal open={ questionsModal }
+          onClose={ () => { setQuestionsModal( false ) } }
+          style={ { overflow: 'auto', padding: "1rem" } }>
+          <Box className="bg-white my-4 px-4 md:px-16 m-4 md:m-auto md:w-4/5 lg:w-3/5 py-8 rounded relative flex justify-center items-center flex-col">
+            <div className="flex justify-center items-center p-2 w-6 h-6 cursor-pointer bg-red-500 hover:bg-red-600 rounded absolute top-2 right-2" onClick={ () => setQuestionsModal( false ) }>
+              <FontAwesomeIcon className="text-white text-lg" icon={ faClose as IconProp }></FontAwesomeIcon>
+            </div>
+            <Create close={ ( bool: boolean ) => { setQuestionsModal( bool ); setCreateModal( !bool ) } } />
+          </Box>
+        </Modal>
       </Modal>
 
       <Modal style={ { overflow: 'auto' } } className="p-4 flex justify-center items-center"
         open={ editModal }
         onClose={ () => { setEditModal( false ) } }>
         <Modal open={ editModal }
-        onClose={ () => { setEditModal( false ) } } style={ { overflow: 'auto', padding: "1rem" } }>
+          onClose={ () => { setEditModal( false ) } } style={ { overflow: 'auto', padding: "1rem" } }>
           <Box className="bg-white my-4 px-4 md:px-16 m-4 md:m-auto md:w-4/5 lg:w-3/5 py-8 rounded relative flex justify-center items-center flex-col">
             <div className="flex justify-center items-center p-2 w-6 h-6 cursor-pointer bg-red-500 hover:bg-red-600 rounded absolute top-2 right-2" onClick={ () => setEditModal( false ) }>
               <FontAwesomeIcon className="text-white text-lg" icon={ faClose as IconProp }></FontAwesomeIcon>
