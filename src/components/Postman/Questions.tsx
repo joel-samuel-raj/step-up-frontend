@@ -166,7 +166,7 @@ export default function Questions () {
         </div>
       </Container>
       <Container className="mt-4">
-        { currentAnswers.length > 0 && <Box>
+        { currentAnswers.length > 1 && <Box>
           { currentAnswers.map( ( ans, j ) => ( <div key={ j } className="py-4"> <Accordion sx={ { backgorundColor: "gray" } } className="bg-purple_heart-50">
             <AccordionSummary color="primary" className="rounded text-purple-900" expandIcon={ <FontAwesomeIcon icon={ faChevronDown as IconProp }></FontAwesomeIcon> }> { ans.userName } </AccordionSummary>
             <AccordionDetails> <Box>

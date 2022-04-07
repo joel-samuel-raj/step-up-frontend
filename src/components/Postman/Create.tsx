@@ -64,12 +64,15 @@ export default function Create ( { close, id }: { close?: any, id?: string } ) {
 
     }
 
-    useEffect( () => {
-        if ( !id ) return
+    useEffect(() => {
         let arr = allPosts.find( ar => ar._id === id )
         setEditQuestions( arr!.questions )
         setEditPosts( arr as questionType )
         console.log( "editPosts", editPosts )
+    }, [allPosts])
+
+    useEffect( () => {
+        if ( !id ) return
         setSettingDone( true )
     }, [ currentIndex ] )
 
