@@ -200,9 +200,9 @@ const Home: NextPage = () => {
           )} ) }
         </div>
       </Container>
-      { currentQuestion >= 0 && <Modal className="flex justify-center" open={ answerModal[ currentQuestion ] } onClose={ () => handleModalClose( currentQuestion ) }>
-        <Modal className="flex justify-center" open={ answerModal[ currentQuestion ] } onClose={ () => handleModalClose( currentQuestion ) }>
-          <Box style={ { overflow: "auto" } } className="w-11/12 relative bg-white m-4 p-4 lg:px-12 h-11/12">
+      { currentQuestion >= 0 && <Modal className="flex justify-center z-10" open={ answerModal[ currentQuestion ] } onClose={ () => handleModalClose( currentQuestion ) }>
+        <Modal className="flex justify-center z-20" open={ answerModal[ currentQuestion ] } onClose={ () => handleModalClose( currentQuestion ) }>
+          <Box style={ { overflow: "auto" } } className="z-30 w-11/12 relative bg-white m-4 p-4 lg:px-12 h-11/12">
             <div className="p-2 flex justify-center items-center w-6 h-6 cursor-pointer bg-red-500 hover:bg-red-600 rounded absolute top-4 right-2" onClick={ () => handleModalClose( currentQuestion ) }>
               <FontAwesomeIcon className="text-white text-lg" icon={ faClose as IconProp }></FontAwesomeIcon>
             </div>
