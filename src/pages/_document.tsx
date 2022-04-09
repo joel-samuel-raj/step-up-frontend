@@ -27,7 +27,7 @@ class MyDocument extends Document {
             href="https://fonts.googleapis.com/icon?family=Material+Icons"
           />
           <link rel="shortcut icon" href="/images/logo.png" />
-          <title> GCT's Very Own Quiz App  </title>
+          <title> GCT&apos;s Very Own Quiz App  </title>
         </Head>
         <body>
           <Main />
