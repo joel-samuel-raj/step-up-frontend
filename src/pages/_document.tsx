@@ -4,16 +4,16 @@ import Document, {
   Html,
   Main,
   NextScript,
-} from "next/document";
-import React from "react";
+} from "next/document"
+import React from "react"
 
 class MyDocument extends Document {
-  static async getInitialProps(ctx: DocumentContext) {
-    const initialProps = await Document.getInitialProps(ctx);
-    return { ...initialProps };
+  static async getInitialProps ( ctx: DocumentContext ) {
+    const initialProps = await Document.getInitialProps( ctx )
+    return { ...initialProps }
   }
 
-  render() {
+  render () {
     return (
       <Html lang="en">
         <Head>
@@ -28,16 +28,21 @@ class MyDocument extends Document {
           />
           <link rel="shortcut icon" href="/images/logo.png" />
           <title> GCT&apos;s Very Own Quiz App  </title>
+          <meta property="og:title" content="Quiz App" />
+          <meta property="og:description" content=" GCT's Very Own Quiz App" />
+          <meta property="og:type" content="article" />
+          <meta property="og:url" content="https://gct-quizapp.vercel.app/" />
+          <meta property="og:image" content="https://gct-quizapp.vercel.app/images/logo.png" />
         </Head>
         <body>
           <Main />
           <NextScript />
         </body>
       </Html>
-    );
+      );
   }
 }
 
-export default MyDocument;
+              export default MyDocument;
 
 //dist
