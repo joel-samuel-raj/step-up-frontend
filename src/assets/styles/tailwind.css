@@ -36,23 +36,23 @@ h1, h2, h3, h4, h5, h6 {
     font-family: 'Poppins', sans-serif;
 }
 
-h6 {
+h5 {
     @apply text-base;
 }
-h5 {
+h4 {
     @apply text-lg;
 }
-h4 {
+h3 {
     @apply text-xl;
 }
-h3 {
+h2 {
     @apply text-2xl;
 }
-h2 {
+h1 {
     @apply text-3xl;
 }
-h1 {
-    @apply text-4xl;
+h6 {
+    @apply text-sm;
 }
 
 .text-grid {

@@ -11,8 +11,11 @@ const theme = createTheme( {
     },
     secondary: {
       main: '#c725c7',
-    },
+    }
   },
+  typography: {
+    "fontFamily": "Poppins, Roboto, sans-serif"
+  }
 } )
 import { config } from '@fortawesome/fontawesome-svg-core'
 import '@fortawesome/fontawesome-svg-core/styles.css' // Import the CSS
