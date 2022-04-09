@@ -26,7 +26,8 @@ class MyDocument extends Document {
             rel="stylesheet"
             href="https://fonts.googleapis.com/icon?family=Material+Icons"
           />
-          <link rel="shortcut icon" href="/favicon/favicon.ico" />
+          <link rel="shortcut icon" href="/images/logo.png" />
+          <title> GCT's Very Own Quiz App  </title>
         </Head>
         <body>
           <Main />

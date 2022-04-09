@@ -259,7 +259,7 @@ export default function Navbar ( { loginModel, setloginmodel }: { loginModel?: b
                 </AppBar>
             </Box>
             <Box>
-                <Drawer anchor="left" open={ drawer } onClose={ () => setDrawer( false ) }>
+                <Drawer className="relative" anchor="left" open={ drawer } onClose={ () => setDrawer( false ) }>
                     <List sx={ { width: "100%", padding: "1rem" } }>
                         <Link href="/Dashboard">
                             <ListItem className="flex items-center justify-center poppins" button>
@@ -285,6 +285,7 @@ export default function Navbar ( { loginModel, setloginmodel }: { loginModel?: b
                             </ListItem>
                         </Link> ) }
                     </List>
+                    <img className="w-44 bottom-0 m-4 p-4 absolute object-contain" src="images/logo.png"/> 
                 </Drawer>
             </Box>
             {/* { () => { return currentUser === "unauthenticated" ? login() : logout() } } */ }
