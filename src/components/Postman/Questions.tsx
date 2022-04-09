@@ -1,7 +1,7 @@
 import { faChevronDown, faClose, faPencil } from '@fortawesome/free-solid-svg-icons'
 import { CSVLink } from "react-csv"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Accordion, AccordionSummary, Box, Button, Container, Modal, AccordionDetails, Divider, Switch, Alert, Snackbar } from '@mui/material'
+import { Accordion, AccordionSummary, Box, Button, Container, Modal, TextField, AccordionDetails, Divider, Switch, Alert, Snackbar } from '@mui/material'
 import axios from 'axios'
 import router from 'next/router'
 import React, { useContext, useEffect, useReducer, useState } from 'react'
@@ -173,7 +173,7 @@ export default function Questions () {
             <AccordionSummary color="primary" className="rounded text-black mb-0 text-lg" expandIcon={ <FontAwesomeIcon icon={ faChevronDown as IconProp }></FontAwesomeIcon> }> { ans.userName } </AccordionSummary>
             <AccordionDetails> <Box>
               { handleQuestion( ans.questionId ).questions.map( ( quest: any, k: number ) => ( <div key={ k }>
-                <p className="roboto whitespace-pre-line"> { quest.question } </p>
+                <TextField label={`Question #${k + 1}`} className="whitespace-pre-line" fullWidth multiline value={ quest.question } /> 
                 { quest.isMcq ? ( <Mcq mcqData={ mcqData } changer={ [ 1, 2 ] } iconFlag={ false } readFlag={ true } preData={ ans.answers![ k ].options } ansData={ quest } /> ) : ( <div className="p-2 px-4 mt-4 bg-white rounded">
                   <Editor readOnly={ true } value={ ans.answers![ k ].answer }> </Editor>
                 </div> )} 
