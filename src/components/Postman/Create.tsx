@@ -103,14 +103,16 @@ export default function Create ( { close, id }: { close?: any, id?: string } ) {
                 // setEditPosts( ( prev ) => ( { ...prev, questions: editQuestions } ) )
                 // console.log( editQuestions, editPosts )
                 forceUpdate()
+                return
             }
-            if ( ( posts && posts.questions && posts.questions![ i ] && posts.questions![ i ].isMcq ) ) {
+            if ( ( !id && posts && posts.questions && posts.questions![ i ] && posts.questions![ i ].isMcq ) ) {
                 let arr = { questions: questions![ i ].question, isMcq: false }
                 console.log( arr )
                 setQuestions( ( prev: any[] ) => prev.map( ( p, j ): any => j === i ? { question : p.question, isMcq : false} : p ) )
                 // setEditPosts( ( prev ) => ( { ...prev, questions: editQuestions } ) )
                 // console.log( editQuestions, editPosts )
                 forceUpdate()
+                return
             }
             else {
                 if ( id ) {
