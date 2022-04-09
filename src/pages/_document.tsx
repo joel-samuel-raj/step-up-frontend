@@ -27,12 +27,12 @@ class MyDocument extends Document {
             href="https://fonts.googleapis.com/icon?family=Material+Icons"
           />
           <link rel="shortcut icon" href="/images/logo.png" />
-          <title> GCT&apos;s Very Own Quiz App  </title>
-          <meta property="og:title" content="Quiz App" />
-          <meta property="og:description" content=" GCT's Very Own Quiz App" />
-          <meta property="og:type" content="article" />
-          <meta property="og:url" content="https://gct-quizapp.vercel.app/" />
-          <meta property="og:image" content="https://gct-quizapp.vercel.app/images/logo.png" />
+          <title>Quiz App</title>
+          <meta key="title" property="og:title" content="Quiz App" />
+          <meta key="desc" property="og:description" content=" GCT's Very Own Quiz App" />
+          <meta key="type" property="og:type" content="article" />
+          <meta key="url" property="og:url" content="https://gct-quizapp.vercel.app/" />
+          <meta key="image" property="og:image" content="https://gct-quizapp.vercel.app/images/logo.png" />
         </Head>
         <body>
           <Main />
