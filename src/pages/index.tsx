@@ -1,4 +1,4 @@
-import { Button, Container, Box, Divider, Snackbar, Alert, Modal } from "@mui/material"
+import { Button, Container, Box, Divider, Snackbar, Alert, Modal, TextField} from "@mui/material"
 import type { NextPage } from "next"
 import Navbar from "../components/Navbar"
 import Mcq from "../components/Postman/mcq"
@@ -201,29 +201,31 @@ const Home: NextPage = () => {
         </div>
       </Container>
       { currentQuestion >= 0 && <Modal className="flex justify-center" open={ answerModal[ currentQuestion ] } onClose={ () => handleModalClose( currentQuestion ) }>
-        <Box style={ { overflow: "auto" } } className="w-11/12 relative bg-white m-4 p-4 lg:px-12 h-11/12">
-          <div className="p-2 flex justify-center items-center w-6 h-6 cursor-pointer bg-red-500 hover:bg-red-600 rounded absolute top-4 right-2" onClick={ () => handleModalClose( currentQuestion ) }>
-            <FontAwesomeIcon className="text-white text-lg" icon={ faClose as IconProp }></FontAwesomeIcon>
-          </div>
-          <h3 className="my-4"> Take Quiz ✅ </h3>
-          <div className="py-8 px-2 rounded shadow-lg border-2 border-purple-500">
-            <h3 className="text-center"> { question.name } </h3>
-            { question.questions!.map( ( quest, j: number ) => ( <div onChange={ () => { setCurrentIndex( j ); setClicked( true ) } } key={ j } className="p-4">
-              <p className="text-lg whitespace-pre-line"> { quest.question } </p>
-              { quest!.options!.length > 1 ? <Mcq iconFlag={ false } inputFlag={ true } mcqData={ mcqData } changer={ [ question._id, existingAnswer ] } preData={ templateData( j ) } /> : <div className="my-4">
-                <Editor value={ editorValue( j ) } onChange={ ( value ) => { handleChange( value(), j ); setCurrentIndex( j ) } } placeholder="Start Writing Here..."
-                />
-              </div> }
+        <Modal className="flex justify-center" open={ answerModal[ currentQuestion ] } onClose={ () => handleModalClose( currentQuestion ) }>
+          <Box style={ { overflow: "auto" } } className="w-11/12 relative bg-white m-4 p-4 lg:px-12 h-11/12">
+            <div className="p-2 flex justify-center items-center w-6 h-6 cursor-pointer bg-red-500 hover:bg-red-600 rounded absolute top-4 right-2" onClick={ () => handleModalClose( currentQuestion ) }>
+              <FontAwesomeIcon className="text-white text-lg" icon={ faClose as IconProp }></FontAwesomeIcon>
             </div>
-            ) ) }
-            <div className="flex m-4">
-              <div className="mr-4"> 
-                <Button variant="contained" className="bg-green-500" onClick={ () => { handleSubmit( question._id, question, false ) } }> Submit </Button>
+            <h3 className="my-4"> Take Quiz ✅ </h3>
+            <div className="py-8 px-2 rounded shadow-lg w-full border-2 border-purple-500">
+              <h3 className="text-center"> { question.name } </h3>
+              { question.questions!.map( ( quest, j: number ) => ( <div onChange={ () => { setCurrentIndex( j ); setClicked( true ) } } key={ j } className="p-4">
+                <TextField variant="standard" label={`question #${j + 1}`} className="whitespace-pre-line w-full" fullWidth multiline value={quest.question} />
+                { quest!.options!.length > 1 ? <Mcq iconFlag={ false } inputFlag={ true } mcqData={ mcqData } changer={ [ question._id, existingAnswer ] } preData={ templateData( j ) } /> : <div className="my-4">
+                  <Editor value={ editorValue( j ) } onChange={ ( value ) => { handleChange( value(), j ); setCurrentIndex( j ) } } placeholder="Start Writing Here..."
+                  />
+                </div> }
               </div>
-              <Button variant="outlined" onClick={ () => { handleSubmit( question._id, question, true ) } }> Save Progress </Button>
+              ) ) }
+              <div className="flex m-4">
+                <div className="mr-4"> 
+                  <Button variant="contained" className="bg-green-500" onClick={ () => { handleSubmit( question._id, question, false ) } }> Submit </Button>
+                </div>
+                <Button variant="outlined" onClick={ () => { handleSubmit( question._id, question, true ) } }> Save Progress </Button>
+              </div>
             </div>
-          </div>
-        </Box> 
+          </Box> 
+        </Modal>
       </Modal> }
       <Snackbar anchorOrigin={ { vertical: 'top', horizontal: 'right' } } open={ responseModel } autoHideDuration={ 6000 } onClose={ () => setResponseModel( false ) }>
         <Alert onClose={ () => setLoginModel( false ) } severity="success" sx={ { width: '100%' } }>
