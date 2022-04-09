@@ -39,7 +39,7 @@ export default function Questions () {
   useEffect( () => {
     if ( currentAnswers.length < 1 ) return
     console.log( currentAnswers )
-    let header = currentAnswers[ 0 ]!.answers!.map( ( _, i ) => `question ${ i + 1}` )
+    let header = currentAnswers![0].question!.questions!.map(({question}) => question)
     header.splice( 0, 0, "Student Name" )
     let excel = currentAnswers.map( curr => {
       let array = curr!.answers!.map( ( { options, answer }, i ) => {

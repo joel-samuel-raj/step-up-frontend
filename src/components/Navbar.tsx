@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { AppBar, Box, Button, Drawer, IconButton, InputAdornment, List, ListItem, ListItemIcon, ListItemText, Modal, TextField, Toolbar, Typography } from '@mui/material'
+import { AppBar, Box, Button, Drawer, IconButton, InputAdornment, List, ListItem, ListItemIcon, Modal, TextField, Toolbar, Typography } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser, faClose, faLock, faEnvelope, faAddressBook, faPhone } from '@fortawesome/free-solid-svg-icons'
@@ -262,26 +262,26 @@ export default function Navbar ( { loginModel, setloginmodel }: { loginModel?: b
                 <Drawer anchor="left" open={ drawer } onClose={ () => setDrawer( false ) }>
                     <List sx={ { width: "100%", padding: "1rem" } }>
                         <Link href="/Dashboard">
-                            <ListItem className="flex items-center justify-center" button>
+                            <ListItem className="flex items-center justify-center poppins" button>
                                 <ListItemIcon>
                                     <img className="h-8 rounded-full object-contain" src={ currentUser.profilePicture || defaultDp } alt="" />
-                                </ListItemIcon>
-                                <ListItemText> Dashboard </ListItemText>
-                            </ListItem>
+                                </ListItemIcon> 
+                                <p className="poppins"> Dashboard </p> 
+                            </ListItem> 
                         </Link>
                         <Link href="/">
-                            <ListItem className="flex items-center justify-center" button>
-                                <ListItemText> Home </ListItemText>
+                            <ListItem className="flex items-center" button>
+                                <p className="poppins"> Home </p>
                             </ListItem>
                         </Link>
                         <Link href="/Winners">
-                            <ListItem className="flex items-center justify-center" button>
-                                <ListItemText> Winners </ListItemText>
+                            <ListItem className="flex items-center" button>
+                                <p className="poppins"> Winners </p>
                             </ListItem>
                         </Link>
                         { currentUser.isAdmin && ( <Link href="/Admin">
-                            <ListItem className="flex items-center justify-center" button>
-                                <ListItemText> Admin </ListItemText>
+                            <ListItem className="flex items-center" button>
+                                <p className="poppins"> Admin </p>
                             </ListItem>
                         </Link> ) }
                     </List>
