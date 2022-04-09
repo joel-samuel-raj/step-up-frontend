@@ -97,14 +97,14 @@ const Home: NextPage = () => {
       setResponseModel(true)
       if ( !( existingAnswer === {} || existingAnswer === undefined ) ) {
         axios.post( `${ process.env.NEXT_PUBLIC_BACKEND_URL }/posts/answers/update/${ existingAnswer.ulid }`, obj ).then( () => {
-          setQuestion( {} )
+          // setQuestion( {} )
           setAllAnswers( ( prev: any ) => ( [ ...prev, obj ] ) )
           router.reload()
         } )
         return
       }
       axios.post( `${ process.env.NEXT_PUBLIC_BACKEND_URL }/posts/answers/post`, obj ).then( () => {
-        setQuestion( {} )
+        // setQuestion( {} )
         setAllAnswers( ( prev: any ) => ( [ ...prev, obj ] ) )
         router.reload()
       } )
@@ -209,7 +209,7 @@ const Home: NextPage = () => {
             <h3 className="my-4"> Take Quiz ✅ </h3>
             <div className="py-8 px-2 rounded shadow-lg w-full border-2 border-purple-500">
               <h3 className="text-center"> { question.name } </h3>
-              { question.questions!.map( ( quest, j: number ) => ( <div onChange={ () => { setCurrentIndex( j ); setClicked( true ) } } key={ j } className="p-4">
+              { question && question.questions && question.questions!.map( ( quest, j: number ) => ( <div onChange={ () => { setCurrentIndex( j ); setClicked( true ) } } key={ j } className="p-4">
                 <TextField variant="standard" label={`Question #${j + 1}`} className="whitespace-pre-line w-full" fullWidth multiline value={ quest.question } />
                 { quest!.options!.length > 1 ? <Mcq iconFlag={ false } inputFlag={ true } mcqData={ mcqData } changer={ [ question._id, existingAnswer ] } preData={ templateData( j ) } /> : <div className="my-4">
                   <Editor value={ editorValue( j ) } onChange={ ( value ) => { handleChange( value(), j ); setCurrentIndex( j ) } } placeholder="Start Writing Here..."
