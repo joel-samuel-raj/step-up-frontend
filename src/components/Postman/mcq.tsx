@@ -25,6 +25,7 @@ export default function Mcq ( { mcqData, changer, preData, ansData, iconFlag, re
     }
 
     const handleInputChange = ( e: any, i: number ) => {
+        console.log(write, input)
         if ( typeof window !== "undefined" && write && input ) {
             const newTemplate = [ ...template ]
             newTemplate.splice( i, 1, { ...template[ i ], value: e.target.value as string } )
@@ -83,7 +84,7 @@ export default function Mcq ( { mcqData, changer, preData, ansData, iconFlag, re
 
     const colourChange = ( bool: boolean, i: number ) => {
         let classes = "m-2 p-2 rounded"
-        if ( !ansData || ( typeof correctAns.options === 'undefined' ) ) return ""
+        if ( !ansData || ( typeof correctAns.options === 'undefined' ) || ( typeof correctAns.options[i] === 'undefined' ) ) return ""
         console.log( bool )
         if ( bool ) {
             return correctAns.options[ i ].answer === bool ? `${ classes } bg-green-200` : `${ classes } bg-red-300` 

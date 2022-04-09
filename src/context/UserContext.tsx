@@ -32,6 +32,9 @@ export const UserProvider = ( props: any ) => {
                 if ( user.data as string === 'wrong password' ) {
                     alert('Wrong Password Please Try Again !')
                 }
+                if ( user.data as string === 'wrong email' ) {
+                    alert('Email not registered, please create an account !')
+                }
                 return
             } 
             await axios.get( `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/google/users`, {

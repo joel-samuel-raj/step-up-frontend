@@ -6,6 +6,7 @@ export type questionType = {
     image?: string | ArrayBuffer | null
     questions?: [ {
         question : string,
+        isMcq? : boolean,
         options?: [{
             value: string,
             answer: boolean

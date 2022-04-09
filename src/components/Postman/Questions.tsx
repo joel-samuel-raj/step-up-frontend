@@ -34,6 +34,7 @@ export default function Questions () {
   const [ currentAnswers, setCurrentAnswers ] = useState<answerType[]>( [] )
   const [ open, setOpen ] = useState<boolean[]>( new Array( allPosts.length ).fill( true ) as boolean[] )
   const [ datas, setDatas ] = useState<any>( [] )
+  const [noRes, setNoRes] = useState(false)
 
   useEffect( () => {
     if ( currentAnswers.length < 1 ) return
@@ -81,6 +82,7 @@ export default function Questions () {
   const handleClick = ( id: string ) => {
     let dat = answers.filter( answer => answer.questionId! === id && answer.progress === false )
     setCurrentAnswers( dat )
+    dat.length ? setNoRes(false) : setNoRes(true)
     console.log( "currentAnswers", dat )
   }
 
@@ -120,7 +122,7 @@ export default function Questions () {
 
   const classChange = ( bool: boolean ) => {
     let classes = "cursor-pointer p-2 pr-14 rounded relative"
-    return bool ? `${ classes } bg-gradient-to-tr from-purple-400 to-purple-500 text-white` : `${ classes } bg-gradient-to-tr from-red-400 to-red-500 text-white`
+    return bool ? `${ classes } bg-gradient-to-tr from-green-400 to-green-500 text-white` : `${ classes } bg-gradient-to-tr from-red-400 to-red-500 text-white`
   }
 
   const handleSwitch = ( e: any, i: number ) => {
@@ -136,15 +138,15 @@ export default function Questions () {
   return (
     <>
       <Container>
-        <h3 className="m-4"> Admin Page </h3>
+        <h3 className="m-4"> Admin Page 👑 </h3>
       </Container>
       <Container className="px-4 ">
-        <div className="rounded shadow-lg bg-purple_heart-200 p-4">
+        <div className="rounded shadow-lg bg-gray-200 p-4">
           <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 my-4">
             { data.map( ( dat: any, i: number ) => (
               <Box onClick={ () => { handleClick( dat._id ) } } key={ i } className={ classChange( dat.open ) }>
                 <h4> { dat.name } </h4>
-                <Switch color="primary"
+                <Switch color="success"
                   checked={ dat.open }
                   onChange={ ( e ) => handleSwitch( e, i ) }
                 />
@@ -166,16 +168,16 @@ export default function Questions () {
         </div>
       </Container>
       <Container className="mt-4">
-        { currentAnswers.length > 1 && <Box>
+        { currentAnswers.length > 0 && <Box>
           { currentAnswers.map( ( ans, j ) => ( <div key={ j } className="py-4"> <Accordion sx={ { backgorundColor: "gray" } } className="bg-purple_heart-50">
-            <AccordionSummary color="primary" className="rounded text-purple-900" expandIcon={ <FontAwesomeIcon icon={ faChevronDown as IconProp }></FontAwesomeIcon> }> { ans.userName } </AccordionSummary>
+            <AccordionSummary color="primary" className="rounded text-black mb-0 text-lg" expandIcon={ <FontAwesomeIcon icon={ faChevronDown as IconProp }></FontAwesomeIcon> }> { ans.userName } </AccordionSummary>
             <AccordionDetails> <Box>
               { handleQuestion( ans.questionId ).questions.map( ( quest: any, k: number ) => ( <div key={ k }>
-                <p className="font-bold mt-8 whitespace-pre-line"> { quest.question } </p>
-                { ans.answers![ k ].answer ? ( <div className="p-2 px-4 mt-4 bg-white rounded">
+                <p className="roboto whitespace-pre-line"> { quest.question } </p>
+                { quest.isMcq ? ( <Mcq mcqData={ mcqData } changer={ [ 1, 2 ] } iconFlag={ false } readFlag={ true } preData={ ans.answers![ k ].options } ansData={ quest } /> ) : ( <div className="p-2 px-4 mt-4 bg-white rounded">
                   <Editor readOnly={ true } value={ ans.answers![ k ].answer }> </Editor>
-                </div> ) : ( <Mcq mcqData={ mcqData } changer={ [ 1, 2 ] } iconFlag={ false } readFlag={ true } preData={ ans.answers![ k ].options } ansData={ quest } /> ) }
-                <Divider></Divider>
+                </div> )} 
+                <Divider className="my-4"></Divider>
               </div> ) ) }
             </Box>
               <div className="flex items-center justify-around">
@@ -191,7 +193,7 @@ export default function Questions () {
       </Container>
 
       <Container className="my-4">
-        { currentAnswers.length > 0 && <Box>
+        { currentAnswers.length > 0 ? <Box>
           <Divider className="bg-purple_heart-500 rounded-full my-4"></Divider>
           <h3 className="my-4"> Potential Winners ⚡ </h3>
           { currentAnswers.map( ( ans, j ) => ( <div key={ j }>{
@@ -199,10 +201,10 @@ export default function Questions () {
               <h4 className=""> { ans.userName } </h4>
               <p onClick={ () => window.location.href = `mailto:${ ans.userEmail }?body=You have potential to win !` } className="text-blue-500 cursor-pointer hover:underline"> { ans.userEmail } </p>
               <p onClick={ () => window.location.href = `tel:${ ans.userPhone }` } className="text-blue-500 cursor-pointer hover:underline"> { ans.userPhone } </p>
-            </Box>
+            </Box> 
           }
           </div> ) )
-          } </Box> }
+          } </Box> :  noRes && <h3> No Responses yet 😔 </h3>}
       </Container>
 
       <Container className="my-4">

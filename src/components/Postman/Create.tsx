@@ -18,7 +18,7 @@ export default function Create ( { close, id }: { close?: any, id?: string } ) {
 
     const [ , forceUpdate ] = useReducer( x => x + 1, 0 )
     const [ questions, setQuestions ] = useState<any>( [ { question: "question #1" } ] )
-    const [ isMcq, setIsMcq ] = useState( new Array( questions!.length + 1 ).fill( false ) )
+    const [ isMcq, setIsMcq ] = useState( new Array( 1000 ).fill( true ) )
     const [ mcq, setMcq ] = useState<any>( [ {} ] )
     const [ editQuestions, setEditQuestions ] = useState<any>( [ "question #1" ] )
     const [ createModel, setCreateModel ] = useState( false )
@@ -32,9 +32,9 @@ export default function Create ( { close, id }: { close?: any, id?: string } ) {
 
     const addQuestion = ( i: number ) => {
         if ( id ) {
-            setEditQuestions( ( prev: any ) => { return [ ...prev!, { question: `` } ] as unknown as [ { question: string } ] } )
+            setEditQuestions( ( prev: any ) => { return [ ...prev!, { question: ``, isMcq: false } ] } )
         }
-        setQuestions( ( prev: any ) => { return [ ...prev!, { question: `` } ] as unknown as [ { question: string } ] } )
+        setQuestions( ( prev: any ) => { return [ ...prev!, { question: ``, isMcq: false } ] } )
     }
 
     const handleTyping = ( e: any ) => {
@@ -64,12 +64,13 @@ export default function Create ( { close, id }: { close?: any, id?: string } ) {
 
     }
 
-    useEffect(() => {
+    useEffect( () => {
         let arr = allPosts.find( ar => ar._id === id )
+        if ( !arr ) return
         setEditQuestions( arr!.questions )
         setEditPosts( arr as questionType )
         console.log( "editPosts", editPosts )
-    }, [allPosts])
+    }, [ allPosts ] )
 
     useEffect( () => {
         if ( !id ) return
@@ -93,73 +94,69 @@ export default function Create ( { close, id }: { close?: any, id?: string } ) {
     }
 
     const questionType = ( i: number ) => {
-        if ( isMcq[ i ] ) {
-            if ( id ) {
-                let arr = {
-                    question: editQuestions![ i ].question,
-                }
-                let array = editQuestions
-                array![ i ] = arr
-                setEditQuestions( ( prev: any[] ) => prev.map( ( p, j ): any => j === i ? arr : p ) )
-                console.log( editQuestions )
-                // forceUpdate()
+        // console.log(editQuestions, editPosts)
+        console.log(i)
+            if ( ( id && editPosts && editPosts.questions && editPosts.questions![ i ] && editPosts.questions![ i ].isMcq ) ) {
+                let arr = { questions: editQuestions![ i ].question, isMcq: false }
+                console.log( arr )
+                setEditQuestions( ( prev: any[] ) => prev.map( ( p, j ): any => j === i ? { question : p.question, isMcq : false} : p ) )
+                // setEditPosts( ( prev ) => ( { ...prev, questions: editQuestions } ) )
+                // console.log( editQuestions, editPosts )
+                forceUpdate()
             }
             else {
-                let arr = {
-                    question: questions![ i ].question,
+                if ( id ) {
+                    let arr = { question: editQuestions![ i ].question, options: [ {
+                        value: "",
+                        answer: false
+                    } ] as [ {
+                        value: string,
+                        answer: boolean
+                    } ], isMcq: true } 
+                    console.log(arr)
+                    setEditQuestions( ( prev: any[] ) => {
+                        let array = prev.map( ( p, j ): any => {
+                            return j === i ? arr : p
+                        })
+                        console.log(array)
+                        return array
+                    } )
+                } 
+                else {
+                    let arr = { question: questions![ i ].question, options: [ {
+                        value: "",
+                        answer: false
+                    } ] as [ {
+                        value: string,
+                        answer: boolean
+                    } ], isMcq: true } 
+                    setQuestions( ( prev: any[] ) => {
+                        let array = prev.map( ( p, j ): any => {
+                            return j === i ? arr : p
+                        })
+                        console.log(array)
+                        return array
+                    } )
+                    // setEditPosts( ( prev ) => ( { ...prev, questions: editQuestions } ) )
+                    // console.log( editQuestions )
+                    forceUpdate()
+                    // console.log( questions![ i ].options )
                 }
-                let array = questions
-                array![ i ] = arr
-                setQuestions( ( prev: any[] ) => prev.map( ( p, j ): any => j === i ? arr : p ) )
-                console.log( questions )
-                forceUpdate()
-                console.log( questions![ i ].options )
             }
-            let bool = isMcq
-            bool[ i ] = !bool[ i ]
-            setIsMcq( bool )
-            console.log( isMcq[ i ] )
-            return
-        }
-        let bool = isMcq
-        bool[ i ] = !bool[ i ]
-        setIsMcq( bool )
-        console.log( isMcq[ i ] )
-        if ( id ) {
-            let arr = {
-                question: editQuestions![ i ].question,
-                options: [ {
-                    value: "",
-                    answer: false
-                } ] as [ {
-                    value: string,
-                    answer: boolean
-                } ]
-            }
-            let array = editQuestions
-            array![ i ] = arr
-            setEditQuestions( array )
-            console.log( editQuestions )
-            forceUpdate()
-            return
-        }
-        let arr = {
-            question: questions![ i ].question,
-            options: [ {
-                value: "",
-                answer: false
-            } ] as [ {
-                value: string,
-                answer: boolean
-            } ]
-        }
-        let array = questions
-        array![ i ] = arr
-        setQuestions( array )
-        console.log( questions )
-        forceUpdate()
-        console.log( questions![ i ].options )
+            return 
     }
+
+    // console.log( editQuestions )
+
+    useEffect(() => {
+        setEditPosts(prev => ({...prev, questions : editQuestions}))
+        setPosts(prev => ({...prev, questions: questions}))
+    }, [editQuestions, questions])
+
+    useEffect(() => {
+        console.log(editPosts)
+        console.log(posts)
+    }, [editPosts, posts])
 
     const handleChange = ( e: any, i: number ) => {
         if ( id ) {
@@ -233,21 +230,22 @@ export default function Create ( { close, id }: { close?: any, id?: string } ) {
         if ( settingDone && changeDone ) {
             let object = {
                 question: editQuestions![ currentIndex ].question,
-                options: mcq
+                options: mcq,
+                isMcq: editQuestions![ currentIndex ].isMcq
             }
-            editPosts.questions![ currentIndex ] = object
-            setEditPosts( editPosts )
-            console.log( editPosts )
+            setEditQuestions((prev: any[]) => prev.map((p, i): any => i === currentIndex ? object : p))
+            // console.log( editPosts )
             return
         }
         if ( !id ) {
             let object = {
                 question: questions![ currentIndex ].question,
-                options: mcq
+                options: mcq,
+                isMcq: questions![ currentIndex ].isMcq,
             }
-            posts.questions![ currentIndex ] = object
-            setPosts( posts )
-            console.log( posts )
+            setQuestions((prev: any[]) => prev.map((p, i): any => i === currentIndex ? object : p))
+            // setPosts( posts )
+            // console.log( posts )
         }
     }, [ mcq, settingDone ] )
 
@@ -291,21 +289,11 @@ export default function Create ( { close, id }: { close?: any, id?: string } ) {
                                         </>
                                     ),
                                 } } />
-                                { ( isMcq[ i ] ) && ( <div className="mb-8 w-full">
-                                    {/* { ( () => {
-                                        if ( id && editPosts.questions![ i ] ) {
-                                            if ( editPosts.questions![ i ].options ) {
-                                                if ( editPosts.questions![ i ].options!.length > 2 ) {
-                                                    return ( <Mcq changer={ [ 1, 2 ] } mcqData={ mcqData } preData={ editPosts.questions![ i ].options } /> )
-                                                }
-                                            }
-                                        }
-                                        else {
-                                            return ( <Mcq changer={ [ 1, 2 ] } mcqData={ mcqData } /> )
-                                        }
-                                    } ) } */}
-                                    { id && editPosts.questions![ i ] ? <Mcq changer={ [ 1, 2 ] } mcqData={ mcqData } preData={ editPosts.questions![ i ].options } /> : <Mcq changer={ [ 1, 2 ] } mcqData={ mcqData } /> }
-                                </div> ) }
+                                {
+                                    ( ( id && editPosts && editPosts.questions && editPosts.questions![ i ] && editPosts.questions![ i ].isMcq ) || ( posts && posts.questions && posts.questions![ i ] && posts.questions![ i ].isMcq ) )
+                                        ? ( <div className="mb-8 w-full">
+                                            { id && editPosts.questions![ i ] ? <Mcq changer={ [ 1, 2 ] } mcqData={ mcqData } preData={ editPosts.questions![ i ].options } /> : <Mcq changer={ [ 1, 2 ] } mcqData={ mcqData } /> }
+                                        </div> ) : ( <> </> ) }
                             </div>
                         ) ) }
                         { id ? ( <Button className="float-left" onClick={ () => { submit() } }>

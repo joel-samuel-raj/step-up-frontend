@@ -210,7 +210,7 @@ const Home: NextPage = () => {
             <h3 className="text-center"> { question.name } </h3>
             { question.questions!.map( ( quest, j: number ) => ( <div onChange={ () => { setCurrentIndex( j ); setClicked( true ) } } key={ j } className="p-4">
               <p className="text-lg whitespace-pre-line"> { quest.question } </p>
-              { quest!.options!.length > 1 ? <Mcq iconFlag={ false } inputFlag={ false } mcqData={ mcqData } changer={ [ question._id, existingAnswer ] } preData={ templateData( j ) } /> : <div className="my-4">
+              { quest!.options!.length > 1 ? <Mcq iconFlag={ false } inputFlag={ true } mcqData={ mcqData } changer={ [ question._id, existingAnswer ] } preData={ templateData( j ) } /> : <div className="my-4">
                 <Editor value={ editorValue( j ) } onChange={ ( value ) => { handleChange( value(), j ); setCurrentIndex( j ) } } placeholder="Start Writing Here..."
                 />
               </div> }

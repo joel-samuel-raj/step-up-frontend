@@ -35,35 +35,57 @@ const Profile = () => {
       { ans.length > 0 ? ( <> {
         ans[ 0 ].question && ( <Container className="my-6 py-6 border-b-2 border-purple-900 rounded">
           <h3> All Responses 📚 </h3>
-          { ans.map( ( answer, i ) => {
-            return allPosts.find( ( post ) => post._id === answer.questionId ) ? ( <div key={ i }>
-              <p> { '👉🏼' + answer.question!.name } </p>
-            </div> ) : ( <> </> )
+          <Box className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 rounded justify-center items-center"> 
+            { ans.map( ( answer, i ) => {
+              return allPosts.find( ( post ) => post._id === answer.questionId ) ? ( <div key={ i } >
+                <div className="relative my-4">
+                  <div className="relative rounded">
+                    <div className="top-0 bottom-0 left-0 right-0 bg-purple_heart-500 absolute z-10 opacity-80 rounded"></div>
+                    <img src={ answer!.question!.image as string } alt="" />
+                  </div>
+                  <div className="absolute text-white z-20 top-4 left-4">
+                    <h4 className="italic"> { answer.question!.name } </h4>
+                  </div>
+                </div>
+              </div> ) : ( <> </> )
           } ) }
+        </Box>
         </Container> ) }
         { ans[ 0 ].question && ( <Container className="my-6 py-6 border-b-2 border-purple-900 rounded">
           <h3> Watch List ⭐ </h3>
-          { ans.map( ( answer, i ) => {
-            if ( answer.star ) {
-              ans.map( ( answer, i ) => {
-                return allPosts.find( ( post ) => post._id === answer.questionId ) ? ( <div key={ i }>
-                  <p> { '👉🏼' + answer.question!.name } </p>
-                </div> ) : ( <> </> )
-              } )
-            }
+          <Box className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 rounded justify-center "> 
+            { ans.map( ( answer, i ) => {
+              return allPosts.find( ( post ) => post._id === answer.questionId && answer.star ) ? ( <div key={ i } >
+                <div className="relative my-4">
+                  <div className="relative rounded">
+                    <div className="top-0 bottom-0 left-0 right-0 bg-purple_heart-500 absolute z-10 opacity-80 rounded"></div>
+                    <img src={ answer!.question!.image as string } alt="" />
+                  </div>
+                  <div className="absolute text-white z-20 top-4 left-4">
+                    <h4 className="italic"> { answer.question!.name } </h4>
+                  </div>
+                </div>
+              </div> ) : ( <> </> )
           } ) }
+        </Box>
         </Container> ) }
         { ans[ 0 ].question && ( <Container className="my-6 py-6 border-b-2 border-purple-900 rounded">
           <h3> Winning Responses 😍 </h3>
-          { ans.map( ( answer, i ) => {
-            if ( answer.validate ) {
-              ans.map( ( answer, i ) => {
-                return allPosts.find( ( post ) => post._id === answer.questionId ) ? ( <div key={ i }>
-                  <p> { '👉🏼' + answer.question!.name } </p>
-                </div> ) : ( <> </> )
-              } )
-            }
+          <Box className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 rounded justify-center items-center"> 
+            { ans.map( ( answer, i ) => {
+              return allPosts.find( ( post ) => post._id === answer.questionId && answer.validate ) ? ( <div key={ i } >
+                <div className="relative my-4">
+                  <div className="relative rounded">
+                    <div className="top-0 bottom-0 left-0 right-0 bg-purple_heart-500 absolute z-10 opacity-80 rounded"></div>
+                    <img src={ answer!.question!.image as string } alt="" />
+                  </div>
+                  <div className="absolute text-white z-20 top-4 left-4">
+                    <h4 className="italic"> { answer.question!.name } </h4>
+                  </div>
+                </div>
+              </div> ) : ( <> </> )
           } ) }
+        </Box>
         </Container> )
         } </> ) : ( <>
           <Container>

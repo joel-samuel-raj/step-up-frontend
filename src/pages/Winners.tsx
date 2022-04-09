@@ -18,7 +18,7 @@ export default function Winners () {
             <Navbar></Navbar>
             <Container>
                 <h3> Winners so Far ⚡ </h3>
-                { answers.length > 0 && ( <Box className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 rounded">
+                { answers.length > 0 && ( <Box className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 rounded justify-center items-center">
                     { answers.map( ( answer, i ) => ( <div className="relative my-4" key={ i }>
                         <div className="relative rounded"> 
                             <div className="top-0 bottom-0 left-0 right-0 bg-purple_heart-500 absolute z-10 opacity-80 rounded"></div>

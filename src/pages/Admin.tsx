@@ -9,11 +9,11 @@ export default function Admin () {
 
     const user: User = useContext( UserContext )
 
-    // useEffect( () => {
-    //     if ( user && !user.isAdmin ) {
-    //         router.push( "/" )
-    //     }
-    // }, [ user ] )
+    useEffect( () => {
+        if ( user && !user.isAdmin ) {
+            router.push( "/" )
+        }
+    }, [ user ] )
 
     return (
         <>
