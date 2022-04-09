@@ -210,7 +210,7 @@ const Home: NextPage = () => {
             <div className="py-8 px-2 rounded shadow-lg w-full border-2 border-purple-500">
               <h3 className="text-center"> { question.name } </h3>
               { question.questions!.map( ( quest, j: number ) => ( <div onChange={ () => { setCurrentIndex( j ); setClicked( true ) } } key={ j } className="p-4">
-                <TextField variant="standard" label={`Question #${j + 1}`} className="whitespace-pre-line w-full" fullWidth multiline value={quest.question} />
+                <TextField variant="standard" label={`Question #${j + 1}`} className="whitespace-pre-line w-full" fullWidth multiline value={ quest.question } />
                 { quest!.options!.length > 1 ? <Mcq iconFlag={ false } inputFlag={ true } mcqData={ mcqData } changer={ [ question._id, existingAnswer ] } preData={ templateData( j ) } /> : <div className="my-4">
                   <Editor value={ editorValue( j ) } onChange={ ( value ) => { handleChange( value(), j ); setCurrentIndex( j ) } } placeholder="Start Writing Here..."
                   />
